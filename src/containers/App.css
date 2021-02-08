@@ -1,0 +1,58 @@
+@import '~antd/dist/antd.css';
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap');
+.logo {
+  height: 32px;
+  margin: 16px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.layout-font {
+  font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+}
+
+.file-explorer-header {
+  font-size: 24px;
+  color: #919397;
+}
+
+.site-layout .site-layout-background {
+  background: #fff;
+}
+
+/* [data-theme="dark"] .site-layout .site-layout-background {
+  background: #141414;
+} */
+
+.ant-layout-sider-children {
+  background-color: #21252B;
+}
+
+.ant-layout-sider-trigger {
+  background-color: #282C34;
+}
+
+/* .ant-menu-item .ant-menu-item-only-child .ant-menu-item-selected .ant-menu-submenu .ant-menu-submenu-inline .ant-menu-item .ant-menu .ant-menu-dark .ant-menu-root .ant-menu-inline .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected{
+  background-color: #282C34;
+
+} */
+
+.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected .ant-menu-submenu-title{
+  background-color: #282C34;
+}
+
+.ant-menu.ant-menu-dark, .ant-menu-dark .ant-menu-sub, .ant-menu.ant-menu-dark .ant-menu-sub {
+  color: rgba(255, 255, 255, 0.65);
+  background: #282C34;
+}
+
+.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: #41729F;
+}
+
+.ant-layout-footer {
+  z-index: 100000000000000;
+  padding: 0;
+  position: absolute;
+  bottom: 0;
+}

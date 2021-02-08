@@ -1,0 +1,42 @@
+.ant-tabs-nav {
+    margin: 0 !important;
+    background-color: #282C34;
+}
+
+.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab, .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab {
+    background: #21252B !important;
+    border-width: 0 1px !important;
+    border-color: #282c34d5  !important;
+    margin: 0 !important;
+}
+
+.ant-tabs > .ant-tabs-nav .ant-tabs-nav-add, .ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-add {
+    background: #21252B !important;
+    border-width: 0 1px !important;
+    border-color: #282c34d5 !important;
+    margin: 0 !important;
+}
+
+.ant-tabs-nav-wrap {
+    border-style: solid !important;
+    border-color: #282C34 !important;
+    border-width: 0 0 2px 0 !important;
+}
+
+.ant-tabs-tab .ant-tabs-tab-btn {
+    color: grey !important;
+}
+
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: whitesmoke !important;
+}
+
+#root > section > section > div > div.ant-tabs-nav > div.ant-tabs-nav-wrap > div > div.ant-tabs-tab.ant-tabs-tab-with-remove.ant-tabs-tab-active > button > span > svg {
+    color: whitesmoke !important;
+}
+
+#root > section > section > div > div.ant-tabs-nav > div.ant-tabs-nav-wrap > div > div > button > span > svg,
+#root > section > section > div > div.ant-tabs-nav > div.ant-tabs-nav-wrap > div > button > span > svg {
+    color: grey !important;
+}
