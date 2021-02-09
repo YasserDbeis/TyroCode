@@ -5,7 +5,6 @@ const { ipcRenderer } = require("electron");
 const {resizeTerminal, writeEnter} = require('./TerminalSetup');
 import handle from './Handle/Handle';
 
-var fitAddon = null;
 
 import classes from './Terminal.module.css';
 import './TerminalContainer.css';
@@ -27,6 +26,9 @@ class Terminal extends Component {
 
     componentDidMount() {
         window.addEventListener('resize', this.updateTerminalDimensions)
+
+        // require('electron').remote.getCurrentWindow().on('enter-full-screen', this.updateTerminalDimensions)
+
     }
 
 
@@ -45,6 +47,8 @@ class Terminal extends Component {
             height: updatedHeight / 3,
             width: updatedWidth
         })    
+
+        this.resizeTextEditor()
 
         resizeTerminal()
     }
@@ -108,7 +112,7 @@ class Terminal extends Component {
                 id="terminal" 
                 handle={handle()} 
                 onResize={this.onResize} 
-                width={this.state.width} 
+                width={Infinity} 
                 height={this.state.height} 
                 className="box" 
                 maxConstraints={[Infinity, this.state.height * 3 / 2]}

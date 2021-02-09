@@ -20,7 +20,7 @@ import TextArea from 'antd/lib/input/TextArea';
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
-const {initTerminal} = require('../components/Terminal/TerminalSetup');
+const {initTerminal, resizeTerminal} = require('../components/Terminal/TerminalSetup');
 
 class App extends Component {
 
@@ -42,12 +42,31 @@ class App extends Component {
     changeCounter: 0,
     authenticated: false,
     showTerminal: false,
-    collapsed: false
+    collapsed: false,
+    terminalInitialized: false,
+    terminalWidth: 0
   };
 
   onCollapse = collapsed => {
     console.log(collapsed);
+
     this.setState({ collapsed });
+
+
+    // // Janky solution to fix sidebar term issue, shows white space termporarily
+    // const bodyWidth = document.querySelector("#root > section").clientWidth
+
+    // const term = document.querySelector("#terminal")
+
+    // var termWidthNum = collapsed ? bodyWidth - 80 : bodyWidth - 200
+
+    // const termWidth = termWidthNum.toString() + 'px'
+
+
+    // term.setAttribute('style', 'width: ' + (termWidth))
+
+    // resizeTerminal()
+
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -57,17 +76,19 @@ class App extends Component {
 
   componentDidMount() {
     console.log('[App.js] componentDidMount')
+    
   }
 
   componentDidUpdate(){
-    if(this.state.showTerminal) {
+    if(this.state.showTerminal && !this.state.terminalInitialized) {
       initTerminal()
-    }
+      this.setState({terminalInitialized: true})
 
+      console.log('init terminal')
+    }
     // console.log(document.querySelector('#terminal > div.terminal.xterm > div.xterm-screen > canvas.xterm-cursor-layer').clientHeight)
   }
 
-  
   shouldComponentUpdate() {
     console.log('[App.js] shouldComponentUpdate')
     return true
@@ -125,12 +146,12 @@ class App extends Component {
   }
 
 
-  openTerminal = () => {
+  toggleTerminal = () => {
     const showingTerminal = this.state.showTerminal;
     this.setState({showTerminal: !showingTerminal})
 
     if(showingTerminal) {   // if terminal was turned off
-
+      this.setState({terminalInitialized: false})
       this.resizeTextEditor(0)
     }
     else {
@@ -146,7 +167,6 @@ class App extends Component {
   render() {
     console.log('[App.js] render')
     let persons = null;
-
 
     if (this.state.showPersons) {
       persons = <Persons 
@@ -187,11 +207,11 @@ class App extends Component {
             </SubMenu>
             
             </Menu>
-            <button onClick={this.openTerminal}>Open Terminal</button>
+            <button onClick={this.toggleTerminal}>Open Terminal</button>
         </Sider>
         <Layout className="site-layout">
 
-        <Tabs/>          
+        <Tabs />          
         <Footer>
           {this.state.showTerminal ? <Terminal /> : null}
         </Footer>
