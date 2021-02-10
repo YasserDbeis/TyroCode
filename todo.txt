@@ -1,0 +1,12 @@
+// Bugs
+
+- initial terminal width is too large
+- when sidebar is triggered, the terminal width does not resize
+
+// Features
+
+- File Directory
+- Make the collapsed sidebar button trigger the sidebar to open
+- custom titlebar
+    - add terminal toggle to this or consider adding it as a button to be more intuitive
+

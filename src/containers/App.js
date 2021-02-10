@@ -16,6 +16,8 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
+import {Scrollbars} from 'react-custom-scrollbars';
+import {getFolderContents} from '../helpers/FileDirectory';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -76,6 +78,10 @@ class App extends Component {
 
   componentDidMount() {
     console.log('[App.js] componentDidMount')
+
+    // const dirList = getFolderContents(process.cwd())
+
+    // console.log(dirList)
     
   }
 
@@ -85,6 +91,9 @@ class App extends Component {
       this.setState({terminalInitialized: true})
 
       console.log('init terminal')
+
+
+
     }
     // console.log(document.querySelector('#terminal > div.terminal.xterm > div.xterm-screen > canvas.xterm-cursor-layer').clientHeight)
   }
@@ -179,36 +188,28 @@ class App extends Component {
     const { collapsed } = this.state;
     return (
       <Layout className="layout-font" style={{ minHeight: '100vh' }}>
-        <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>          
-          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="1" icon={<PieChartOutlined />}>
 
-            </Menu.Item>
-            <Menu.Item key="2" icon={<DesktopOutlined />}>
-              Option 2
-            </Menu.Item>
-            <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-              <Menu.Item key="3">Tom</Menu.Item>
-                <SubMenu key="sub4" icon={<UserOutlined />} title="User">
-                  <Menu.Item key="3">Tom</Menu.Item>
-                  <Menu.Item key="4">Bill</Menu.Item>
-                  <Menu.Item key="5">Alex</Menu.Item>
-                </SubMenu>
-              <Menu.Item key="4">Bill</Menu.Item>
-              <Menu.Item key="5">Alex</Menu.Item>
-            </SubMenu>
-            <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-              <Menu.Item key="6">Team 1</Menu.Item>
-              <Menu.Item key="8">Team 2</Menu.Item>
-            </SubMenu>
+      <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse} style={{'fontSize' : 11 }}>          
+        <Scrollbars>
+          <Menu inlineIndent={10} theme="dark" defaultSelectedKeys={['1']} mode="inline">
+            
             <SubMenu key="9" icon={<FileOutlined/>} title={process.cwd().split("\\").pop()}>
-              Files
-              
+              <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
+                <Menu.Item key="6">Team 1</Menu.Item>
+                <Menu.Item key="8">Team 2</Menu.Item>
+                <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
+                <Menu.Item key="6">Team 1</Menu.Item>
+                <Menu.Item key="8">Team 2</Menu.Item>
+              </SubMenu>
+              </SubMenu>
             </SubMenu>
             
             </Menu>
             <button onClick={this.toggleTerminal}>Open Terminal</button>
+            </Scrollbars>
         </Sider>
+
+
         <Layout className="site-layout">
 
         <Tabs />          

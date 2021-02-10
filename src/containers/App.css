@@ -57,3 +57,15 @@
   width: 100%;
 }
 
+li.ant-menu-submenu > div > span {
+  font-size: 12px !important;
+  font-weight: bold !important;
+}
+
+li.ant-menu-item{
+  font-size: 12px !important;
+}
+
+/* li.ant-menu-submenu.ant-menu-submenu-inline.ant-menu-submenu-open > div {
+  padding-left: 10px !important;
+} */
