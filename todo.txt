@@ -1,5 +1,6 @@
 // Bugs
 
+- when you first open app the text editor width sets and doesnt change when you full screen or even resize
 - initial terminal width is too large
 - when sidebar is triggered, the terminal width does not resize
 
@@ -9,4 +10,5 @@
 - Make the collapsed sidebar button trigger the sidebar to open
 - custom titlebar
     - add terminal toggle to this or consider adding it as a button to be more intuitive
-
+- make a tiktok advertising yscode
+    - ask other creators to advertise it

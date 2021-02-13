@@ -17,16 +17,14 @@ const getFolderContents = (filePath) => {
         var currentPath = path.join(filePath, f)
 
         const currentPathIsDir = isDirectory(currentPath)
-        console.log('YO:', currentPathIsDir)
+
         if(currentPathIsDir) {
-            console.log('folder')
             var tempDir = getFolderContents(currentPath)
 
-            if(tempDir.length > 0)
-                newDir.push(tempDir)
+            newDir.push({name: currentPath.split("\\").pop(), children: tempDir, path: currentPath})       // type 1: Folder
         }
         else {
-            newDir.push(currentPath)
+            newDir.push({ name: currentPath.split("\\").pop(), children: [], path: currentPath })     // type 0: File
         }
     }
 

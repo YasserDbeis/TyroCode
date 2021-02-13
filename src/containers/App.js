@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import path from 'path';
 import './App.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit'
@@ -6,6 +7,7 @@ import withClass from '../hoc/withClass';
 import Aux from '../hoc/Auxillary';
 import AuthContext from '../context/auth-context';
 import Terminal from '../components/Terminal/Terminal';
+import FolderContent from '../components/FolderDropdown/FolderDropdown';
 import { Layout, Menu, Breadcrumb, Divider } from 'antd';
 import Tabs from '../components/Tabs/Tabs';
 import {
@@ -26,29 +28,35 @@ const {initTerminal, resizeTerminal} = require('../components/Terminal/TerminalS
 
 class App extends Component {
 
+  
+
+
   constructor(props) {
     super(props)
     console.log('[App.js] constructor')
 
+    this.state = {
+      persons: [
+        { id: 'asfa1', name: 'Max', age: 28 },
+        { id: 'vasdf1', name: 'Manu', age: 29 },
+        { id: 'asdf11', name: 'Stephanie', age: 26 }
+      ],
+      otherState: 'some other value',
+      showPersons: false,
+      showCockpit: true,
+      changeCounter: 0,
+      authenticated: false,
+      showTerminal: false,
+      collapsed: false,
+      terminalInitialized: false,
+      terminalWidth: 0,
+      folderContent: null,
+      folderName: null
+    };
+
+
   }
-
-  state = {
-    persons: [
-      { id: 'asfa1', name: 'Max', age: 28 },
-      { id: 'vasdf1', name: 'Manu', age: 29 },
-      { id: 'asdf11', name: 'Stephanie', age: 26 }
-    ],
-    otherState: 'some other value',
-    showPersons: false,
-    showCockpit: true,
-    changeCounter: 0,
-    authenticated: false,
-    showTerminal: false,
-    collapsed: false,
-    terminalInitialized: false,
-    terminalWidth: 0
-  };
-
+  
   onCollapse = collapsed => {
     console.log(collapsed);
 
@@ -77,13 +85,19 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log('[App.js] componentDidMount')
+    console.log('[App.js] componentDidMount')    
 
-    // const dirList = getFolderContents(process.cwd())
+    const fetchFolderContent = async () => {
+      const folderContent = getFolderContents(path.join(process.cwd(), 'src'))
+      const folderName = (path.join(process.cwd(), 'src')).split("\\").pop()
+      this.setState({folderContent: folderContent, folderName: folderName})
+    };
 
-    // console.log(dirList)
-    
+    fetchFolderContent()
+
   }
+
+
 
   componentDidUpdate(){
     if(this.state.showTerminal && !this.state.terminalInitialized) {
@@ -91,11 +105,9 @@ class App extends Component {
       this.setState({terminalInitialized: true})
 
       console.log('init terminal')
-
-
-
     }
     // console.log(document.querySelector('#terminal > div.terminal.xterm > div.xterm-screen > canvas.xterm-cursor-layer').clientHeight)
+    console.log(this.state.folderContent)
   }
 
   shouldComponentUpdate() {
@@ -189,23 +201,26 @@ class App extends Component {
     return (
       <Layout className="layout-font" style={{ minHeight: '100vh' }}>
 
-      <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse} style={{'fontSize' : 11 }}>          
-        <Scrollbars>
-          <Menu inlineIndent={10} theme="dark" defaultSelectedKeys={['1']} mode="inline">
-            
-            <SubMenu key="9" icon={<FileOutlined/>} title={process.cwd().split("\\").pop()}>
-              <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-                <Menu.Item key="6">Team 1</Menu.Item>
-                <Menu.Item key="8">Team 2</Menu.Item>
+        <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse} style={{'fontSize' : 11 }}>          
+            <Scrollbars>
+                <FolderContent key={this.state.folderName} folderContent={this.state.folderContent} folderName={this.state.folderName}/>
+                
+                <Menu inlineIndent={10} theme="dark" defaultSelectedKeys={['1']} mode="inline">
+                
+                <SubMenu key="19" icon={<FileOutlined/>} title={process.cwd().split("\\").pop()}>
                 <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-                <Menu.Item key="6">Team 1</Menu.Item>
-                <Menu.Item key="8">Team 2</Menu.Item>
+                  <Menu.Item key="6">Team 1</Menu.Item>
+                  <Menu.Item key="8">Team 2</Menu.Item>
+                  <SubMenu key="sub3" icon={<TeamOutlined />} title="Team">
+                  <Menu.Item key="7">Team 1</Menu.Item>
+                  <Menu.Item key="9">Team 2</Menu.Item>
+                </SubMenu>
+                </SubMenu>
               </SubMenu>
-              </SubMenu>
-            </SubMenu>
-            
-            </Menu>
-            <button onClick={this.toggleTerminal}>Open Terminal</button>
+                </Menu>
+
+
+                <button onClick={this.toggleTerminal}>Open Terminal</button>
             </Scrollbars>
         </Sider>
 
@@ -238,7 +253,16 @@ export default App;
 
 
 
-
+// <SubMenu key="9" icon={<FileOutlined/>} title={process.cwd().split("\\").pop()}>
+// <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
+//   <Menu.Item key="6">Team 1</Menu.Item>
+//   <Menu.Item key="8">Team 2</Menu.Item>
+//   <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
+//   <Menu.Item key="6">Team 1</Menu.Item>
+//   <Menu.Item key="8">Team 2</Menu.Item>
+// </SubMenu>
+// </SubMenu>
+// </SubMenu>
 
 // return (
 //   <Aux classes={classes.App}>

@@ -25,6 +25,13 @@ function createWindow() {
   win.webContents.openDevTools()
 
   win.loadFile('index.html');
+
+  const {default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer')
+  installExtension(REACT_DEVELOPER_TOOLS).then((name) => {
+    console.log("Added Extension")
+  }).catch(err => {
+    console.log(err)
+  })
 }
 
 if (isDev) {

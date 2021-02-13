@@ -37,16 +37,16 @@ class TextEditor extends Component {
 
         let codeEditorTextArea = document.getElementsByClassName('npm__react-simple-code-editor__textarea')[0]
 
-        console.log(resultCode)
+        // console.log(resultCode)
         
         let lastChar = resultCode.charAt(this.state.cursorPosition)
-        console.log(lastChar)
+        // console.log(lastChar)
         if(oldCodeLength < newCodeLength && (this.parentheticalDelimiters[lastChar] != undefined)) {
             
             
 
             resultCode = this.insertCharIntoText(resultCode, this.state.cursorPosition + 1, this.parentheticalDelimiters[lastChar])
-            console.log("RESULT:", resultCode)
+            // console.log("RESULT:", resultCode)
             // let currentPos = this.state.cursorPosition
 
             // this.setState({cursorPosition: currentPos - 1})   
@@ -64,6 +64,25 @@ class TextEditor extends Component {
             code: newCode
         })
         // this.updateCursorPos()
+
+        const splitOnLineCode = newCode.split('\n')
+        console.log(splitOnLineCode)
+
+        const lineNums = document.getElementsByClassName('editorLineNumber')
+        console.log(lineNums)
+        var letterCount = 0;
+        var i = 0;
+        for(const line of splitOnLineCode) {
+            letterCount += line.length;
+            if(letterCount >= this.state.cursorPosition) {
+                console.log("HIGHLIGHT TIME: ", i)
+                lineNums[i].setAttribute('style', 'color: white')
+            }
+
+            console.log(letterCount)
+
+            i++;
+        }
 
     }
 
@@ -91,7 +110,7 @@ class TextEditor extends Component {
 
 
 
-    // function curtesy of https://github.com/bogutski
+    // function courtesy of https://github.com/bogutski
     hightlightWithLineNumbers = (input, language) =>
         highlight(input, language)
         .split("\n")
