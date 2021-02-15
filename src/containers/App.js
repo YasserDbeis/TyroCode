@@ -7,7 +7,8 @@ import withClass from '../hoc/withClass';
 import Aux from '../hoc/Auxillary';
 import AuthContext from '../context/auth-context';
 import Terminal from '../components/Terminal/Terminal';
-import FolderContent from '../components/FolderDropdown/FolderDropdown';
+import FileTree from '../components/FolderDropdown/FolderDropdown';
+
 import { Layout, Menu, Breadcrumb, Divider } from 'antd';
 import Tabs from '../components/Tabs/Tabs';
 import {
@@ -88,12 +89,16 @@ class App extends Component {
     console.log('[App.js] componentDidMount')    
 
     const fetchFolderContent = async () => {
-      const folderContent = getFolderContents(path.join(process.cwd(), 'src'))
+    
       const folderName = (path.join(process.cwd(), 'src')).split("\\").pop()
+      const folderContent = getFolderContents(path.join(process.cwd(), 'src'))
+      
+    
       this.setState({folderContent: folderContent, folderName: folderName})
     };
 
     fetchFolderContent()
+
 
   }
 
@@ -108,6 +113,7 @@ class App extends Component {
     }
     // console.log(document.querySelector('#terminal > div.terminal.xterm > div.xterm-screen > canvas.xterm-cursor-layer').clientHeight)
     console.log(this.state.folderContent)
+
   }
 
   shouldComponentUpdate() {
@@ -201,27 +207,13 @@ class App extends Component {
     return (
       <Layout className="layout-font" style={{ minHeight: '100vh' }}>
 
-        <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse} style={{'fontSize' : 11 }}>          
-            <Scrollbars>
-                <FolderContent key={this.state.folderName} folderContent={this.state.folderContent} folderName={this.state.folderName}/>
-                
-                <Menu inlineIndent={10} theme="dark" defaultSelectedKeys={['1']} mode="inline">
-                
-                <SubMenu key="19" icon={<FileOutlined/>} title={process.cwd().split("\\").pop()}>
-                <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-                  <Menu.Item key="6">Team 1</Menu.Item>
-                  <Menu.Item key="8">Team 2</Menu.Item>
-                  <SubMenu key="sub3" icon={<TeamOutlined />} title="Team">
-                  <Menu.Item key="7">Team 1</Menu.Item>
-                  <Menu.Item key="9">Team 2</Menu.Item>
-                </SubMenu>
-                </SubMenu>
-              </SubMenu>
-                </Menu>
-
-
-                <button onClick={this.toggleTerminal}>Open Terminal</button>
-            </Scrollbars>
+        <Sider width={250} collapsed={collapsed} onCollapse={this.onCollapse} style={{ textAlign: 'left', height: '100vh'  }}>     
+              <Scrollbars>
+                <div style={{color: 'white'}}>
+                    <FileTree  key={this.state.folderName} folderContent={this.state.folderContent} />
+                    </div>
+                    <button onClick={this.toggleTerminal}>Open Terminal</button>
+              </Scrollbars>
         </Sider>
 
 
@@ -252,7 +244,12 @@ class App extends Component {
 export default App;
 
 
+// <Menu inlineIndent={10} theme="dark" defaultSelectedKeys={['1']} mode="inline">
+// <SubMenu key="-1" icon={<FileOutlined/>} title={this.state.folderName}>
 
+
+// </SubMenu>
+// </Menu>
 // <SubMenu key="9" icon={<FileOutlined/>} title={process.cwd().split("\\").pop()}>
 // <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
 //   <Menu.Item key="6">Team 1</Menu.Item>

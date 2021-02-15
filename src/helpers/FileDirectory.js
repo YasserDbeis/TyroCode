@@ -21,10 +21,23 @@ const getFolderContents = (filePath) => {
         if(currentPathIsDir) {
             var tempDir = getFolderContents(currentPath)
 
-            newDir.push({name: currentPath.split("\\").pop(), children: tempDir, path: currentPath})       // type 1: Folder
+            newDir.push(
+                {
+                    type: 'folder',
+                    name: currentPath.split("\\").pop(), 
+                    childrens: tempDir, 
+                    path: currentPath,
+                }
+            )       // type 1: Folder
         }
         else {
-            newDir.push({ name: currentPath.split("\\").pop(), children: [], path: currentPath })     // type 0: File
+            newDir.push(
+                {
+                    type: 'file',
+                    name: currentPath.split("\\").pop(), 
+                    path: currentPath,
+                }
+            )     // type 0: File
         }
     }
 

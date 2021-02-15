@@ -1,0 +1,20 @@
+/* .checkboxDOM {
+    display: none
+} */
+
+span.editingName > input {
+    background-color: #282C34;
+}
+
+
+span.editingName > input:focus{
+    outline: none;
+}
+
+span.displayName:hover {
+    color: white !important;
+}
+
+.TreeNode:hover {
+    background-color: rgba(255, 255, 255, 0.068);
+}
