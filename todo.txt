@@ -1,8 +1,12 @@
 // Bugs
 
-- when you first open app the text editor width sets and doesnt change when you full screen or even resize
-- initial terminal width is too large
-- when sidebar is triggered, the terminal width does not resize
+1. when you first open app the text editor width sets and doesnt change when you full screen or even resize
+2. initial terminal width is too large
+3. when sidebar is triggered, the terminal width does not resize
+
+// Potential Fixes
+1. Always have terminal open, you already allow resizing
+
 
 // Features
 

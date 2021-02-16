@@ -49,18 +49,19 @@ const Collapsible = styled.div`
   overflow: hidden;
 `;
 
-const File = ({ name, node }) => {
+const File = ({ name, node, onNodeClick }) => {
   let ext = name.split(".")[1];
 
-  const fileClickHandler = () => {
-      console.log(node)
-  }
+  // const fileClickHandler = () => {
+  //     console.log(node)
+  //     console.log(onNodeClick(node))
+  // }
 
   return (
     <StyledFile>
       {/* render the extension or fallback to generic file icon  */}
       {FILE_ICONS[ext] || <AiOutlineFile />}
-      <span style={{cursor: 'pointer'}} onClick={fileClickHandler}>{name}</span>
+      <span style={{cursor: 'pointer'}} onClick={() => onNodeClick(node)}>{name}</span>
     </StyledFile>
   );
 };
@@ -84,19 +85,19 @@ const Folder = ({ name, node, children }) => {
   );
 };
 
-const TreeRecursive = ({ data }) => {
+const TreeRecursive = ({ data, onNodeClick }) => {
   // loop through the data
   return data.map(item => {
     // if its a file render <File />
     if (item.type === "file") {
-      return <File name={item.name} node={item}/>;
+      return <File key={item.path} name={item.name} node={item} onNodeClick={onNodeClick}/>;
     }
     // if its a folder render <Folder />
     if (item.type === "folder") {
       return (
-        <Folder name={item.name} node={item}>
+        <Folder key={item.path} name={item.name} node={item}>
           {/* Call the <TreeRecursive /> component with the current item.childrens */}
-          <TreeRecursive data={item.childrens}  />
+          <TreeRecursive key={item.path} data={item.childrens} onNodeClick={onNodeClick} />
         </Folder>
       );
     }
@@ -104,13 +105,11 @@ const TreeRecursive = ({ data }) => {
 };
 const Tree = ({ data, children, onNodeClick }) => {
   const isImparative = data && !children;
-
-    console.log(onNodeClick)
-
+  // console.log(onNodeClick)
 
   return (
     <StyledTree>
-      {isImparative ? <TreeRecursive onClick={onNodeClick} data={data} /> : children}
+      {isImparative ? <TreeRecursive key={data.path} data={data} onNodeClick={onNodeClick}/> : children}
     </StyledTree>
   );
 };
@@ -120,36 +119,24 @@ Tree.Folder = Folder;
 
 const structure = [
   {
-    type: "folder",
-    name: "src",
-    childrens: [
-      {
-        type: "folder",
-        name: "Components",
-        childrens: [
-          { type: "file", name: "Modal.js" },
-          { type: "file", name: "Modal.css" }
-        ]
-      },
-      { type: "file", name: "index.js" },
-      { type: "file", name: "index.html" }
-    ]
-  },
-  { type: "file", name: "package.json" }
+    type: "file",
+    name: "Error Loading Directory",
+    childrens: []
+  }
 ];
 
 export default function FileTree(props) {
 
-    console.log(props.folderContent)
+  console.log(props.folderContent)
 
-    const nodeClickHandler = (node) => {
-        console.log(node)
-    }
+  const nodeClickHandler = (node) => {
+      console.log(node)
+  }
     
 
   return (
     <div className="App">
-      <Tree onNodeClick={nodeClickHandler}  data={props.folderContent ? props.folderContent : structure} />
+      <Tree key={"123"} onNodeClick={nodeClickHandler} data={props.folderContent ? props.folderContent : structure} />
     </div>
   );
 }

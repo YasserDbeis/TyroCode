@@ -99,6 +99,8 @@ class App extends Component {
 
     fetchFolderContent()
 
+    this.setState({showTerminal: true})
+
 
   }
 
