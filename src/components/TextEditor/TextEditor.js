@@ -5,6 +5,7 @@ import {highlight, languages, plugins} from 'prismjs/components/prism-core';
 import "prismjs/components/prism-clike";
 import "prismjs/components/prism-javascript";
 import "prismjs/components/prism-java";
+const fs = require('fs')
 
 import "prismjs/themes/prism-coy.css"; //Example style, you can use another
 import './TextEditor.css'
@@ -14,10 +15,12 @@ import {Scrollbars} from 'react-custom-scrollbars';
 
 // good themes: coy - fun american colors, okaida - gothy but fun, tomorrow - not my style but its meh, 
 
+
+
 class TextEditor extends Component {
 
     state = {
-        code: "const x = 5;",
+        code: this.props.code,
         cursorPosition: 0,
     }
 

@@ -18,7 +18,7 @@ class TextEditorWrapper extends Component {
 
         return (
             <div className="text-editor-wrappers" id="text-editor-wrapper" style={textEditorWrapperStyles}>
-                <TextEditor />
+                <TextEditor code={this.props.code}/>
             </div>
         );
     }

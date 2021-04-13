@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Tabs } from 'antd';
+import { Tabs, Button } from 'antd';
 import TextEditorWrapper from '../TextEditor/TextEditorWrapper';
 import "./Tabs.css";
 
@@ -19,6 +19,14 @@ class Tabbing extends Component {
         panes: initialPanes,
     };
 
+    componentDidMount() {
+      this.props.onRef(this)
+    }
+
+    componentWillUnmount() {
+      this.props.onRef(null)
+    }
+
     onChange = activeKey => {
         this.setState({ activeKey });
     };
@@ -27,14 +35,15 @@ class Tabbing extends Component {
         this[action](targetKey);
     };
 
-    add = () => {
+    add = (name, code) => {
         const { panes } = this.state;
         const activeKey = `newTab${this.newTabIndex++}`;
         const newPanes = [...panes];
-        newPanes.push({ title: 'New Tab', content: 'Content of new Tab', key: activeKey });
+        newPanes.push({ title: name, content: code, key: activeKey });
+
         this.setState({
-        panes: newPanes,
-        activeKey,
+          panes: newPanes,
+          activeKey,
         });
     };
 
@@ -43,17 +52,17 @@ class Tabbing extends Component {
         let newActiveKey = activeKey;
         let lastIndex;
         panes.forEach((pane, i) => {
-        if (pane.key === targetKey) {
-            lastIndex = i - 1;
-        }
+          if (pane.key === targetKey) {
+              lastIndex = i - 1;
+          }
         });
         const newPanes = panes.filter(pane => pane.key !== targetKey);
         if (newPanes.length && newActiveKey === targetKey) {
-        if (lastIndex >= 0) {
-            newActiveKey = newPanes[lastIndex].key;
-        } else {
-            newActiveKey = newPanes[0].key;
-        }
+          if (lastIndex >= 0) {
+              newActiveKey = newPanes[lastIndex].key;
+          } else {
+              newActiveKey = newPanes[0].key;
+          }
         }
         this.setState({
         panes: newPanes,
@@ -86,7 +95,14 @@ class Tabbing extends Component {
   render() {
     const { panes, activeKey } = this.state;
     return (
+      <div>
+
+      <div style={{ marginBottom: 16 }}>
+      <Button onClick={() => this.add("New File", ".")}>ADD</Button>
+    </div>
+
       <Tabs
+        hideAdd
         type="editable-card"
         onChange={this.onChange}
         activeKey={activeKey}
@@ -94,10 +110,15 @@ class Tabbing extends Component {
       >
         {panes.map(pane => (
           <TabPane tab={pane.title} key={pane.key} closable={pane.closable} >
-            <TextEditorWrapper className="text-editor-wrappers" />
+            <TextEditorWrapper code={pane.content} className="text-editor-wrappers" />
           </TabPane>
         ))}
+
       </Tabs>
+      
+
+      </div>
+
     );
   }
 }

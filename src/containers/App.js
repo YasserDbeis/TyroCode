@@ -21,7 +21,7 @@ import {
 } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import {Scrollbars} from 'react-custom-scrollbars';
-import {getFolderContents} from '../helpers/FileDirectory';
+import {getFolderContents, getFileText} from '../helpers/FileDirectory';
 import {siderHandle} from '../components/Terminal/Handle/TerminalHandle';
 import {Resizable} from 're-resizable';
 
@@ -188,9 +188,14 @@ class App extends Component {
     
     
   }
+  
 
   fileClickHandler = (node) => {
-    console.log(node)
+    if(node.type == 'file') {
+      let code = getFileText(node.path)
+      console.log(code)
+      this.child.add(node.name, code);
+    }
   }
 
   render() {
@@ -224,7 +229,7 @@ class App extends Component {
         
         <Layout className="site-layout">
 
-        <Tabs />          
+        <Tabs onRef={ref => (this.child = ref)} />          
         <Footer>
           {this.state.showTerminal ? <Terminal /> : null}
         </Footer>

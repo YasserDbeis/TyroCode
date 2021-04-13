@@ -1,6 +1,24 @@
 const fs = require('fs');
 const path = require('path');
 
+const getFileText = (path) => {
+    try {
+        if (fs.existsSync(path)) {
+          console.log("File exists.")
+        } else {
+          console.log(path, "File does not exist.")
+          return ""
+        }
+      } catch(err) {
+        console.error("YERRRRR", err)
+        return ""
+      }
+
+      const fileData = fs.readFileSync(path, "utf8");
+      return fileData
+
+}
+
 const getFolderContents = (filePath) => {
 
     if(!pathExists(filePath)){
@@ -67,5 +85,6 @@ const readDirectory = (filePath) => {
 
 
 module.exports = {
-    getFolderContents
+    getFolderContents,
+    getFileText
 }
