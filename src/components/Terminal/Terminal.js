@@ -3,7 +3,7 @@ import {XTerm} from 'xterm-for-react';
 const ResizableBox = require('react-resizable').ResizableBox;
 const { ipcRenderer } = require("electron");
 const {resizeTerminal, writeEnter} = require('./TerminalSetup');
-import handle from './Handle/Handle';
+import {terminalHandle} from './Handle/TerminalHandle';
 
 
 import classes from './Terminal.module.css';
@@ -110,7 +110,7 @@ class Terminal extends Component {
 
             <ResizableBox 
                 id="terminal" 
-                handle={handle()} 
+                handle={terminalHandle()} 
                 onResize={this.onResize} 
                 width={Infinity} 
                 height={this.state.height} 

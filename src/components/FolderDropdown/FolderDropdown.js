@@ -1,25 +1,30 @@
 import React, {Component, useEffect, useState, use} from 'react';
-import FolderTree, { testData } from 'react-folder-tree';
-import {Scrollbars} from 'react-custom-scrollbars';
-import {
-    DesktopOutlined,
-    PieChartOutlined,
-    FileOutlined,
-    TeamOutlined,
-    UserOutlined,
-  } from '@ant-design/icons';
 
 import './FolderTree.css'
 
 import styled from "styled-components";
-import { AiOutlineFile, AiOutlineFolder } from "react-icons/ai";
-import { DiJavascript1, DiCss3Full, DiHtml5, DiReact } from "react-icons/di";
+import { AiOutlineFile, AiOutlineFolder, AiOutlineFolderOpen } from "react-icons/ai";
+import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiGo, DiJava, DiPython } from "react-icons/di";
+import { SiC, SiCsharp } from "react-icons/si";
+
+/*
+Thank you to Anurag Hazra for his wonderful inspiration. His work 
+in article https://anuraghazra.github.io/blog/building-a-react-folder-tree-component
+was immensly helpful and influential on this component. I took much of his code
+and for that he deserves credit. 
+*/
+
 
 const FILE_ICONS = {
   js: <DiJavascript1 />,
   css: <DiCss3Full />,
   html: <DiHtml5 />,
-  jsx: <DiReact />
+  jsx: <DiReact />,
+  go: <DiGo />,
+  java: <DiJava />,
+  py: <DiPython />,
+  c: <SiC />,
+  cs: <SiCsharp />
 };
 
 const StyledTree = styled.div`
@@ -50,23 +55,18 @@ const Collapsible = styled.div`
 `;
 
 const File = ({ name, node, onNodeClick }) => {
-  let ext = name.split(".")[1];
-
-  // const fileClickHandler = () => {
-  //     console.log(node)
-  //     console.log(onNodeClick(node))
-  // }
+  let ext = name.split(".")[name.split(".").length - 1];
+  let iconExists = FILE_ICONS[ext] != null;
 
   return (
     <StyledFile>
-      {/* render the extension or fallback to generic file icon  */}
-      {FILE_ICONS[ext] || <AiOutlineFile />}
+      {iconExists ? FILE_ICONS[ext] : <AiOutlineFile />}
       <span style={{cursor: 'pointer'}} onClick={() => onNodeClick(node)}>{name}</span>
     </StyledFile>
   );
 };
 
-const Folder = ({ name, node, children }) => {
+const Folder = ({ name, children }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = e => {
@@ -77,7 +77,7 @@ const Folder = ({ name, node, children }) => {
   return (
     <StyledFolder>
       <div style={{cursor: 'pointer'}} className="folder--label" onClick={handleToggle}>
-        <AiOutlineFolder />
+        {isOpen ? <AiOutlineFolderOpen /> : <AiOutlineFolder />}
         <span>{name}</span>
       </div>
       <Collapsible isOpen={isOpen}>{children}</Collapsible>
@@ -88,36 +88,30 @@ const Folder = ({ name, node, children }) => {
 const TreeRecursive = ({ data, onNodeClick }) => {
   // loop through the data
   return data.map(item => {
-    // if its a file render <File />
+
     if (item.type === "file") {
       return <File key={item.path} name={item.name} node={item} onNodeClick={onNodeClick}/>;
     }
-    // if its a folder render <Folder />
+
     if (item.type === "folder") {
       return (
         <Folder key={item.path} name={item.name} node={item}>
-          {/* Call the <TreeRecursive /> component with the current item.childrens */}
           <TreeRecursive key={item.path} data={item.childrens} onNodeClick={onNodeClick} />
         </Folder>
       );
     }
   });
 };
-const Tree = ({ data, children, onNodeClick }) => {
-  const isImparative = data && !children;
-  // console.log(onNodeClick)
 
+const Tree = ({ data, onNodeClick }) => {
   return (
     <StyledTree>
-      {isImparative ? <TreeRecursive key={data.path} data={data} onNodeClick={onNodeClick}/> : children}
+      <TreeRecursive key={data.path} data={data} onNodeClick={onNodeClick}/>
     </StyledTree>
   );
 };
 
-Tree.File = File;
-Tree.Folder = Folder;
-
-const structure = [
+const errorDirectory = [
   {
     type: "file",
     name: "Error Loading Directory",
@@ -125,194 +119,16 @@ const structure = [
   }
 ];
 
-export default function FileTree(props) {
+const FileTree = (props) => {
 
-  console.log(props.folderContent)
-
-  const nodeClickHandler = (node) => {
-      console.log(node)
-  }
-    
+  //console.log(props.folderContent)
 
   return (
-    <div className="App">
-      <Tree key={"123"} onNodeClick={nodeClickHandler} data={props.folderContent ? props.folderContent : structure} />
+    <div className="FileTree">
+      <Tree onNodeClick={props.fileClickHandler} data={props.folderContent ? props.folderContent : errorDirectory} />
     </div>
   );
 }
 
+export default FileTree;
 
-
-
-
-
-
-
-
-
-
-
-
-
-// const errorMessage = {
-//     name: "ERROR: Folder Could Not Be Loaded",
-//     children: []
-// }
-
-// var prevState = null
-
-
-
-
-// // const FileIcon = ({ onClick, className }) => {
-// //     const handleClick = (event) => {
-// //       console.log(event);
-// //       onClick();
-// //     };
-  
-// //     return <FileOutlined onClick={  handleClick(event) } />;
-// //   };
-
-
-// const BasicTree = props => {
-    
-//     console.log(props.folderContent)
-//     console.log(testData)
-//     console.log(typeof(testData))
-//     console.log(typeof(props.folderContent))
-
-    
-    
-
-//     const onTreeStateChange = state => {
-        
-//         if(prevState != state) {
-//             console.log(prevState)
-//             console.log(state)
-
-//         }
-
-//         prevState = state
-//     } 
-
-//     return (
-//         <div style={{'fontSize' : 12, color: 'white'}}>
-//             <FolderTree
-//                 data={ props.folderContent ?  props.folderContent : errorMessage }
-//                 onChange={ onTreeStateChange }
-//                 indentPixels={8}
-//                 initOpenStatus={closed}
-//                 />    
-//         </div>
-//     );
-// };
-
-// export default BasicTree;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { Layout, Menu, Breadcrumb, Divider } from 'antd';
-// const { Header, Content, Footer, Sider } = Layout;
-// const { SubMenu } = Menu;
-// import {
-//     DesktopOutlined,
-//     PieChartOutlined,
-//     FileOutlined,
-//     TeamOutlined,
-//     UserOutlined,
-// } from '@ant-design/icons';
-
-
-// const DirItem = ({ dirContent }) => {
-
-//     console.log((dirContent))
-
-//     if(dirContent.children.length == 0) {
-//         return <Menu.Item className="ant-menu-item" key={dirContent.path}>{dirContent.name}</Menu.Item>
-//     }
-
-//     return (
-//         <SubMenu className="ant-menu-submenu-title" key={dirContent.path} title={dirContent.name}>
-//             <Menu.Item className="ant-menu-item" key={dirContent.path}>{dirContent.name}</Menu.Item>
-//         </SubMenu>
-//     );
-
-// }
-
-// // const nestedDir = (content.children || []).map(content => {
-// //     return <SubMenu key={content.path} title={content.name}></SubMenu>    
-// //   })
-
-// //   return <Menu.Item key={content.path}>{content.name}</Menu.Item>
-
-
-
-// class DirList extends Component {
-
-//     constructor(props) {
-//         super(props)
-
-//         this.state = {
-//             folderContent: this.props.folderContent,
-//             folderName: this.props.folderName
-//         }
-
-//         // console.log(this.state.folderName)
-//     }
-
-//     componentDidUpdate(prevProps) {
-//         if(prevProps.folderContent != this.state.folderContent) {
-//             this.setState({value: this.props.folderContent})
-//         }
-
-//         // console.log(this.state.folderContent)
-//     }
-
-//     render() {
-
-//         if(this.state.folderContent && this.state.folderContent.length > 0) {
-//             return this.state.folderContent.map((dirContent, index) => {
-//                 console.log(dirContent)
-//                 console.log(dirContent.children)
-
-//                 if(dirContent.children.length > 0) {
-//                     return (
-//                         <SubMenu key={index} title={dirContent.name}>
-//                         </SubMenu>
-//                     );
-//                 }
-//                 else {
-//                     return <Menu.Item>{dirContent.name}</Menu.Item>
-//                 }
-//             })
-//         }
-
-//     }
-
-// }
-
-// export default DirList;
-
-
-// // <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-// // <Menu.Item key="6">Team 1</Menu.Item>
-// // <Menu.Item key="8">Team 2</Menu.Item>
-// // <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-// //     <Menu.Item key="6">Team 1</Menu.Item>
-// //     <Menu.Item key="8">Team 2</Menu.Item>
-// // </SubMenu>
-// // </SubMenu>

@@ -8,6 +8,7 @@ import Aux from '../hoc/Auxillary';
 import AuthContext from '../context/auth-context';
 import Terminal from '../components/Terminal/Terminal';
 import FileTree from '../components/FolderDropdown/FolderDropdown';
+const ResizableBox = require('react-resizable').ResizableBox;
 
 import { Layout, Menu, Breadcrumb, Divider } from 'antd';
 import Tabs from '../components/Tabs/Tabs';
@@ -21,6 +22,8 @@ import {
 import TextArea from 'antd/lib/input/TextArea';
 import {Scrollbars} from 'react-custom-scrollbars';
 import {getFolderContents} from '../helpers/FileDirectory';
+import {siderHandle} from '../components/Terminal/Handle/TerminalHandle';
+import {Resizable} from 're-resizable';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -52,7 +55,8 @@ class App extends Component {
       terminalInitialized: false,
       terminalWidth: 0,
       folderContent: null,
-      folderName: null
+      folderName: null,
+      sidebarWidth: 300
     };
 
 
@@ -80,11 +84,6 @@ class App extends Component {
 
   };
 
-  static getDerivedStateFromProps(props, state) {
-    console.log('[App.js] getDerivedStateFromProps', props);
-    return state;
-  }
-
   componentDidMount() {
     console.log('[App.js] componentDidMount')    
 
@@ -101,6 +100,8 @@ class App extends Component {
 
     this.setState({showTerminal: true})
 
+    const bodyWidth = document.querySelector("#root > section").clientWidth
+    //this.setState({sidebarWidth: bodyWidth * .20})
 
   }
 
@@ -114,13 +115,8 @@ class App extends Component {
       console.log('init terminal')
     }
     // console.log(document.querySelector('#terminal > div.terminal.xterm > div.xterm-screen > canvas.xterm-cursor-layer').clientHeight)
-    console.log(this.state.folderContent)
+    //console.log(this.state.folderContent)
 
-  }
-
-  shouldComponentUpdate() {
-    console.log('[App.js] shouldComponentUpdate')
-    return true
   }
 
   nameChangedHandler = (event, id) => {
@@ -193,32 +189,39 @@ class App extends Component {
     
   }
 
-  render() {
-    console.log('[App.js] render')
-    let persons = null;
+  fileClickHandler = (node) => {
+    console.log(node)
+  }
 
-    if (this.state.showPersons) {
-      persons = <Persons 
-          persons={this.state.persons}
-          clicked={this.deletePersonHandler}
-          changed={this.nameChangedHandler}
-          isAuthenticated={this.state.authenticated}/>
-    }
+  render() {
+    //console.log('[App.js] render')
 
     const { collapsed } = this.state;
     return (
       <Layout className="layout-font" style={{ minHeight: '100vh' }}>
+      
+      <Sider width={0}/>     
+      <Resizable className="ant-layout-sider-children"
+      size={{ width: this.state.sidebarWidth }}
+      maxWidth="500px"
+      onResizeStop={(e, direction, ref, d) => {
+        this.setState({
+          sidebarWidth: this.state.sidebarWidth + d.width,
+        });
+        console.log(this.state.sidebarWidth)
+      }}
+    >
+        <Scrollbars>
+          <div style={{color: 'white'}}>
+              <FileTree  key={this.state.folderName} folderContent={this.state.folderContent} fileClickHandler={this.fileClickHandler}/>
+              </div>
+              <button onClick={this.toggleTerminal}>Open Terminal</button>
+        </Scrollbars>
 
-        <Sider width={250} collapsed={collapsed} onCollapse={this.onCollapse} style={{ textAlign: 'left', height: '100vh'  }}>     
-              <Scrollbars>
-                <div style={{color: 'white'}}>
-                    <FileTree  key={this.state.folderName} folderContent={this.state.folderContent} />
-                    </div>
-                    <button onClick={this.toggleTerminal}>Open Terminal</button>
-              </Scrollbars>
-        </Sider>
+    </Resizable>
 
-
+      
+        
         <Layout className="site-layout">
 
         <Tabs />          
@@ -280,3 +283,4 @@ export default App;
 //     <Terminal/>
 //     </Aux>
 // );
+

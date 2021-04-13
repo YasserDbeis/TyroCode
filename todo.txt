@@ -10,6 +10,7 @@
 
 // Features
 
+- Draggable Tabs
 - File Directory
 - Make the collapsed sidebar button trigger the sidebar to open
 - custom titlebar
