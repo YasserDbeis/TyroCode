@@ -83,3 +83,40 @@ li.ant-menu-item{
   font-family: inherit;
   font-weight: 600;
 }
+
+.arrow-btn {
+	color: #ffffff;
+	text-decoration: none;
+	text-align: center;
+	font-size: 2em;
+	text-transform: uppercase;
+	display: block;
+	margin: 50px auto 50px auto;
+	font-weight: 700;
+}
+
+.arrow-btn:focus , .arrow-btn:active , .arrow-btn:hover {
+	color: #ffffff;
+	text-decoration: none;
+	text-align: center;
+	font-size: 2em;
+	text-transform: uppercase;
+	display: block;
+	margin: 50px auto 50px auto;
+}
+
+.arrow-btn > i {
+	font-size: .8em;
+    vertical-align: text-bottom;
+    line-height: 1.5;
+}
+
+.arrow-btn:hover > i ,  .arrow-btn:active > i ,  .arrow-btn:focus > i{
+	-webkit-transition: transform .5s;
+	-o-transition: transform .5s;
+	transition: transform .5s;
+	-webkit-transform: translate3d(10px, 0, 0);
+	-ms-transform: translate3d(10px, 0, 0);
+	-o-transform: translate3d(10px, 0, 0);
+	transform: translate3d(10px, 0, 0);
+}

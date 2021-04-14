@@ -10,7 +10,7 @@ import Terminal from '../components/Terminal/Terminal';
 import FileTree from '../components/FolderDropdown/FolderDropdown';
 const ResizableBox = require('react-resizable').ResizableBox;
 
-import { Layout, Menu, Breadcrumb, Divider } from 'antd';
+import { Layout, Menu, Breadcrumb, Divider, Button } from 'antd';
 import Tabs from '../components/Tabs/Tabs';
 import {
   DesktopOutlined,
@@ -24,6 +24,8 @@ import {Scrollbars} from 'react-custom-scrollbars';
 import {getFolderContents, getFileText} from '../helpers/FileDirectory';
 import {siderHandle} from '../components/Terminal/Handle/TerminalHandle';
 import {Resizable} from 're-resizable';
+import { AiOutlineFileAdd } from "react-icons/ai";
+import { FaRegPlayCircle } from "react-icons/fa";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -192,7 +194,7 @@ class App extends Component {
 
   fileClickHandler = (node) => {
     if(node.type == 'file') {
-      let code = getFileText(node.path)
+      let code = node.path == '.' ? "" : getFileText(node.path)
       console.log(code)
       this.child.add(node.name, code);
     }
@@ -202,6 +204,28 @@ class App extends Component {
     //console.log('[App.js] render')
 
     const { collapsed } = this.state;
+    let newFile = {
+      type: 'file',
+      name: 'New File',
+      path: '.'
+    };
+
+    let newFileIconStyle = {
+      cursor: 'pointer', 
+      float: 'left', 
+      color: 'whitesmoke',
+      margin: '5px',
+    }
+
+    let runButtonStyle = {
+      cursor: 'pointer', 
+      color: 'whitesmoke',
+      float: 'right',
+      backgroundColor: 'transparent',
+      verticalAlign: 'text-bottom', 
+      lineHeight: '1.5'
+    }
+
     return (
       <Layout className="layout-font" style={{ minHeight: '100vh' }}>
       
@@ -217,10 +241,19 @@ class App extends Component {
       }}
     >
         <Scrollbars>
+        <div style={{height: '2.5%'}}>
+          <a href="#" className="arrow-btn" style={runButtonStyle}>
+            Run Code <FaRegPlayCircle className="fa fa-arrow-right" style={{ verticalAlign: 'text-bottom', lineHeight: '10.5'}} size={25}/>
+          </a>
+
+          <AiOutlineFileAdd style={newFileIconStyle} size={25} onClick={() => this.fileClickHandler(newFile)}></AiOutlineFileAdd>
+        </div>
+
           <div style={{color: 'white'}}>
               <FileTree  key={this.state.folderName} folderContent={this.state.folderContent} fileClickHandler={this.fileClickHandler}/>
               </div>
-              <button onClick={this.toggleTerminal}>Open Terminal</button>
+              <Button onClick={this.toggleTerminal}>Open Terminal</Button>
+
         </Scrollbars>
 
     </Resizable>

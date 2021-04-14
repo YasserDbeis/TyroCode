@@ -95,11 +95,6 @@ class Tabbing extends Component {
   render() {
     const { panes, activeKey } = this.state;
     return (
-      <div>
-
-      <div style={{ marginBottom: 16 }}>
-      <Button onClick={() => this.add("New File", ".")}>ADD</Button>
-    </div>
 
       <Tabs
         hideAdd
@@ -115,9 +110,6 @@ class Tabbing extends Component {
         ))}
 
       </Tabs>
-      
-
-      </div>
 
     );
   }
