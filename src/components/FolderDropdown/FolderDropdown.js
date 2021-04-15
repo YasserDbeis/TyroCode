@@ -5,7 +5,7 @@ import './FolderTree.css'
 import styled from "styled-components";
 import { AiOutlineFile, AiOutlineFolder, AiOutlineFolderOpen } from "react-icons/ai";
 import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiGo, DiJava, DiPython } from "react-icons/di";
-import { SiC, SiCsharp } from "react-icons/si";
+import { SiC, SiCsharp, SiCplusplus } from "react-icons/si";
 
 /*
 Thank you to Anurag Hazra for his wonderful inspiration. His work 
@@ -24,7 +24,9 @@ const FILE_ICONS = {
   java: <DiJava />,
   py: <DiPython />,
   c: <SiC />,
-  cs: <SiCsharp />
+  cs: <SiCsharp />,
+  cpp: <SiCplusplus />,
+  cc: <SiCplusplus />
 };
 
 const StyledTree = styled.div`

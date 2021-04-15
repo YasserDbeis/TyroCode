@@ -6,9 +6,7 @@ import "./Tabs.css";
 const { TabPane } = Tabs;
 
 const initialPanes = [
-  { title: 'Tab 1', content: 'Content of Tab 1', key: '1' },
-  { title: 'Tab 2', content: 'Content of Tab 2', key: '2' },
-  { title: 'Tab 3', content: 'Content of Tab 3', key: '3' }
+  {title: 'Welcome!', content: 'Click an existing file or add a new one to get started!', key: '1'}
 ];
 
 class Tabbing extends Component {
@@ -38,7 +36,7 @@ class Tabbing extends Component {
     add = (name, code) => {
         const { panes } = this.state;
         const activeKey = `newTab${this.newTabIndex++}`;
-        const newPanes = [...panes];
+        const newPanes = panes.length == 1 && panes[0].key == 1 ? [] : [...panes];
         newPanes.push({ title: name, content: code, key: activeKey });
 
         this.setState({
@@ -64,9 +62,10 @@ class Tabbing extends Component {
               newActiveKey = newPanes[0].key;
           }
         }
+        
         this.setState({
-        panes: newPanes,
-        activeKey: newActiveKey,
+          panes: newPanes,
+          activeKey: newActiveKey,
         });
     };
 
@@ -90,6 +89,14 @@ class Tabbing extends Component {
             return
 
         textEditor.setAttribute("style", "height: " + entirePageHeightMinusTabsAndTermHeight.toString() + "px; position: relative;")
+    }
+
+    runCurrentCode = () => {
+      let currentFile = this.state.panes.filter(file => {
+        return file.key == this.state.activeKey
+      })
+
+      console.log(currentFile)
     }
 
   render() {

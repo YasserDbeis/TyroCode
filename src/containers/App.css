@@ -8,7 +8,7 @@
 
 .layout-font {
   font-family: 'JetBrains Mono', monospace;
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .file-explorer-header {
@@ -83,40 +83,33 @@ li.ant-menu-item{
   font-family: inherit;
   font-weight: 600;
 }
-
-.arrow-btn {
-	color: #ffffff;
-	text-decoration: none;
-	text-align: center;
-	font-size: 2em;
-	text-transform: uppercase;
-	display: block;
-	margin: 50px auto 50px auto;
-	font-weight: 700;
+.ant-dropdown-menu-item {
+  
+  color: whitesmoke
+}
+.ant-dropdown-menu-item:hover {
+  background-color: #21252B;
 }
 
-.arrow-btn:focus , .arrow-btn:active , .arrow-btn:hover {
-	color: #ffffff;
-	text-decoration: none;
-	text-align: center;
-	font-size: 2em;
-	text-transform: uppercase;
-	display: block;
-	margin: 50px auto 50px auto;
+.ant-btn > span {
+  vertical-align: top !important
 }
 
-.arrow-btn > i {
-	font-size: .8em;
-    vertical-align: text-bottom;
-    line-height: 1.5;
+.ant-btn > svg {
+  vertical-align: top !important;
+  margin-top: -2px;
+  margin-left: 10px;
 }
 
-.arrow-btn:hover > i ,  .arrow-btn:active > i ,  .arrow-btn:focus > i{
-	-webkit-transition: transform .5s;
-	-o-transition: transform .5s;
-	transition: transform .5s;
-	-webkit-transform: translate3d(10px, 0, 0);
-	-ms-transform: translate3d(10px, 0, 0);
-	-o-transform: translate3d(10px, 0, 0);
-	transform: translate3d(10px, 0, 0);
+/* svg:not(:root) {
+  margin-left: 10px;
+  margin-bottom: -5px;
+} */
+.ant-layout.ant-layout-has-sider > .ant-layout {
+  background-color: #282C34;  
+}
+
+.language-dropdown {
+  background-color: #282C34;
+  color: whitesmoke;
 }

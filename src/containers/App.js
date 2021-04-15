@@ -10,7 +10,7 @@ import Terminal from '../components/Terminal/Terminal';
 import FileTree from '../components/FolderDropdown/FolderDropdown';
 const ResizableBox = require('react-resizable').ResizableBox;
 
-import { Layout, Menu, Breadcrumb, Divider, Button } from 'antd';
+import { Layout, Menu, Breadcrumb, Divider, Button, Dropdown} from 'antd';
 import Tabs from '../components/Tabs/Tabs';
 import {
   DesktopOutlined,
@@ -19,6 +19,8 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiGo, DiJava, DiPython } from "react-icons/di";
+import { SiC, SiCsharp, SiCplusplus } from "react-icons/si";
 import TextArea from 'antd/lib/input/TextArea';
 import {Scrollbars} from 'react-custom-scrollbars';
 import {getFolderContents, getFileText} from '../helpers/FileDirectory';
@@ -58,7 +60,8 @@ class App extends Component {
       terminalWidth: 0,
       folderContent: null,
       folderName: null,
-      sidebarWidth: 300
+      sidebarWidth: 300,
+      languageSelection: 'Python'
     };
 
 
@@ -200,6 +203,15 @@ class App extends Component {
     }
   }
 
+  runButtonHandler = () => {
+    console.log("YOO")
+    this.child.runCurrentCode()
+  }
+
+  languageOptionClickHandler = (name) => {
+    this.setState({languageSelection: name})
+  }
+
   render() {
     //console.log('[App.js] render')
 
@@ -220,39 +232,104 @@ class App extends Component {
     let runButtonStyle = {
       cursor: 'pointer', 
       color: 'whitesmoke',
-      float: 'right',
       backgroundColor: 'transparent',
-      verticalAlign: 'text-bottom', 
-      lineHeight: '1.5'
+      float: 'right',
+      marginTop: '8.5px',
+      marginRight: '5px'
     }
+
+    let languageDropdownStyle = {
+      cursor: 'pointer', 
+      color: 'whitesmoke',
+      backgroundColor: 'transparent',
+      float: 'right',
+      margin: '5px'
+    }
+
+    let languageOptionStyle = {
+      textAlign: 'center', 
+      verticalAlign: 'baseline', 
+      fontSize: '15px',
+      textAlign: 'left',
+      margin: '5px'
+    }
+
+    let languageOptions = [
+      {
+        name: 'Python',
+        icon: <DiPython size={20} style={{float: 'right'}} />
+      },
+      {
+        name: 'JavaScript',
+        icon: <DiJavascript1 size={20} style={{float: 'right', marginLeft: '10px'}} />
+      },
+      {
+        name: 'C++',
+        icon: <SiCplusplus size={20} style={{float: 'right'}} />
+      },
+      {
+        name: 'C',
+        icon: <SiC size={20} style={{float: 'right'}} />
+      },
+      {
+        name: 'Go',
+        icon: <DiGo size={20} style={{float: 'right'}} />
+      },
+      {
+        name: 'Java',
+        icon: <DiJava size={20} style={{float: 'right'}} />
+      },
+      {
+        name: 'C#',
+        icon: <SiCsharp size={20} style={{float: 'right'}} />
+      },
+    ]
+
+    let languageMenu = (
+
+      <Menu className="layout-font language-dropdown" >
+        {languageOptions.map((lang, index) => {
+          return  <Menu.Item key={index} style={languageOptionStyle} onClick={() => this.languageOptionClickHandler(lang.name)}>
+                    {lang.name} {lang.icon} 
+                  </Menu.Item>
+        })}
+      </Menu>
+      
+    );
 
     return (
       <Layout className="layout-font" style={{ minHeight: '100vh' }}>
       
-      <Sider width={0}/>     
-      <Resizable className="ant-layout-sider-children"
-      size={{ width: this.state.sidebarWidth }}
-      maxWidth="500px"
-      onResizeStop={(e, direction, ref, d) => {
-        this.setState({
-          sidebarWidth: this.state.sidebarWidth + d.width,
-        });
-        console.log(this.state.sidebarWidth)
-      }}
-    >
+        <Sider width={0}/>     
+        <Resizable className="ant-layout-sider-children"
+          size={{ width: this.state.sidebarWidth }}
+          maxWidth="500px"
+          onResizeStop={(e, direction, ref, d) => {
+            this.setState({
+              sidebarWidth: this.state.sidebarWidth + d.width,
+            });
+            console.log(this.state.sidebarWidth)
+          }}
+        >
         <Scrollbars>
-        <div style={{height: '2.5%'}}>
-          <a href="#" className="arrow-btn" style={runButtonStyle}>
-            Run Code <FaRegPlayCircle className="fa fa-arrow-right" style={{ verticalAlign: 'text-bottom', lineHeight: '10.5'}} size={25}/>
-          </a>
 
+        <div style={{height: '2.5%'}}>
+        <FaRegPlayCircle size={25} style={runButtonStyle} onClick={() => this.runButtonHandler()}/> 
+        <Dropdown overlay={languageMenu} placement="bottomCenter"> 
+        <Button style={languageDropdownStyle}>
+            
+            Run {this.state.languageSelection}
+            
+        </Button>
+            
+        </Dropdown >
           <AiOutlineFileAdd style={newFileIconStyle} size={25} onClick={() => this.fileClickHandler(newFile)}></AiOutlineFileAdd>
         </div>
 
           <div style={{color: 'white'}}>
               <FileTree  key={this.state.folderName} folderContent={this.state.folderContent} fileClickHandler={this.fileClickHandler}/>
-              </div>
-              <Button onClick={this.toggleTerminal}>Open Terminal</Button>
+          </div>
+          <Button onClick={this.toggleTerminal}>Open Terminal</Button>
 
         </Scrollbars>
 
@@ -286,6 +363,9 @@ class App extends Component {
 
 export default App;
 
+// <a href="#" className="arrow-btn" style={runButtonStyle}>
+//   Run Code <FaRegPlayCircle className="fa fa-arrow-right" size={25}/>
+// </a>
 
 // <Menu inlineIndent={10} theme="dark" defaultSelectedKeys={['1']} mode="inline">
 // <SubMenu key="-1" icon={<FileOutlined/>} title={this.state.folderName}>
