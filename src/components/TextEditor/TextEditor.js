@@ -30,6 +30,11 @@ class TextEditor extends Component {
         '[' : ']'
     }
 
+    codeChange = (code) => {
+        this.props.codeChange(code)
+        this.onCode(code)
+    }
+
     insertCharIntoText = (str, pos, character) => {
 
         return str.slice(0, pos) + character + str.slice(pos, str.length)
@@ -128,7 +133,7 @@ class TextEditor extends Component {
                 <Editor
                 id="text-editor"
                 value={this.state.code}
-                onValueChange={(code) => this.onCode(code)}
+                onValueChange={(code) => this.codeChange(code)}
                 highlight={(code) => this.hightlightWithLineNumbers(code, languages.java)}
                 autoSave="true"
                 padding={10}

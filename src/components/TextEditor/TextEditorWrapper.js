@@ -5,7 +5,24 @@ import TextEditor from './TextEditor';
 //        entirePageHeightMinusTabs = document.querySelector("#root > section > section").clientHeight - 40
 
 class TextEditorWrapper extends Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            code: 'hey'
+        }
+        this.codeChange = this.codeChange.bind(this)
+    }
     
+    codeChange = (newCode) => {
+        this.setState({
+            code: newCode
+        })
+
+        console.log(newCode)
+
+        this.props.codeChange(newCode)
+    }
 
     render() {
         
@@ -18,7 +35,7 @@ class TextEditorWrapper extends Component {
 
         return (
             <div className="text-editor-wrappers" id="text-editor-wrapper" style={textEditorWrapperStyles}>
-                <TextEditor code={this.props.code}/>
+                <TextEditor codeChange={this.codeChange} code={this.props.code}/>
             </div>
         );
     }

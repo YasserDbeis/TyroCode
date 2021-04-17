@@ -12,10 +12,15 @@ const initialPanes = [
 class Tabbing extends Component {
     newTabIndex = 0;
 
-    state = {
-        activeKey: initialPanes[0].key,
-        panes: initialPanes,
-    };
+    constructor(props) {
+      super(props)
+      this.state = {
+          activeKey: initialPanes[0].key,
+          panes: initialPanes,
+      };
+
+      this.codeChange = this.codeChange.bind(this)
+    }
 
     componentDidMount() {
       this.props.onRef(this)
@@ -91,12 +96,32 @@ class Tabbing extends Component {
         textEditor.setAttribute("style", "height: " + entirePageHeightMinusTabsAndTermHeight.toString() + "px; position: relative;")
     }
 
-    runCurrentCode = () => {
-      let currentFile = this.state.panes.filter(file => {
-        return file.key == this.state.activeKey
-      })
+    getCurrentPaneIndex = () => {
+      let i = 0
 
-      console.log(currentFile)
+      for(const pane of this.state.panes) {
+        if(pane.key == this.state.activeKey) {
+          break;
+        }
+        i++
+      }
+
+      return i
+    }
+
+    runCurrentCode = () => {
+      let paneIndex = this.getCurrentPaneIndex()
+
+      console.log(this.state.panes[paneIndex])
+    }
+
+    codeChange = (code) => {
+      console.log(code)
+
+      let currPaneIndex = this.getCurrentPaneIndex()
+      let panesCopy = this.state.panes
+      panesCopy[currPaneIndex].content = code
+      this.setState({panes: panesCopy})
     }
 
   render() {
@@ -112,7 +137,7 @@ class Tabbing extends Component {
       >
         {panes.map(pane => (
           <TabPane tab={pane.title} key={pane.key} closable={pane.closable} >
-            <TextEditorWrapper code={pane.content} className="text-editor-wrappers" />
+            <TextEditorWrapper codeChange={this.codeChange} code={pane.content} className="text-editor-wrappers" />
           </TabPane>
         ))}
 
