@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Tabs, Button } from 'antd';
+import { writeCodeResult } from '../Terminal/TerminalSetup';
 import TextEditorWrapper from '../TextEditor/TextEditorWrapper';
 import "./Tabs.css";
 
@@ -112,7 +113,31 @@ class Tabbing extends Component {
     runCurrentCode = () => {
       let paneIndex = this.getCurrentPaneIndex()
 
-      console.log(this.state.panes[paneIndex])
+      let code = this.state.panes[paneIndex].content
+
+      var request = require('request');
+
+      var program = {
+          script : code,
+          stdin: "Yasser",
+          language: "python3",
+          versionIndex: "0",
+          clientId: "e7f1ebfe96c749a4f6d493bf24d809d2",
+          clientSecret:"ffc186bff12de9db1b39e74621bae2b145889b3c68222bb269d28e0c06cb4582"
+      };
+      request({
+          url: 'https://api.jdoodle.com/v1/execute',
+          method: "POST",
+          json: program
+      },
+      function (error, response, body) {
+          console.log('error:', error);
+          console.log('statusCode:', response && response.statusCode);
+          console.log('body:', body);
+          writeCodeResult(body.output);
+      });
+
+
     }
 
     codeChange = (code) => {

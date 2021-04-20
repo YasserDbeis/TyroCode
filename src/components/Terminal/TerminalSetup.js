@@ -63,9 +63,14 @@ const writeEnter = () => {
                      99, 111, 100, 101, 62])
 }
 
+const writeCodeResult = (result) => {
+    termProxy.write(result)
+}
+
 export {
     initTerminal,
     getFitAddon,
     resizeTerminal,
-    writeEnter
+    writeEnter,
+    writeCodeResult
 };
