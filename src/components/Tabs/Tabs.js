@@ -110,7 +110,7 @@ class Tabbing extends Component {
       return i
     }
 
-    runCurrentCode = () => {
+    runCurrentCode = (language) => {
       let paneIndex = this.getCurrentPaneIndex()
 
       let code = this.state.panes[paneIndex].content
@@ -120,7 +120,7 @@ class Tabbing extends Component {
       var program = {
           script : code,
           stdin: "Yasser",
-          language: "python3",
+          language: language,
           versionIndex: "0",
           clientId: "e7f1ebfe96c749a4f6d493bf24d809d2",
           clientSecret:"ffc186bff12de9db1b39e74621bae2b145889b3c68222bb269d28e0c06cb4582"
@@ -134,7 +134,9 @@ class Tabbing extends Component {
           console.log('error:', error);
           console.log('statusCode:', response && response.statusCode);
           console.log('body:', body);
+
           writeCodeResult(body.output);
+
       });
 
 

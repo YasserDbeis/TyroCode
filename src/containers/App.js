@@ -61,7 +61,11 @@ class App extends Component {
       folderContent: null,
       folderName: null,
       sidebarWidth: 300,
-      languageSelection: 'Python'
+      languageSelection: {
+        name: 'Python 3',
+        icon: <DiPython size={20} style={{float: 'right'}} />,
+        compilerName: 'python3'
+      }
     };
 
 
@@ -204,12 +208,11 @@ class App extends Component {
   }
 
   runButtonHandler = () => {
-    console.log("YOO")
-    this.child.runCurrentCode()
+    this.child.runCurrentCode(this.state.languageSelection.compilerName)
   }
 
-  languageOptionClickHandler = (name) => {
-    this.setState({languageSelection: name})
+  languageOptionClickHandler = (lang) => {
+    this.setState({languageSelection: lang})
   }
 
   render() {
@@ -256,32 +259,39 @@ class App extends Component {
 
     let languageOptions = [
       {
-        name: 'Python',
-        icon: <DiPython size={20} style={{float: 'right'}} />
+        name: 'Python 3',
+        icon: <DiPython size={20} style={{float: 'right'}} />,
+        compilerName: 'python3'
       },
       {
         name: 'JavaScript',
-        icon: <DiJavascript1 size={20} style={{float: 'right', marginLeft: '10px'}} />
+        icon: <DiJavascript1 size={20} style={{float: 'right', marginLeft: '10px'}} />,
+        compilerName: 'nodejs'
       },
       {
         name: 'C++',
-        icon: <SiCplusplus size={20} style={{float: 'right'}} />
+        icon: <SiCplusplus size={20} style={{float: 'right'}} />,
+        compilerName: 'cpp'
       },
       {
         name: 'C',
-        icon: <SiC size={20} style={{float: 'right'}} />
+        icon: <SiC size={20} style={{float: 'right'}} />,
+        compilerName: 'c'
       },
       {
         name: 'Go',
-        icon: <DiGo size={20} style={{float: 'right'}} />
+        icon: <DiGo size={20} style={{float: 'right'}} />,
+        compilerName: 'go'
       },
       {
         name: 'Java',
-        icon: <DiJava size={20} style={{float: 'right'}} />
+        icon: <DiJava size={20} style={{float: 'right'}} />,
+        compilerName: 'java'
       },
       {
         name: 'C#',
-        icon: <SiCsharp size={20} style={{float: 'right'}} />
+        icon: <SiCsharp size={20} style={{float: 'right'}} />,
+        compilerName: 'csharp'
       },
     ]
 
@@ -289,7 +299,7 @@ class App extends Component {
 
       <Menu className="layout-font language-dropdown" >
         {languageOptions.map((lang, index) => {
-          return  <Menu.Item key={index} style={languageOptionStyle} onClick={() => this.languageOptionClickHandler(lang.name)}>
+          return  <Menu.Item key={index} style={languageOptionStyle} onClick={() => this.languageOptionClickHandler(lang)}>
                     {lang.name} {lang.icon} 
                   </Menu.Item>
         })}
@@ -308,41 +318,43 @@ class App extends Component {
             this.setState({
               sidebarWidth: this.state.sidebarWidth + d.width,
             });
+            
+            //this.child.adjustTerminalWidth(this.state.sidebarWidth + d.width)
+
             console.log(this.state.sidebarWidth)
           }}
         >
-        <Scrollbars>
+          <Scrollbars>
 
-        <div style={{height: '2.5%'}}>
-        <FaRegPlayCircle size={25} style={runButtonStyle} onClick={() => this.runButtonHandler()}/> 
-        <Dropdown overlay={languageMenu} placement="bottomCenter"> 
-        <Button style={languageDropdownStyle}>
-            
-            Run {this.state.languageSelection}
-            
-        </Button>
-            
-        </Dropdown >
-          <AiOutlineFileAdd style={newFileIconStyle} size={25} onClick={() => this.fileClickHandler(newFile)}></AiOutlineFileAdd>
-        </div>
-
-          <div style={{color: 'white'}}>
-              <FileTree  key={this.state.folderName} folderContent={this.state.folderContent} fileClickHandler={this.fileClickHandler}/>
+          <div style={{height: '2.5%'}}>
+            <FaRegPlayCircle size={25} style={runButtonStyle} onClick={() => this.runButtonHandler()}/> 
+            <Dropdown overlay={languageMenu} placement="bottomCenter"> 
+              <Button style={languageDropdownStyle}>
+                  
+                  Run {this.state.languageSelection.name}
+                  
+              </Button>
+                
+            </Dropdown >
+              <AiOutlineFileAdd style={newFileIconStyle} size={25} onClick={() => this.fileClickHandler(newFile)}></AiOutlineFileAdd>
           </div>
-          <Button onClick={this.toggleTerminal}>Open Terminal</Button>
 
-        </Scrollbars>
+            <div style={{color: 'white'}}>
+                <FileTree  key={this.state.folderName} folderContent={this.state.folderContent} fileClickHandler={this.fileClickHandler}/>
+            </div>
+            <Button onClick={this.toggleTerminal}>Open Terminal</Button>
 
-    </Resizable>
+          </Scrollbars>
+
+        </Resizable>
 
       
         
         <Layout className="site-layout">
 
-        <Tabs onRef={ref => (this.child = ref)} />          
-        <Footer>
-          {this.state.showTerminal ? <Terminal /> : null}
-        </Footer>
+        <Tabs onRef={ref => (this.child = ref)} />
+        {this.state.showTerminal ? <Terminal sidebarWidth={this.state.sidebarWidth} /> : null}
+
   
         </Layout>
       </Layout>

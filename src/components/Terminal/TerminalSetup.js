@@ -43,11 +43,12 @@ const createTerminal = () => {
     termProxy = new Terminal({
         rows: 30,
         cols: 80,
+        cursorBlink: true,
         theme: {
             background: "#282C34",
             foreground: "#FFFFFF",
             selection: "#FFFFFF"
-    
+            
         }
     });
 
@@ -64,7 +65,18 @@ const writeEnter = () => {
 }
 
 const writeCodeResult = (result) => {
+    termProxy.write("\r\n");
+
     termProxy.write(result)
+
+    termProxy.write("\r");
+    termProxy.focus()
+    termProxy.write([67, 58, 92, 85, 115, 101, 114, 115, 92, 85, 115, 
+        101, 114, 92, 68, 101, 115, 107, 116, 111, 112, 
+        92, 80, 101, 114, 115, 111, 110, 97, 108, 32, 80, 
+        114, 111, 106, 101, 99, 116, 115, 92, 121, 115, 
+        99, 111, 100, 101, 62])
+    //writeEnter()
 }
 
 export {
