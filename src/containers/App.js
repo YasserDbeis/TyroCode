@@ -122,10 +122,11 @@ class App extends Component {
       this.setState({terminalInitialized: true})
 
       console.log('init terminal')
+    
+      resizeTerminal()
     }
-    // console.log(document.querySelector('#terminal > div.terminal.xterm > div.xterm-screen > canvas.xterm-cursor-layer').clientHeight)
-    //console.log(this.state.folderContent)
-
+    
+    
   }
 
   nameChangedHandler = (event, id) => {
@@ -193,9 +194,6 @@ class App extends Component {
 
       this.resizeTextEditor(termHeight)
     }
-
-    
-    
   }
   
 
@@ -306,7 +304,7 @@ class App extends Component {
       </Menu>
       
     );
-
+    
     return (
       <Layout className="layout-font" style={{ minHeight: '100vh' }}>
       
@@ -319,6 +317,7 @@ class App extends Component {
               sidebarWidth: this.state.sidebarWidth + d.width,
             });
             
+            resizeTerminal()
             //this.child.adjustTerminalWidth(this.state.sidebarWidth + d.width)
 
             console.log(this.state.sidebarWidth)
@@ -354,7 +353,6 @@ class App extends Component {
 
         <Tabs onRef={ref => (this.child = ref)} />
         {this.state.showTerminal ? <Terminal sidebarWidth={this.state.sidebarWidth} /> : null}
-
   
         </Layout>
       </Layout>

@@ -6,7 +6,7 @@
     position: absolute;
     top: 0px;
     margin-top: 0px;
-    z-index: 10000;
+    z-index: 100000000000000;
 }
 .terminalhandle:hover{
  cursor: n-resize;

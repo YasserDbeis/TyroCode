@@ -8,6 +8,7 @@ import {Resizable} from 're-resizable';
 import { Layout} from 'antd';
 const { Footer } = Layout;
 import {Scrollbars} from 'react-custom-scrollbars';
+import ResizePanel from "react-resize-panel";
 
 
 import './Terminal.css';
@@ -25,7 +26,9 @@ class Terminal extends Component {
             height: initHeight / 3,
             width: initWidth,
             show: true,
-            sidebarWidth: 0
+            sidebarWidth: 0,
+            browserWidth: 0,
+            browserHeight: 0
         }        
     }
 
@@ -38,60 +41,12 @@ class Terminal extends Component {
             this.setState({width: newWidth})
             this.setState({sidebarWidth: newProps.sidebarWidth})
             console.log(newProps)
-            resizeTerminal()
-            this.updateTerminalDimensions()
-
+        
         }
 
-    }
-    newWidth
-    // componentDidMount() {
-    //     window.addEventListener('resize', this.updateTerminalDimensions)
-
-    //     // require('electron').remote.getCurrentWindow().on('enter-full-screen', this.updateTerminalDimensions)
-
-    // }
-
-
-    // componentWillUnmount() {
-    //     window.removeEventListener('resize', this.updateTerminalDimensions)
-
-    //     // ipcRenderer.removeAllListeners('exit')
-    // }
-
-    updateTerminalDimensions = () => {
-        // const updatedHeight = document.querySelector("#root > section > section").clientHeight
-        // console.log(updatedHeight)
-        // const updatedWidth = document.querySelector("#root > section").clientWidth - document.querySelector("#root > section > div").clientWidth
-        // console.log(updatedWidth)
-        // this.setState({
-        //     width: updatedWidth
-        // })    
-
-        //this.resizeTextEditor()
-        //document.querySelector("#terminal > div.terminal.xterm > div.xterm-viewport").style.width = document.querySelector("#terminal").clientHeight
         resizeTerminal()
+
     }
-
-
-    // term.open(document.getElementById('terminal'));
-
-    // ipcRenderer.on("terminal.incomingData", (event, data) => {
-    //     // console.log(Buffer.from(data, 'utf-8'))
-    //     term.current.terminal.write(data)
-    // });
-
-    // // My Attempt to do resizing of text editor by just the active tab index
-    // const tabs = document.getElementsByClassName('ant-tabs-tab')
-    // var activeTab = 0
-    // for(const tab of tabs) {
-    //     if(tab.classList.contains('abt-tabs-tab-active')) {
-    //         break
-    //     }
-    //     activeTab++
-    // }
-    
-    // this.resizeTextEditor(activeTab)
 
     resizeTextEditor = () => {
         const termHeight = document.getElementById('terminal').clientHeight
@@ -124,15 +79,46 @@ class Terminal extends Component {
             })
         }
     }
+
+
+    updateDimensions = () => {
+        this.setState({ browserWidth: window.innerWidth, browserHeight: window.innerHeight });
+        
+    };
+
+    componentDidMount() {
+    window.addEventListener('resize', this.updateDimensions);
+    
+    }
+    componentWillUnmount() {
+    window.removeEventListener('resize', this.updateDimensions);
+    }
+
+    componentDidUpdate() {
+        resizeTerminal()
+    }
     
     render() {
+
+        const terminalStyle = {
+            backgroundColor: '#282C34',
+            padding: '5px',
+            borderTop: '5px solid #21252B',
+        }
+
+        const sidebarWidth = document.querySelector("#root > section > div").clientWidth
+
         return (
-            <Footer>
-            
-                <Resizable id="terminal" style={{backgroundColor: '#282C34', borderStyle: 'solid'}}
-                size={{ width: this.state.width, height: this.state.height }}
-                maxHeight={550}
-                minHeight={50}
+
+
+
+            <Footer 
+                style={terminalStyle}
+            >
+
+            <Resizable id="terminal" style={{backgroundColor: '#282C34'}}
+                size={{width: this.state.browserWidth - sidebarWidth, height: this.state.height }}
+
                 onResizeStop={(e, direction, ref, d) => {
 
                     if(direction !== 'top')
@@ -141,16 +127,12 @@ class Terminal extends Component {
                     this.setState({
                         height: this.state.height + d.height,
                     });
-                    console.log(this.state.height)
-
-                    this.updateTerminalDimensions()
                 }}
-                >
-            
-                </Resizable>
-            </Footer>
+            >
 
-            
+            </Resizable>
+            </Footer>
+    
         );
     
         
@@ -160,11 +142,15 @@ class Terminal extends Component {
 
 export default Terminal;
 
+
+
+
+
+              
 // <ResizableBox 
 // id="terminal" 
 // handle={terminalHandle()} 
-// onResize={this.onResize} 
-// width={Infinity} 
+// width={this.state.width} 
 // height={this.state.height} 
 // className="box" 
 // maxConstraints={[Infinity, this.state.height * 3 / 2]}

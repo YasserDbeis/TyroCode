@@ -36,7 +36,13 @@ const getFitAddon = () => {
 }
 
 const resizeTerminal = () => {
-    fitAdd.fit()
+
+    if(fitAdd != null) {
+        fitAdd.fit()
+        console.log("resizing")
+            
+    }
+
 }
 
 const createTerminal = () => {
