@@ -1,58 +1,73 @@
-
 // Terminal Version - used to resize all of them on terminal resize
 
 resizeTextEditor = () => {
-    const term = document.getElementById('terminal')
+  const term = document.getElementById('terminal');
 
-    if(!term)
-        return
-    
-    const termHeight = term.clientHeight
+  if (!term) return;
 
-    const entirePageHeightMinusTabsAndTermHeight = document.querySelector("#root > section > section").clientHeight - 40 - termHeight
+  const termHeight = term.clientHeight;
 
-    const textEditors = document.getElementsByClassName('text-editor-wrappers')
-    var i = 0;
-    for(const textEditor of textEditors) {
-        textEditor.setAttribute("style", "height: " + entirePageHeightMinusTabsAndTermHeight.toString() + "px; position: relative;")
-    }
-}
+  const entirePageHeightMinusTabsAndTermHeight =
+    document.querySelector('#root > section > section').clientHeight -
+    40 -
+    termHeight;
 
+  const textEditors = document.getElementsByClassName('text-editor-wrappers');
+  var i = 0;
+  for (const textEditor of textEditors) {
+    textEditor.setAttribute(
+      'style',
+      'height: ' +
+        entirePageHeightMinusTabsAndTermHeight.toString() +
+        'px; position: relative;'
+    );
+  }
+};
 
 // Tabs version
 
 resizeTextEditor = (activeTab) => {
-    const term = document.getElementById('terminal')
+  const term = document.getElementById('terminal');
 
-    if(!term)
-        return
-    
-    const termHeight = term.clientHeight
+  if (!term) return;
 
-    const entirePageHeightMinusTabsAndTermHeight = document.querySelector("body").clientHeight - 40 - termHeight
+  const termHeight = term.clientHeight;
 
-    const textEditor = document.getElementsByClassName('text-editor-wrappers')[activeTab]
+  const entirePageHeightMinusTabsAndTermHeight =
+    document.querySelector('body').clientHeight - 40 - termHeight;
 
-    textEditor.setAttribute("style", "height: " + entirePageHeightMinusTabsAndTermHeight.toString() + "px; position: relative;")
-}
+  const textEditor = document.getElementsByClassName('text-editor-wrappers')[
+    activeTab
+  ];
 
+  textEditor.setAttribute(
+    'style',
+    'height: ' +
+      entirePageHeightMinusTabsAndTermHeight.toString() +
+      'px; position: relative;'
+  );
+};
 
 // App.js Version
 
 resizeTextEditor = (termHeight) => {
+  const term = document.getElementById('terminal');
 
-    const term = document.getElementById('terminal')
+  if (!term) return;
 
-    if(!term)
-        return
-    
-    const termHeight = termHeight
+  const termHeight = termHeight;
 
-    const entirePageHeightMinusTabsAndTermHeight = document.querySelector("body").clientHeight - 40 - termHeight
+  const entirePageHeightMinusTabsAndTermHeight =
+    document.querySelector('body').clientHeight - 40 - termHeight;
 
-    const textEditors = document.getElementsByClassName('text-editor-wrappers')
+  const textEditors = document.getElementsByClassName('text-editor-wrappers');
 
-    for(const textEditor of textEditors) {
-        textEditor.setAttribute("style", "height: " + entirePageHeightMinusTabsAndTermHeight.toString() + "px;  position: relative;")
-    }
+  for (const textEditor of textEditors) {
+    textEditor.setAttribute(
+      'style',
+      'height: ' +
+        entirePageHeightMinusTabsAndTermHeight.toString() +
+        'px;  position: relative;'
+    );
   }
+};

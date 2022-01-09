@@ -1,36 +1,32 @@
-
-
-
 .token.operator {
-    background: none;
+  background: none;
 }
 
 .editor {
-    counter-reset: line;
-    border: 1px solid #282C34;
+  counter-reset: line;
+  border: 1px solid #282c34;
 }
 
 .editor #codeArea {
-    outline: none;
-    padding-left: 60px !important;
+  outline: none;
+  padding-left: 60px !important;
 }
 
 .editor pre {
-    padding-left: 60px !important;
+  padding-left: 60px !important;
 }
 
 .editorLineNumber {
-    position: absolute;
-    left: 0px;
-    color: #495162;
-    text-align: right;
-    width: 40px;
-    font-weight: 100;
+  position: absolute;
+  left: 0px;
+  color: #495162;
+  text-align: right;
+  width: 40px;
+  font-weight: 100;
 }
 
 #text-editor {
-    background-color: #282C34 !important;
-    color: white;
-    position: relative;
+  background-color: #282c34 !important;
+  color: white;
+  position: relative;
 }
-

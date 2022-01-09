@@ -53,8 +53,17 @@ class App extends Component {
     this.setState({ collapsed });
   };
 
+  resize = () => {
+    this.forceUpdate();
+  };
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize);
+  }
+
   componentDidMount() {
     console.log('[App.js] componentDidMount');
+    window.addEventListener('resize', this.resize);
 
     const fetchFolderContent = async () => {
       const folderName = path.join(process.cwd(), 'src').split('\\').pop();
@@ -97,18 +106,20 @@ class App extends Component {
 
   toggleTerminal = () => {
     const showingTerminal = this.state.showTerminal;
-    this.setState({ showTerminal: !showingTerminal });
 
     if (showingTerminal) {
-      // if terminal was turned off
+      // term is on, so hide it
       this.setState({ terminalInitialized: false });
-      this.resizeTextEditor(0);
+      this.setState({ terminalHeight: 0 });
     } else {
-      const termHeight =
-        document.querySelector('#root > section > section').clientHeight / 3;
+      // const termHeight =
+      //   document.querySelector('#root > section > section').clientHeight / 3;
+      // this.resizeTextEditor(termHeight);
 
-      this.resizeTextEditor(termHeight);
+      this.setState({ terminalHeight: 300 });
     }
+
+    this.setState({ showTerminal: !showingTerminal });
   };
 
   fileClickHandler = (node) => {
