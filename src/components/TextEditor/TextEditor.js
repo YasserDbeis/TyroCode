@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // const Prism = require('prismjs');
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages, plugins } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
@@ -13,12 +13,25 @@ import 'prismjs/themes/prism-coy.css'; //Example style, you can use another
 import './TextEditor.css';
 
 import { Scrollbars } from 'react-custom-scrollbars';
+import TextArea from 'antd/lib/input/TextArea';
+import { useWindowResize } from 'beautiful-react-hooks';
+const TAB_HEIGHT = 40;
 
 // good themes: coy - fun american colors, okaida - gothy but fun, tomorrow - not my style but its meh,
 
 const TextEditor = (props) => {
   const [code, setCode] = useState(props.code);
   console.log(props.code);
+
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+
+  useEffect(() => {
+    setWindowHeight(window.innerHeight);
+  });
+
+  useWindowResize((event) => {
+    setWindowHeight(window.innerHeight);
+  });
 
   function codeChange(code) {
     props.codeChange(code);
@@ -53,27 +66,16 @@ const TextEditor = (props) => {
       .map((line, i) => `<span class='editorLineNumber'>${i + 1}</span>${line}`)
       .join('\n');
   }
+  console.log('WINDOW: ', windowHeight);
+  console.log('termina: ', props.terminalHeight);
 
   return (
     <Scrollbars>
-      <Editor
-        id="text-editor"
-        value={code}
-        onValueChange={(code) => codeChange(code)}
-        highlight={(code) => hightlightWithLineNumbers(code, languages.java)}
-        autoSave="true"
-        padding={10}
+      <TextArea
         style={{
-          fontFamily: '"Fira code", "Fira Mono", monospace',
-          fontSize: 14,
-          resize: 'none',
-          overflow: 'hidden',
-          minHeight: '100%',
+          height: windowHeight - props.terminalHeight - TAB_HEIGHT,
         }}
-        autoCapitalize="true"
-        textareaId="codeArea"
-        className="editor"
-      />
+      ></TextArea>
     </Scrollbars>
   );
 };

@@ -39,7 +39,7 @@ class App extends Component {
       showTerminal: false,
       collapsed: false,
       terminalInitialized: false,
-      terminalWidth: 0,
+      terminalHeight: 300,
       folderContent: null,
       folderName: null,
       sidebarWidth: 300,
@@ -127,6 +127,10 @@ class App extends Component {
     this.setState({ languageSelection: lang });
   };
 
+  onTermExpand = (newTermHeight) => {
+    this.setState({ terminalHeight: newTermHeight });
+  };
+
   render() {
     //console.log('[App.js] render')
 
@@ -186,9 +190,15 @@ class App extends Component {
         </Resizable>
 
         <Layout className="site-layout">
-          <Tabs onRef={(ref) => (this.child = ref)} />
+          <Tabs
+            terminalHeight={this.state.terminalHeight}
+            onRef={(ref) => (this.child = ref)}
+          />
           {this.state.showTerminal ? (
-            <Terminal sidebarWidth={this.state.sidebarWidth} />
+            <Terminal
+              onTermExpand={this.onTermExpand}
+              sidebarWidth={this.state.sidebarWidth}
+            />
           ) : null}
         </Layout>
       </Layout>

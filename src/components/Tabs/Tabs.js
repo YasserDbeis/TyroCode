@@ -1,160 +1,169 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { Tabs, Button } from 'antd';
 import { writeCodeResult } from '../Terminal/TerminalSetup';
 import TextEditorWrapper from '../TextEditor/TextEditorWrapper';
-import "./Tabs.css";
+import './Tabs.css';
 
 const { TabPane } = Tabs;
 
 const initialPanes = [
-  {title: 'Welcome!', content: 'Click an existing file or add a new one to get started!', key: '1'}
+  {
+    title: 'Welcome!',
+    content: 'Click an existing file or add a new one to get started!',
+    key: '1',
+  },
 ];
 
 class Tabbing extends Component {
-    newTabIndex = 0;
+  newTabIndex = 0;
 
-    constructor(props) {
-      super(props)
-      this.state = {
-          activeKey: initialPanes[0].key,
-          panes: initialPanes,
-      };
-
-      this.codeChange = this.codeChange.bind(this)
-    }
-
-    componentDidMount() {
-      this.props.onRef(this)
-    }
-
-    componentWillUnmount() {
-      this.props.onRef(null)
-    }
-
-    onChange = activeKey => {
-        this.setState({ activeKey });
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeKey: initialPanes[0].key,
+      panes: initialPanes,
     };
 
-    onEdit = (targetKey, action) => {
-        this[action](targetKey);
-    };
+    this.codeChange = this.codeChange.bind(this);
+  }
 
-    add = (name, code) => {
-        const { panes } = this.state;
-        const activeKey = `newTab${this.newTabIndex++}`;
-        const newPanes = panes.length == 1 && panes[0].key == 1 ? [] : [...panes];
-        newPanes.push({ title: name, content: code, key: activeKey });
+  componentDidMount() {
+    this.props.onRef(this);
+  }
 
-        this.setState({
-          panes: newPanes,
-          activeKey,
-        });
-    };
+  componentWillUnmount() {
+    this.props.onRef(null);
+  }
 
-    remove = targetKey => {
-        const { panes, activeKey } = this.state;
-        let newActiveKey = activeKey;
-        let lastIndex;
-        panes.forEach((pane, i) => {
-          if (pane.key === targetKey) {
-              lastIndex = i - 1;
-          }
-        });
-        const newPanes = panes.filter(pane => pane.key !== targetKey);
-        if (newPanes.length && newActiveKey === targetKey) {
-          if (lastIndex >= 0) {
-              newActiveKey = newPanes[lastIndex].key;
-          } else {
-              newActiveKey = newPanes[0].key;
-          }
-        }
-        
-        this.setState({
-          panes: newPanes,
-          activeKey: newActiveKey,
-        });
-    };
+  onChange = (activeKey) => {
+    this.setState({ activeKey });
+  };
 
-    componentDidUpdate() {
-        this.resizeTextEditor(this.state.activeKey - 1)
-    }
+  onEdit = (targetKey, action) => {
+    this[action](targetKey);
+  };
 
-    resizeTextEditor = (activeTab) => {
-        const term = document.getElementById('terminal')
+  add = (name, code) => {
+    const { panes } = this.state;
+    const activeKey = `newTab${this.newTabIndex++}`;
+    const newPanes = panes.length == 1 && panes[0].key == 1 ? [] : [...panes];
+    newPanes.push({ title: name, content: code, key: activeKey });
 
-        if(!term)
-            return
-        
-        const termHeight = term.clientHeight
+    this.setState({
+      panes: newPanes,
+      activeKey,
+    });
+  };
 
-        const entirePageHeightMinusTabsAndTermHeight = document.querySelector("body").clientHeight - 40 - termHeight
-
-        const textEditor = document.getElementsByClassName('text-editor-wrappers')[activeTab]
-
-        if(!textEditor)
-            return
-
-        textEditor.setAttribute("style", "height: " + entirePageHeightMinusTabsAndTermHeight.toString() + "px; position: relative;")
-    }
-
-    getCurrentPaneIndex = () => {
-      let i = 0
-
-      for(const pane of this.state.panes) {
-        if(pane.key == this.state.activeKey) {
-          break;
-        }
-        i++
+  remove = (targetKey) => {
+    const { panes, activeKey } = this.state;
+    let newActiveKey = activeKey;
+    let lastIndex;
+    panes.forEach((pane, i) => {
+      if (pane.key === targetKey) {
+        lastIndex = i - 1;
       }
-
-      return i
+    });
+    const newPanes = panes.filter((pane) => pane.key !== targetKey);
+    if (newPanes.length && newActiveKey === targetKey) {
+      if (lastIndex >= 0) {
+        newActiveKey = newPanes[lastIndex].key;
+      } else {
+        newActiveKey = newPanes[0].key;
+      }
     }
 
-    runCurrentCode = (language) => {
-      let paneIndex = this.getCurrentPaneIndex()
+    this.setState({
+      panes: newPanes,
+      activeKey: newActiveKey,
+    });
+  };
 
-      let code = this.state.panes[paneIndex].content
+  componentDidUpdate() {
+    this.resizeTextEditor(this.state.activeKey - 1);
+  }
 
-      var request = require('request');
+  resizeTextEditor = (activeTab) => {
+    const term = document.getElementById('terminal');
 
-      var program = {
-          script : code,
-          stdin: "Yasser",
-          language: language,
-          versionIndex: "0",
-          clientId: "e7f1ebfe96c749a4f6d493bf24d809d2",
-          clientSecret:"ffc186bff12de9db1b39e74621bae2b145889b3c68222bb269d28e0c06cb4582"
-      };
-      request({
-          url: 'https://api.jdoodle.com/v1/execute',
-          method: "POST",
-          json: program
+    if (!term) return;
+
+    const termHeight = term.clientHeight;
+
+    const entirePageHeightMinusTabsAndTermHeight =
+      document.querySelector('body').clientHeight - 40 - termHeight;
+
+    const textEditor = document.getElementsByClassName('text-editor-wrappers')[
+      activeTab
+    ];
+
+    if (!textEditor) return;
+
+    textEditor.setAttribute(
+      'style',
+      'height: ' +
+        entirePageHeightMinusTabsAndTermHeight.toString() +
+        'px; position: relative;'
+    );
+  };
+
+  getCurrentPaneIndex = () => {
+    let i = 0;
+
+    for (const pane of this.state.panes) {
+      if (pane.key == this.state.activeKey) {
+        break;
+      }
+      i++;
+    }
+
+    return i;
+  };
+
+  runCurrentCode = (language) => {
+    let paneIndex = this.getCurrentPaneIndex();
+
+    let code = this.state.panes[paneIndex].content;
+
+    var request = require('request');
+
+    var program = {
+      script: code,
+      stdin: 'Yasser',
+      language: language,
+      versionIndex: '0',
+      clientId: 'e7f1ebfe96c749a4f6d493bf24d809d2',
+      clientSecret:
+        'ffc186bff12de9db1b39e74621bae2b145889b3c68222bb269d28e0c06cb4582',
+    };
+    request(
+      {
+        url: 'https://api.jdoodle.com/v1/execute',
+        method: 'POST',
+        json: program,
       },
       function (error, response, body) {
-          console.log('error:', error);
-          console.log('statusCode:', response && response.statusCode);
-          console.log('body:', body);
+        console.log('error:', error);
+        console.log('statusCode:', response && response.statusCode);
+        console.log('body:', body);
 
-          writeCodeResult(body.output);
+        writeCodeResult(body.output);
+      }
+    );
+  };
 
-      });
+  codeChange = (code) => {
+    console.log(code);
 
-
-    }
-
-    codeChange = (code) => {
-      console.log(code)
-
-      let currPaneIndex = this.getCurrentPaneIndex()
-      let panesCopy = this.state.panes
-      panesCopy[currPaneIndex].content = code
-      this.setState({panes: panesCopy})
-    }
+    let currPaneIndex = this.getCurrentPaneIndex();
+    let panesCopy = this.state.panes;
+    panesCopy[currPaneIndex].content = code;
+    this.setState({ panes: panesCopy });
+  };
 
   render() {
     const { panes, activeKey } = this.state;
     return (
-
       <Tabs
         hideAdd
         type="editable-card"
@@ -162,14 +171,17 @@ class Tabbing extends Component {
         activeKey={activeKey}
         onEdit={this.onEdit}
       >
-        {panes.map(pane => (
-          <TabPane tab={pane.title} key={pane.key} closable={pane.closable} >
-            <TextEditorWrapper codeChange={this.codeChange} code={pane.content} className="text-editor-wrappers" />
+        {panes.map((pane) => (
+          <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
+            <TextEditorWrapper
+              terminalHeight={this.props.terminalHeight}
+              codeChange={this.codeChange}
+              code={pane.content}
+              className="text-editor-wrappers"
+            />
           </TabPane>
         ))}
-
       </Tabs>
-
     );
   }
 }
@@ -177,4 +189,3 @@ class Tabbing extends Component {
 export default Tabbing;
 
 //{pane.content}
- 

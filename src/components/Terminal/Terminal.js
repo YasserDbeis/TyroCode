@@ -16,6 +16,8 @@ import './Terminal.css';
 import './TerminalContainer.css';
 import { useWindowResize } from 'beautiful-react-hooks';
 
+const HANDLE_HEIGHT = 10;
+
 const Terminal = (props) => {
   useEffect(() => {
     setWindowWidth(window.innerWidth - props.sidebarWidth);
@@ -31,7 +33,7 @@ const Terminal = (props) => {
     resizeTerminal();
   });
 
-  const [termHeight, setTermHeight] = useState(300);
+  const [termHeight, setTermHeight] = useState(300 - HANDLE_HEIGHT);
 
   return (
     <Footer style={terminalStyle}>
@@ -46,6 +48,7 @@ const Terminal = (props) => {
           if (direction !== 'top') return;
           resizeTerminal();
           setTermHeight(termHeight + d.height);
+          props.onTermExpand(termHeight + d.height + HANDLE_HEIGHT);
         }}
       ></Resizable>
     </Footer>
