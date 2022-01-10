@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import TextEditor from './TextEditor';
+const TAB_HEIGHT = 40;
 
 //var entirePageHeightMinusTabs;
 //        entirePageHeightMinusTabs = document.querySelector("#root > section > section").clientHeight - 40
@@ -9,7 +10,6 @@ class TextEditorWrapper extends Component {
     super(props);
     this.state = {
       code: 'hey',
-      windowSize: document.querySelector('body').clientHeight,
     };
     this.codeChange = this.codeChange.bind(this);
   }
@@ -24,17 +24,16 @@ class TextEditorWrapper extends Component {
     this.props.codeChange(newCode);
   };
 
-  onResize = (newWindowSize) => {
-    this.setState({ windowSize: newWindowSize });
-  };
-
   render() {
     const textEditorWrapperStyles = {
       overflowY: 'hidden',
       position: 'relative',
       height:
-        (this.state.windowSize - 40 - this.props.terminalHeight).toString() +
-        'px',
+        (
+          this.props.windowHeight -
+          TAB_HEIGHT -
+          this.props.terminalHeight
+        ).toString() + 'px',
     };
 
     return (
@@ -44,6 +43,7 @@ class TextEditorWrapper extends Component {
         style={textEditorWrapperStyles}
       >
         <TextEditor
+          windowHeight={this.props.windowHeight}
           terminalHeight={this.props.terminalHeight}
           codeChange={this.codeChange}
           code={this.props.code}

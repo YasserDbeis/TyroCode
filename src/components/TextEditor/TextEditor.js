@@ -21,61 +21,72 @@ const TAB_HEIGHT = 40;
 
 const TextEditor = (props) => {
   const [code, setCode] = useState(props.code);
-  console.log(props.code);
-
-  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+  const [lineNums, setLineNums] = useState(getLineNums(props.code));
 
   useEffect(() => {
-    setWindowHeight(window.innerHeight);
-  });
+    var scrollers = document.getElementsByClassName('scroller');
 
-  useWindowResize((event) => {
-    setWindowHeight(window.innerHeight);
-  });
+    // var scrollerDivs = Array.prototype.filter.call(
+    //   scrollers,
+    //   function (testElement) {
+    //     return testElement.nodeName === 'DIV';
+    //   }
+    // );
+    console.log(scrollers);
 
-  function codeChange(code) {
-    props.codeChange(code);
-    onCode(code);
-  }
-
-  function onCode(newCode) {
-    setCode(newCode);
-
-    const splitOnLineCode = newCode.split('\n');
-    console.log(splitOnLineCode);
-
-    const lineNums = document.getElementsByClassName('editorLineNumber');
-    console.log(lineNums);
-    var letterCount = 0;
-    var i = 0;
-    for (const line of splitOnLineCode) {
-      letterCount += line.length;
-
-      lineNums[i].setAttribute('style', 'color: white');
-
-      console.log(letterCount);
-
-      i++;
+    function scrollAll(scrollTop) {
+      scrollers.forEach(function (element, index, array) {
+        console.log('YOOOO!!');
+        element.scrollTop = scrollTop;
+      });
     }
+
+    scrollers.forEach(function (element, index, array) {
+      element.addEventListener('scroll', function (e) {
+        scrollAll(e.target.scrollTop);
+      });
+    });
+  }, []);
+
+  function codeChange(e) {
+    const newCode = e.target.value;
+    const lineNums = getLineNums(newCode);
+    console.log('NEW CODE:');
+    setCode(newCode);
+    setLineNums(lineNums);
+    props.codeChange(newCode);
   }
 
   // function courtesy of https://github.com/bogutski
-  function hightlightWithLineNumbers(input, language) {
-    return highlight(input, language)
+  function getLineNums(input) {
+    return input
       .split('\n')
-      .map((line, i) => `<span class='editorLineNumber'>${i + 1}</span>${line}`)
+      .map((line, i) => `${i + 1}`)
       .join('\n');
   }
-  console.log('WINDOW: ', windowHeight);
-  console.log('termina: ', props.terminalHeight);
+  // console.log('WINDOW: ', windowHeight);
+  // console.log('termina: ', props.terminalHeight);
 
   return (
     <Scrollbars>
-      <TextArea
-        style={{
-          height: windowHeight - props.terminalHeight - TAB_HEIGHT,
-        }}
-      ></TextArea>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <TextArea
+          className="scroller"
+          value={lineNums}
+          style={{ width: '10%' }}
+        ></TextArea>
+        <TextArea
+          className="scroller"
+          value={code}
+          onChange={codeChange}
+          style={{
+            height: props.windowHeight - props.terminalHeight - TAB_HEIGHT,
+            whiteSpace: 'pre',
+            overflowWrap: 'normal',
+            overflowX: 'scroll',
+          }}
+        ></TextArea>
+      </div>
     </Scrollbars>
   );
 };

@@ -21,9 +21,12 @@ import {
 } from '../styles/LanguageDropdown';
 import newFileIconStyle from '../styles/NewFileIcon';
 import runButtonStyle from '../styles/RunButton';
+import { last } from 'lodash';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
+
+let lastHeight = 0;
 
 const {
   initTerminal,
@@ -40,6 +43,7 @@ class App extends Component {
       collapsed: false,
       terminalInitialized: false,
       terminalHeight: 300,
+      windowHeight: window.innerHeight,
       folderContent: null,
       folderName: null,
       sidebarWidth: 300,
@@ -53,8 +57,13 @@ class App extends Component {
     this.setState({ collapsed });
   };
 
-  resize = () => {
-    this.forceUpdate();
+  resize = (e) => {
+    if (e.target.innerHeight != lastHeight) {
+      this.setState({
+        windowHeight: e.target.innerHeight,
+      });
+    }
+    lastHeight = e.target.innerHeight;
   };
 
   componentWillUnmount() {
@@ -163,7 +172,7 @@ class App extends Component {
             resizeTerminal();
             //this.child.adjustTerminalWidth(this.state.sidebarWidth + d.width)
 
-            console.log(this.state.sidebarWidth);
+            // console.log(this.state.sidebarWidth);
           }}
           onResize={(e, direction, ref, d) => {
             resizeTerminal();
@@ -202,6 +211,7 @@ class App extends Component {
 
         <Layout className="site-layout">
           <Tabs
+            windowHeight={this.state.windowHeight}
             terminalHeight={this.state.terminalHeight}
             onRef={(ref) => (this.child = ref)}
           />
