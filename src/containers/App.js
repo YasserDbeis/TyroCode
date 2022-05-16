@@ -13,7 +13,7 @@ import { getFolderContents, getFileText } from '../helpers/FileDirectory';
 import { Resizable } from 're-resizable';
 import { AiOutlineFileAdd } from 'react-icons/ai';
 import { FaRegPlayCircle } from 'react-icons/fa';
-import { languageMenu, defaultLang } from '../content/LanguageMenu';
+import { languageOptions, defaultLanguage } from '../content/LanguageMenu';
 import newFile from '../content/NewFile';
 import {
   languageDropdownStyle,
@@ -47,7 +47,7 @@ class App extends Component {
       folderContent: null,
       folderName: null,
       sidebarWidth: 300,
-      languageSelection: { ...defaultLang },
+      languageSelection: { ...defaultLanguage },
     };
   }
 
@@ -152,9 +152,25 @@ class App extends Component {
   };
 
   render() {
-    //console.log('[App.js] render')
-
     const { collapsed } = this.state;
+
+    let languageMenu = (
+      <Menu className="layout-font language-dropdown">
+        {languageOptions.map((lang, index) => {
+          return (
+            <Menu.Item
+              key={index}
+              style={languageOptionStyle}
+              onClick={() => this.languageOptionClickHandler(lang)}
+            >
+              {lang.name} {lang.icon}
+            </Menu.Item>
+          );
+        })}
+      </Menu>
+    );
+
+    console.log(languageMenu, defaultLanguage);
 
     return (
       <Layout className="layout-font" style={{ minHeight: '100vh' }}>

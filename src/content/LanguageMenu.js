@@ -54,20 +54,4 @@ let languageOptions = [
 
 let defaultLanguage = languageOptions[0];
 
-let languageMenu = (
-  <Menu className="layout-font language-dropdown">
-    {languageOptions.map((lang, index) => {
-      return (
-        <Menu.Item
-          key={index}
-          style={languageOptionStyle}
-          onClick={() => this.languageOptionClickHandler(lang)}
-        >
-          {lang.name} {lang.icon}
-        </Menu.Item>
-      );
-    })}
-  </Menu>
-);
-
-export default { languageMenu, defaultLanguage };
+export { languageOptions, defaultLanguage };
