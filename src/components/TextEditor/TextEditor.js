@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // const Prism = require('prismjs');
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages, plugins } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
@@ -8,13 +8,17 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-java';
 const fs = require('fs');
 import { useResizeDetector } from 'react-resize-detector';
-
+import {
+  getHighlightedCode,
+  insertBraceAtPos,
+} from '../../helpers/SyntaxHighlighting';
 import 'prismjs/themes/prism-coy.css'; //Example style, you can use another
 import './TextEditor.css';
 
 import { Scrollbars } from 'react-custom-scrollbars';
 import TextArea from 'antd/lib/input/TextArea';
 import { useWindowResize } from 'beautiful-react-hooks';
+import { start } from 'repl';
 const TAB_HEIGHT = 40;
 
 // good themes: coy - fun american colors, okaida - gothy but fun, tomorrow - not my style but its meh,
@@ -25,6 +29,14 @@ const TextEditor = (props) => {
     highlightCode(props.code)
   );
   const [lineNums, setLineNums] = useState(getLineNums(props.code));
+  const [cursor, setCursor] = useState(props.code.length);
+
+  const editorRef = useRef(null);
+
+  //   useEffect(() => {
+  //     const input = ref.current;
+  //     if (input) input.setSelectionRange(cursor, cursor);
+  //  }, [ref, cursor, value]);
 
   useEffect(() => {
     var scrollers = document.getElementsByClassName('scroller');
@@ -55,7 +67,22 @@ const TextEditor = (props) => {
         );
       });
     });
+
+    // const input = editorRef.current;
+    // if (input) {
+    //   input.selectionStart = cursor;
+    //   input.selectionEnd = cursor;
+    //   console.log('YOO:', cursor);
+    // }
   }, []);
+
+  useLayoutEffect(() => {
+    if (cursor && editorRef.current) {
+      editorRef.current.focus();
+      editorRef.current.setSelectionRange(cursor, cursor);
+      console.log('BEEP:', cursor);
+    }
+  }, [cursor]);
 
   function codeChange(e) {
     const newCode = e.target.value;
@@ -65,16 +92,28 @@ const TextEditor = (props) => {
     setLineNums(lineNums);
     setHighlightedCode(highlightCode(newCode));
     props.codeChange(newCode);
+    setCursor(e.target.selectionStart);
+  }
+
+  function curlyBraceHandler(e) {
+    if (e.keyCode == 219) {
+      let modifiedCode = insertBraceAtPos(code, e.target.selectionStart);
+
+      // console.log('EDITOR REF', editorRef.current.value);
+      // console.log('EDITOR REF SELECTION', editorRef.current.selectionStart);
+
+      setCode(modifiedCode);
+      setHighlightedCode(getHighlightedCode(modifiedCode));
+      setCursor(editorRef.current.selectionStart + 1);
+
+      e.preventDefault();
+    }
+
+    return true;
   }
 
   function highlightCode(input) {
-    return (
-      input.slice(0, 5) +
-      '<span style="color:teal; -webkit-text-stroke: 1px teal;">' +
-      input.slice(5, 15) +
-      '</span>' +
-      input.slice(15)
-    );
+    return getHighlightedCode(input);
   }
 
   // function courtesy of https://github.com/bogutski
@@ -105,53 +144,36 @@ const TextEditor = (props) => {
             backgroundColor: '#282c34',
             color: 'white',
             borderColor: 'transparent',
+            textAlign: 'center',
           }}
         ></TextArea>
         <div
-          className="scroller"
+          className="scroller editor-area"
           dangerouslySetInnerHTML={{ __html: highlightedCode }}
           align="left"
           style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            width: '85%',
             height: props.windowHeight - props.terminalHeight - TAB_HEIGHT,
-            whiteSpace: 'pre',
-            overflowWrap: 'normal',
-            overflowX: 'scroll',
-            backgroundColor: 'transparent',
             color: 'white',
-            border: 'none',
-            padding: '5px',
-            borderColor: 'transparent',
             zIndex: 1,
             pointerEvents: 'none',
           }}
         ></div>
-        <TextArea
-          className="scroller"
+        <textarea
+          className="scroller editor-area"
+          ref={editorRef}
           value={code}
           onChange={codeChange}
+          onKeyDown={curlyBraceHandler}
+          // onFocus={(e) => {
+          //   e.target.selectionStart = cursor;
+          // }}
           style={{
-            opacity: '100%',
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            width: '85%',
             height: props.windowHeight - props.terminalHeight - TAB_HEIGHT,
-            whiteSpace: 'pre',
-            overflowWrap: 'normal',
-            overflowX: 'scroll',
-            backgroundColor: '#282c34',
             color: 'transparent',
             caretColor: 'white',
-            border: 'none',
-            padding: '5px',
-            borderColor: 'transparent',
             pointerEvents: 'auto',
           }}
-        ></TextArea>
+        ></textarea>
       </div>
     </Scrollbars>
   );
