@@ -1,8 +1,10 @@
+import * as langs from '../enums/ProgLanguages';
+
 const getHighlightedCode = (code) => {
   let result = '';
   for (let c of code) {
     if (c === '{' || c === '}') {
-      result += '<span style="color:teal; -webkit-text-stroke: 1px teal;">';
+      result += '<span style="color:teal;">';
       result += c;
       result += '</span>';
     } else {

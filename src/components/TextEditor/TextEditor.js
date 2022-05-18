@@ -19,6 +19,9 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import TextArea from 'antd/lib/input/TextArea';
 import { useWindowResize } from 'beautiful-react-hooks';
 import { start } from 'repl';
+import * as langs from '../../enums/ProgLanguages';
+import { getProgLanguage } from '../../helpers/FilenameExtensions';
+
 const TAB_HEIGHT = 40;
 
 // good themes: coy - fun american colors, okaida - gothy but fun, tomorrow - not my style but its meh,
@@ -33,21 +36,8 @@ const TextEditor = (props) => {
 
   const editorRef = useRef(null);
 
-  //   useEffect(() => {
-  //     const input = ref.current;
-  //     if (input) input.setSelectionRange(cursor, cursor);
-  //  }, [ref, cursor, value]);
-
   useEffect(() => {
     var scrollers = document.getElementsByClassName('scroller');
-
-    // var scrollerDivs = Array.prototype.filter.call(
-    //   scrollers,
-    //   function (testElement) {
-    //     return testElement.nodeName === 'DIV';
-    //   }
-    // );
-    console.log(scrollers);
 
     function scrollAll(scrollTop, scrollLeft, scrollRight) {
       scrollers.forEach(function (element, index, array) {
@@ -67,13 +57,6 @@ const TextEditor = (props) => {
         );
       });
     });
-
-    // const input = editorRef.current;
-    // if (input) {
-    //   input.selectionStart = cursor;
-    //   input.selectionEnd = cursor;
-    //   console.log('YOO:', cursor);
-    // }
   }, []);
 
   useLayoutEffect(() => {
@@ -113,7 +96,9 @@ const TextEditor = (props) => {
   }
 
   function highlightCode(input) {
-    return getHighlightedCode(input);
+    let lang = getProgLanguage(props.filename);
+
+    return getHighlightedCode(input, lang);
   }
 
   // function courtesy of https://github.com/bogutski
@@ -164,9 +149,6 @@ const TextEditor = (props) => {
           value={code}
           onChange={codeChange}
           onKeyDown={curlyBraceHandler}
-          // onFocus={(e) => {
-          //   e.target.selectionStart = cursor;
-          // }}
           style={{
             height: props.windowHeight - props.terminalHeight - TAB_HEIGHT,
             color: 'transparent',

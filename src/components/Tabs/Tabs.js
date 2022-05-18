@@ -174,6 +174,7 @@ class Tabbing extends Component {
         {panes.map((pane) => (
           <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
             <TextEditorWrapper
+              filename={pane.title}
               windowHeight={this.props.windowHeight}
               terminalHeight={this.props.terminalHeight}
               codeChange={this.codeChange}
