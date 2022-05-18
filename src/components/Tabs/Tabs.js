@@ -153,7 +153,7 @@ class Tabbing extends Component {
   };
 
   codeChange = (code) => {
-    console.log(code);
+    // console.log(code);
 
     let currPaneIndex = this.getCurrentPaneIndex();
     let panesCopy = this.state.panes;

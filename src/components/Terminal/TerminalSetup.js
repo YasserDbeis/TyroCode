@@ -36,9 +36,9 @@ const getFitAddon = () => {
 const resizeTerminal = () => {
   if (fitAdd != null) {
     fitAdd.fit();
-    console.log('resizing');
+    // console.log('resizing');
   } else {
-    console.log('not resizing');
+    // console.log('not resizing');
   }
 };
 

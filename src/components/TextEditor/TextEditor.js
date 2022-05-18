@@ -11,7 +11,8 @@ import { useResizeDetector } from 'react-resize-detector';
 import {
   getHighlightedCode,
   insertBraceAtPos,
-} from '../../helpers/SyntaxHighlighting';
+  tabOverText,
+} from '../../helpers/TextEditing';
 import 'prismjs/themes/prism-coy.css'; //Example style, you can use another
 import './TextEditor.css';
 
@@ -32,7 +33,7 @@ const TextEditor = (props) => {
     highlightCode(props.code)
   );
   const [lineNums, setLineNums] = useState(getLineNums(props.code));
-  const [cursor, setCursor] = useState(props.code.length);
+  const [cursor, setCursor] = useState([props.code.length, props.code.length]);
 
   const editorRef = useRef(null);
 
@@ -41,7 +42,6 @@ const TextEditor = (props) => {
 
     function scrollAll(scrollTop, scrollLeft, scrollRight) {
       scrollers.forEach(function (element, index, array) {
-        console.log('YOOOO!!');
         element.scrollTop = scrollTop;
         element.scrollLeft = scrollLeft;
         element.scrollRight = scrollRight;
@@ -62,7 +62,7 @@ const TextEditor = (props) => {
   useLayoutEffect(() => {
     if (cursor && editorRef.current) {
       editorRef.current.focus();
-      editorRef.current.setSelectionRange(cursor, cursor);
+      editorRef.current.setSelectionRange(cursor[0], cursor[1]);
       console.log('BEEP:', cursor);
     }
   }, [cursor]);
@@ -70,29 +70,66 @@ const TextEditor = (props) => {
   function codeChange(e) {
     const newCode = e.target.value;
     const lineNums = getLineNums(newCode);
-    console.log('NEW CODE:');
     setCode(newCode);
     setLineNums(lineNums);
     setHighlightedCode(highlightCode(newCode));
     props.codeChange(newCode);
-    setCursor(e.target.selectionStart);
   }
 
   function curlyBraceHandler(e) {
     if (e.keyCode == 219) {
-      let modifiedCode = insertBraceAtPos(code, e.target.selectionStart);
+      // if key is open curly brace
 
-      // console.log('EDITOR REF', editorRef.current.value);
-      // console.log('EDITOR REF SELECTION', editorRef.current.selectionStart);
+      /*
+      let modifiedCode = insertBraceAtPos(code, e.target.selectionStart);
 
       setCode(modifiedCode);
       setHighlightedCode(getHighlightedCode(modifiedCode));
       setCursor(editorRef.current.selectionStart + 1);
 
-      e.preventDefault();
-    }
+      */
 
-    return true;
+      document.execCommand('insertText', false, '{}');
+
+      setCursor([
+        editorRef.current.selectionStart - 1,
+        editorRef.current.selectionStart - 1,
+      ]);
+
+      e.preventDefault();
+      return false;
+    } else if (e.keyCode == 9) {
+      // if key is tab
+
+      const startCursor = editorRef.current.selectionStart;
+      const endCursor = editorRef.current.selectionEnd;
+      const currCode = editorRef.current.value;
+
+      const currCodeSelection = currCode.slice(startCursor, endCursor);
+      console.log('HIGHLIGHT: ' + startCursor + ', ' + endCursor);
+      console.log('CURRENT SELECTION:', currCodeSelection);
+
+      if (currCodeSelection.includes('\n')) {
+        console.log('SHOULD TAB THINGS OVER');
+
+        let tabbedOverCode = tabOverText(code, startCursor, endCursor);
+        console.log('TABBED OVER: ', tabbedOverCode);
+        setCode(tabbedOverCode);
+        setHighlightedCode(highlightCode(tabbedOverCode));
+      } else {
+        document.execCommand('insertText', false, '\t');
+      }
+
+      // setCursor([
+      //   editorRef.current.selectionStart - 1,
+      //   editorRef.current.selectionStart - 1,
+      // ]);
+
+      e.preventDefault();
+      return false;
+    } else {
+      return true;
+    }
   }
 
   function highlightCode(input) {

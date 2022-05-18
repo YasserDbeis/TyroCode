@@ -134,7 +134,7 @@ class App extends Component {
   fileClickHandler = (node) => {
     if (node.type == 'file') {
       let code = node.path == '.' ? '' : getFileText(node.path);
-      console.log(code);
+      // console.log(code);
       this.child.add(node.name, code);
     }
   };

@@ -19,7 +19,7 @@ class TextEditorWrapper extends Component {
       code: newCode,
     });
 
-    console.log(newCode);
+    // console.log(newCode);
 
     this.props.codeChange(newCode);
   };
