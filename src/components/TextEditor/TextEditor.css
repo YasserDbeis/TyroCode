@@ -9,6 +9,10 @@
   -moz-user-select: none !important;
 }
 
+.scroller::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}
+
 .scroller:focus {
   outline: none;
   border-color: inherit;

@@ -19,7 +19,25 @@ const insertBraceAtPos = (code, pos) => {
   return code.slice(0, pos) + '{}' + code.slice(pos);
 };
 
-const tabOverText = (code, start, end) => {
+const tabOverText = (editorTextarea, tabbedOverLinesStartPos) => {
+  console.log('Tabbed over lines:', tabbedOverLinesStartPos);
+
+  const numTabbedLines = tabbedOverLinesStartPos.length;
+
+  for (let i = numTabbedLines - 1; i >= 0; i--) {
+    const cursorPos = tabbedOverLinesStartPos[i];
+
+    // move cursor to line start
+    editorTextarea.focus();
+    editorTextarea.setSelectionRange(cursorPos, cursorPos);
+
+    // tab over text at line start cursor
+    const spacedTab = ' '.repeat(4);
+    document.execCommand('insertText', false, spacedTab);
+  }
+};
+
+const getTabbedOverLinesStartPos = (code, start, end) => {
   const lines = code.split('\n');
   console.log('SPLIT: ', lines);
 
@@ -48,7 +66,6 @@ const tabOverText = (code, start, end) => {
     console.log('len: ', len);
 
     if (line.trim().length == 0) {
-      tabbedOverLines.push(line);
       continue;
     }
 
@@ -57,15 +74,13 @@ const tabOverText = (code, start, end) => {
       (start >= seenFrameStart && start <= seenFrameEnd) ||
       (end >= seenFrameStart && end <= seenFrameEnd)
     ) {
-      line = '\t' + line;
+      tabbedOverLines.push(seenFrameStart);
     }
-
-    tabbedOverLines.push(line);
   }
 
-  console.log(tabbedOverLines);
+  console.log('TABBEDOVERLINES', tabbedOverLines);
 
-  return tabbedOverLines.join('\n');
+  return tabbedOverLines;
 };
 
-export { getHighlightedCode, insertBraceAtPos, tabOverText };
+export { getHighlightedCode, tabOverText, getTabbedOverLinesStartPos };

@@ -1,11 +1,23 @@
-import React, {Component, useEffect, useState, use} from 'react';
+import React, { Component, useEffect, useState, use } from 'react';
 
-import './FolderTree.css'
+import './FolderTree.css';
 
-import styled from "styled-components";
-import { AiOutlineFile, AiOutlineFolder, AiOutlineFolderOpen } from "react-icons/ai";
-import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiGo, DiJava, DiPython } from "react-icons/di";
-import { SiC, SiCsharp, SiCplusplus } from "react-icons/si";
+import styled from 'styled-components';
+import {
+  AiOutlineFile,
+  AiOutlineFolder,
+  AiOutlineFolderOpen,
+} from 'react-icons/ai';
+import {
+  DiJavascript1,
+  DiCss3Full,
+  DiHtml5,
+  DiReact,
+  DiGo,
+  DiJava,
+  DiPython,
+} from 'react-icons/di';
+import { SiC, SiCsharp, SiCplusplus } from 'react-icons/si';
 
 /*
 Thank you to Anurag Hazra for his wonderful inspiration. His work 
@@ -13,7 +25,6 @@ in article https://anuraghazra.github.io/blog/building-a-react-folder-tree-compo
 was immensly helpful and influential on this component. I took much of his code
 and for that he deserves credit. 
 */
-
 
 const FILE_ICONS = {
   js: <DiJavascript1 />,
@@ -26,7 +37,7 @@ const FILE_ICONS = {
   c: <SiC />,
   cs: <SiCsharp />,
   cpp: <SiCplusplus />,
-  cc: <SiCplusplus />
+  cc: <SiCplusplus />,
 };
 
 const StyledTree = styled.div`
@@ -52,18 +63,20 @@ const StyledFolder = styled.div`
   }
 `;
 const Collapsible = styled.div`
-  height: ${p => (p.isOpen ? "auto" : "0")};
+  height: ${(p) => (p.isOpen ? 'auto' : '0')};
   overflow: hidden;
 `;
 
 const File = ({ name, node, onNodeClick }) => {
-  let ext = name.split(".")[name.split(".").length - 1];
+  let ext = name.split('.')[name.split('.').length - 1];
   let iconExists = FILE_ICONS[ext] != null;
 
   return (
     <StyledFile>
       {iconExists ? FILE_ICONS[ext] : <AiOutlineFile />}
-      <span style={{cursor: 'pointer'}} onClick={() => onNodeClick(node)}>{name}</span>
+      <span style={{ cursor: 'pointer' }} onClick={() => onNodeClick(node)}>
+        {name}
+      </span>
     </StyledFile>
   );
 };
@@ -71,14 +84,18 @@ const File = ({ name, node, onNodeClick }) => {
 const Folder = ({ name, children }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleToggle = e => {
+  const handleToggle = (e) => {
     e.preventDefault();
     setIsOpen(!isOpen);
   };
 
   return (
     <StyledFolder>
-      <div style={{cursor: 'pointer'}} className="folder--label" onClick={handleToggle}>
+      <div
+        style={{ cursor: 'pointer' }}
+        className="folder--label"
+        onClick={handleToggle}
+      >
         {isOpen ? <AiOutlineFolderOpen /> : <AiOutlineFolder />}
         <span>{name}</span>
       </div>
@@ -89,16 +106,26 @@ const Folder = ({ name, children }) => {
 
 const TreeRecursive = ({ data, onNodeClick }) => {
   // loop through the data
-  return data.map(item => {
-
-    if (item.type === "file") {
-      return <File key={item.path} name={item.name} node={item} onNodeClick={onNodeClick}/>;
+  return data.map((item) => {
+    if (item.type === 'file') {
+      return (
+        <File
+          key={item.path + '_file'}
+          name={item.name}
+          node={item}
+          onNodeClick={onNodeClick}
+        />
+      );
     }
 
-    if (item.type === "folder") {
+    if (item.type === 'folder') {
       return (
-        <Folder key={item.path} name={item.name} node={item}>
-          <TreeRecursive key={item.path} data={item.childrens} onNodeClick={onNodeClick} />
+        <Folder key={item.path + '_folder'} name={item.name} node={item}>
+          <TreeRecursive
+            key={item.toString()}
+            data={item.childrens}
+            onNodeClick={onNodeClick}
+          />
         </Folder>
       );
     }
@@ -108,29 +135,34 @@ const TreeRecursive = ({ data, onNodeClick }) => {
 const Tree = ({ data, onNodeClick }) => {
   return (
     <StyledTree>
-      <TreeRecursive key={data.path} data={data} onNodeClick={onNodeClick}/>
+      <TreeRecursive
+        key={data.toString()}
+        data={data}
+        onNodeClick={onNodeClick}
+      />
     </StyledTree>
   );
 };
 
 const errorDirectory = [
   {
-    type: "file",
-    name: "Error Loading Directory",
-    childrens: []
-  }
+    type: 'file',
+    name: 'Error Loading Directory',
+    childrens: [],
+  },
 ];
 
 const FileTree = (props) => {
-
   //console.log(props.folderContent)
 
   return (
     <div className="FileTree">
-      <Tree onNodeClick={props.fileClickHandler} data={props.folderContent ? props.folderContent : errorDirectory} />
+      <Tree
+        onNodeClick={props.fileClickHandler}
+        data={props.folderContent ? props.folderContent : errorDirectory}
+      />
     </div>
   );
-}
+};
 
 export default FileTree;
-

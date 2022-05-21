@@ -10,8 +10,8 @@ const fs = require('fs');
 import { useResizeDetector } from 'react-resize-detector';
 import {
   getHighlightedCode,
-  insertBraceAtPos,
   tabOverText,
+  getTabbedOverLinesStartPos,
 } from '../../helpers/TextEditing';
 import 'prismjs/themes/prism-coy.css'; //Example style, you can use another
 import './TextEditor.css';
@@ -22,8 +22,19 @@ import { useWindowResize } from 'beautiful-react-hooks';
 import { start } from 'repl';
 import * as langs from '../../enums/ProgLanguages';
 import { getProgLanguage } from '../../helpers/FilenameExtensions';
+import os from 'os';
+import UndoStack from '../../StateManagement/UndoStack';
 
 const TAB_HEIGHT = 40;
+const TAB_KEYCODE = 9;
+const OPEN_CURLY_BRACE_KEYCODE = 219;
+const Z_KEYCODE = 90;
+const MAC_PLATFORM = 'darwin';
+const META_KEYCODE = 91;
+const CTRL_KEYCODE = 17;
+const SHIFT_KEYCODE = 16;
+const ALT_KEYCODE = 18;
+const NO_REPITITIONS = -1;
 
 // good themes: coy - fun american colors, okaida - gothy but fun, tomorrow - not my style but its meh,
 
@@ -36,6 +47,7 @@ const TextEditor = (props) => {
   const [cursor, setCursor] = useState([props.code.length, props.code.length]);
 
   const editorRef = useRef(null);
+  let undoStack = useRef(new UndoStack());
 
   useEffect(() => {
     var scrollers = document.getElementsByClassName('scroller');
@@ -76,18 +88,48 @@ const TextEditor = (props) => {
     props.codeChange(newCode);
   }
 
-  function curlyBraceHandler(e) {
-    if (e.keyCode == 219) {
+  function onKeyDownHandler(e) {
+    const comboKeys = [META_KEYCODE, CTRL_KEYCODE, SHIFT_KEYCODE, ALT_KEYCODE];
+
+    if (
+      !e.metaKey &&
+      !e.ctrlKey &&
+      !e.shiftKey &&
+      !e.altKey &&
+      !comboKeys.includes(e.keyCode)
+    ) {
+      const keyCode = e.keyCode.toString();
+      undoStack.current.push({
+        keyCode: [keyCode],
+        repetitions: -1,
+      });
+      console.log(e.key);
+    }
+
+    if (e.keyCode == Z_KEYCODE) {
+      const isMac = os.platform() == MAC_PLATFORM;
+
+      if ((isMac && e.metaKey) || (!isMac && e.ctrlKey)) {
+        if (e.shiftKey) {
+          console.log('REDO');
+          undoStack.current.redo();
+        } else {
+          console.log('UNDO');
+          const undidFrame = undoStack.current.undo();
+
+          if (undidFrame != null) {
+            const numRepitions = undidFrame.repetitions;
+            if (numRepitions != NO_REPITITIONS) {
+              for (let i = 0; i < numRepitions; i++) {
+                console.log('UNDO AGAIN!!');
+                document.execCommand('undo');
+              }
+            }
+          }
+        }
+      }
+    } else if (e.keyCode == OPEN_CURLY_BRACE_KEYCODE) {
       // if key is open curly brace
-
-      /*
-      let modifiedCode = insertBraceAtPos(code, e.target.selectionStart);
-
-      setCode(modifiedCode);
-      setHighlightedCode(getHighlightedCode(modifiedCode));
-      setCursor(editorRef.current.selectionStart + 1);
-
-      */
 
       document.execCommand('insertText', false, '{}');
 
@@ -98,35 +140,47 @@ const TextEditor = (props) => {
 
       e.preventDefault();
       return false;
-    } else if (e.keyCode == 9) {
-      // if key is tab
+    } else if (e.keyCode == TAB_KEYCODE) {
+      if (!e.shiftKey) {
+        // if key is tab
 
-      const startCursor = editorRef.current.selectionStart;
-      const endCursor = editorRef.current.selectionEnd;
-      const currCode = editorRef.current.value;
+        const startCursor = editorRef.current.selectionStart;
+        const endCursor = editorRef.current.selectionEnd;
+        const currCode = editorRef.current.value;
 
-      const currCodeSelection = currCode.slice(startCursor, endCursor);
-      console.log('HIGHLIGHT: ' + startCursor + ', ' + endCursor);
-      console.log('CURRENT SELECTION:', currCodeSelection);
+        const currCodeSelection = currCode.slice(startCursor, endCursor);
+        // console.log('HIGHLIGHT: ' + startCursor + ', ' + endCursor);
+        // console.log('CURRENT SELECTION:', currCodeSelection);
 
-      if (currCodeSelection.includes('\n')) {
-        console.log('SHOULD TAB THINGS OVER');
+        if (currCodeSelection.includes('\n')) {
+          // console.log('SHOULD TAB THINGS OVER');
 
-        let tabbedOverCode = tabOverText(code, startCursor, endCursor);
-        console.log('TABBED OVER: ', tabbedOverCode);
-        setCode(tabbedOverCode);
-        setHighlightedCode(highlightCode(tabbedOverCode));
+          // undoStack.current.
+
+          const tabbedOverLinesStartPos = getTabbedOverLinesStartPos(
+            code,
+            startCursor,
+            endCursor
+          );
+
+          const numTabbedOverLines = tabbedOverLinesStartPos.length;
+
+          const currentStackFrame = undoStack.current.getCurrentFrame();
+          currentStackFrame.repetitions = numTabbedOverLines - 1;
+
+          tabOverText(editorRef.current, tabbedOverLinesStartPos);
+        } else {
+          document.execCommand('insertText', false, ' '.repeat(4));
+        }
+
+        e.preventDefault();
+        return false;
       } else {
-        document.execCommand('insertText', false, '\t');
+        console.log('SHIFT + TAB');
+        // DO THE OPPOSITE OF WHAT THE TABBING FUNCTIONALITY
+        e.preventDefault();
+        return false;
       }
-
-      // setCursor([
-      //   editorRef.current.selectionStart - 1,
-      //   editorRef.current.selectionStart - 1,
-      // ]);
-
-      e.preventDefault();
-      return false;
     } else {
       return true;
     }
@@ -167,6 +221,7 @@ const TextEditor = (props) => {
             color: 'white',
             borderColor: 'transparent',
             textAlign: 'center',
+            resize: 'none',
           }}
         ></TextArea>
         <div
@@ -185,12 +240,13 @@ const TextEditor = (props) => {
           ref={editorRef}
           value={code}
           onChange={codeChange}
-          onKeyDown={curlyBraceHandler}
+          onKeyDown={onKeyDownHandler}
           style={{
             height: props.windowHeight - props.terminalHeight - TAB_HEIGHT,
             color: 'transparent',
             caretColor: 'white',
             pointerEvents: 'auto',
+            resize: 'none',
           }}
         ></textarea>
       </div>
