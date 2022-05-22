@@ -20,6 +20,10 @@
   box-shadow: none;
 }
 
+.scroller::selection {
+  background-color: #8CC0DE;
+}
+
 .editor-area {
   position: absolute;
   top: 0;

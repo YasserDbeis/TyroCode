@@ -5,7 +5,7 @@ export default class UndoStack {
   }
 
   push(newState) {
-    // this.future = new Stack();
+    this.future = new Stack();
     this.history.push(newState);
 
     console.log(this);

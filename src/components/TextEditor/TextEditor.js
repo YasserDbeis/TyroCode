@@ -171,8 +171,10 @@ const TextEditor = (props) => {
         if (e.shiftKey) {
           console.log('SHIFT + TAB');
           unTabText(editorRef.current, currCode, tabbedOverLinesStartPos);
-
-          editorRef.current.setSelectionRange(startCursor, endCursor);
+          editorRef.current.setSelectionRange(
+            startCursor - TAB_SIZE,
+            endCursor - 2 * TAB_SIZE
+          );
         } else {
           console.log('TAB');
           tabOverText(editorRef.current, tabbedOverLinesStartPos);

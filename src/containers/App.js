@@ -179,7 +179,7 @@ class App extends Component {
           className="ant-layout-sider-children"
           size={{ width: this.state.sidebarWidth }}
           maxWidth="500px"
-          minWidth="200px"
+          minWidth="250px"
           onResizeStop={(e, direction, ref, d) => {
             this.setState({
               sidebarWidth: this.state.sidebarWidth + d.width,
