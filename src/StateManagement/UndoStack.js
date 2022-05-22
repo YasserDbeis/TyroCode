@@ -5,8 +5,10 @@ export default class UndoStack {
   }
 
   push(newState) {
-    this.future = new Stack();
+    // this.future = new Stack();
     this.history.push(newState);
+
+    console.log(this);
   }
 
   getCurrentFrame() {
@@ -26,6 +28,7 @@ export default class UndoStack {
 
     if (history != null) {
       this.future.push(history);
+      console.log(this);
       return history;
     }
     console.log(this);
@@ -38,6 +41,7 @@ export default class UndoStack {
 
     if (future != null) {
       this.history.push(future);
+      console.log(this);
       return future;
     }
     console.log(this);

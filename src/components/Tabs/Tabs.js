@@ -9,7 +9,7 @@ const { TabPane } = Tabs;
 const initialPanes = [
   {
     title: 'Welcome!',
-    content: 'Click an existing file or add a new one to get started!',
+    content: 'HELLO\nWORLD',
     key: '1',
   },
 ];

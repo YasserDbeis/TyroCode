@@ -1,5 +1,7 @@
 import * as langs from '../enums/ProgLanguages';
 
+const TAB_SIZE = 4;
+
 const getHighlightedCode = (code) => {
   let result = '';
   for (let c of code) {
@@ -32,14 +34,44 @@ const tabOverText = (editorTextarea, tabbedOverLinesStartPos) => {
     editorTextarea.setSelectionRange(cursorPos, cursorPos);
 
     // tab over text at line start cursor
-    const spacedTab = ' '.repeat(4);
+    const spacedTab = ' '.repeat(TAB_SIZE);
     document.execCommand('insertText', false, spacedTab);
   }
 };
 
+const unTabText = (editorTextarea, code, tabbedOverLinesStartPos) => {
+  const numTabbedLines = tabbedOverLinesStartPos.length;
+
+  for (let i = numTabbedLines - 1; i >= 0; i--) {
+    const cursorPos = tabbedOverLinesStartPos[i];
+
+    editorTextarea.focus();
+
+    const whiteSpaceSize = getWhiteSpaceSize(code, cursorPos);
+
+    editorTextarea.setSelectionRange(cursorPos, cursorPos + whiteSpaceSize);
+
+    document.execCommand('delete');
+  }
+};
+
+const getWhiteSpaceSize = (code, cursorPos) => {
+  let numSpaceChars = 0;
+
+  for (let i = cursorPos; i < cursorPos + TAB_SIZE; i++) {
+    if (code[i] === ' ') {
+      numSpaceChars++;
+    } else {
+      break;
+    }
+  }
+
+  return numSpaceChars > 4 ? 4 : numSpaceChars;
+};
+
 const getTabbedOverLinesStartPos = (code, start, end) => {
   const lines = code.split('\n');
-  console.log('SPLIT: ', lines);
+  // console.log('SPLIT: ', lines);
 
   let seenFrameStart = 0;
   let seenFrameEnd = -1;
@@ -58,12 +90,12 @@ const getTabbedOverLinesStartPos = (code, start, end) => {
     seenFrameStart = seenFrameEnd + 1;
     seenFrameEnd = seenFrameStart + len - 1;
 
-    console.log('INDEX:', i);
-    console.log('START: ', start);
-    console.log('END: ', end);
-    console.log('seenFrameStart: ', seenFrameStart);
-    console.log('seenFrameEnd: ', seenFrameEnd);
-    console.log('len: ', len);
+    // console.log('INDEX:', i);
+    // console.log('START: ', start);
+    // console.log('END: ', end);
+    // console.log('seenFrameStart: ', seenFrameStart);
+    // console.log('seenFrameEnd: ', seenFrameEnd);
+    // console.log('len: ', len);
 
     if (line.trim().length == 0) {
       continue;
@@ -83,4 +115,9 @@ const getTabbedOverLinesStartPos = (code, start, end) => {
   return tabbedOverLines;
 };
 
-export { getHighlightedCode, tabOverText, getTabbedOverLinesStartPos };
+export {
+  getHighlightedCode,
+  tabOverText,
+  unTabText,
+  getTabbedOverLinesStartPos,
+};

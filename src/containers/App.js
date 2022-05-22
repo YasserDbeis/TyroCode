@@ -36,7 +36,7 @@ const {
 class App extends Component {
   constructor(props) {
     super(props);
-    console.log('[App.js] constructor');
+    // console.log('[App.js] constructor');
 
     this.state = {
       showTerminal: false,
@@ -52,7 +52,7 @@ class App extends Component {
   }
 
   onCollapse = (collapsed) => {
-    console.log(collapsed);
+    // console.log(collapsed);
 
     this.setState({ collapsed });
   };
@@ -71,7 +71,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log('[App.js] componentDidMount');
+    // console.log('[App.js] componentDidMount');
     window.addEventListener('resize', this.resize);
 
     const fetchFolderContent = async () => {
@@ -91,7 +91,7 @@ class App extends Component {
       initTerminal();
       this.setState({ terminalInitialized: true });
 
-      console.log('init terminal');
+      // console.log('init terminal');
 
       resizeTerminal();
     }
@@ -170,7 +170,7 @@ class App extends Component {
       </Menu>
     );
 
-    console.log(languageMenu, defaultLanguage);
+    // console.log(languageMenu, defaultLanguage);
 
     return (
       <Layout className="layout-font" style={{ minHeight: '100vh' }}>

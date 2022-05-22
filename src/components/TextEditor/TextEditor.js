@@ -11,6 +11,7 @@ import { useResizeDetector } from 'react-resize-detector';
 import {
   getHighlightedCode,
   tabOverText,
+  unTabText,
   getTabbedOverLinesStartPos,
 } from '../../helpers/TextEditing';
 import 'prismjs/themes/prism-coy.css'; //Example style, you can use another
@@ -35,6 +36,8 @@ const CTRL_KEYCODE = 17;
 const SHIFT_KEYCODE = 16;
 const ALT_KEYCODE = 18;
 const NO_REPITITIONS = -1;
+const FOUR_SPACE_TAB = ' '.repeat(4);
+const TAB_SIZE = 4;
 
 // good themes: coy - fun american colors, okaida - gothy but fun, tomorrow - not my style but its meh,
 
@@ -94,7 +97,7 @@ const TextEditor = (props) => {
     if (
       !e.metaKey &&
       !e.ctrlKey &&
-      !e.shiftKey &&
+      (!e.shiftKey || e.keyCode == TAB_KEYCODE) &&
       !e.altKey &&
       !comboKeys.includes(e.keyCode)
     ) {
@@ -103,7 +106,7 @@ const TextEditor = (props) => {
         keyCode: [keyCode],
         repetitions: -1,
       });
-      console.log(e.key);
+      // console.log(e.key);
     }
 
     if (e.keyCode == Z_KEYCODE) {
@@ -116,6 +119,10 @@ const TextEditor = (props) => {
         } else {
           console.log('UNDO');
           const undidFrame = undoStack.current.undo();
+
+          // console.log(
+          //   'UNDID: ' + undidFrame.keyCode + ', ' + undidFrame.repetitions
+          // );
 
           if (undidFrame != null) {
             const numRepitions = undidFrame.repetitions;
@@ -141,46 +148,45 @@ const TextEditor = (props) => {
       e.preventDefault();
       return false;
     } else if (e.keyCode == TAB_KEYCODE) {
-      if (!e.shiftKey) {
-        // if key is tab
+      const startCursor = editorRef.current.selectionStart;
+      const endCursor = editorRef.current.selectionEnd;
+      const currCode = editorRef.current.value;
 
-        const startCursor = editorRef.current.selectionStart;
-        const endCursor = editorRef.current.selectionEnd;
-        const currCode = editorRef.current.value;
+      const currCodeSelection = currCode.slice(startCursor, endCursor);
 
-        const currCodeSelection = currCode.slice(startCursor, endCursor);
-        // console.log('HIGHLIGHT: ' + startCursor + ', ' + endCursor);
-        // console.log('CURRENT SELECTION:', currCodeSelection);
+      if (currCodeSelection.includes('\n')) {
+        // console.log('SHOULD TAB THINGS OVER');
 
-        if (currCodeSelection.includes('\n')) {
-          // console.log('SHOULD TAB THINGS OVER');
+        const tabbedOverLinesStartPos = getTabbedOverLinesStartPos(
+          currCode,
+          startCursor,
+          endCursor
+        );
 
-          // undoStack.current.
+        const numTabbedOverLines = tabbedOverLinesStartPos.length;
 
-          const tabbedOverLinesStartPos = getTabbedOverLinesStartPos(
-            code,
-            startCursor,
-            endCursor
-          );
+        const currentStackFrame = undoStack.current.getCurrentFrame();
+        currentStackFrame.repetitions = numTabbedOverLines - 1;
 
-          const numTabbedOverLines = tabbedOverLinesStartPos.length;
+        if (e.shiftKey) {
+          console.log('SHIFT + TAB');
+          unTabText(editorRef.current, currCode, tabbedOverLinesStartPos);
 
-          const currentStackFrame = undoStack.current.getCurrentFrame();
-          currentStackFrame.repetitions = numTabbedOverLines - 1;
-
-          tabOverText(editorRef.current, tabbedOverLinesStartPos);
+          editorRef.current.setSelectionRange(startCursor, endCursor);
         } else {
-          document.execCommand('insertText', false, ' '.repeat(4));
+          console.log('TAB');
+          tabOverText(editorRef.current, tabbedOverLinesStartPos);
+          editorRef.current.setSelectionRange(
+            startCursor + TAB_SIZE,
+            endCursor + 2 * TAB_SIZE
+          );
         }
-
-        e.preventDefault();
-        return false;
       } else {
-        console.log('SHIFT + TAB');
-        // DO THE OPPOSITE OF WHAT THE TABBING FUNCTIONALITY
-        e.preventDefault();
-        return false;
+        document.execCommand('insertText', false, FOUR_SPACE_TAB);
       }
+
+      e.preventDefault();
+      return false;
     } else {
       return true;
     }
