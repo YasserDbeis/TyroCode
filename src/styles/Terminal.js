@@ -1,8 +1,6 @@
 const terminalStyle = {
   backgroundColor: '#282C34',
-  paddingRight: '5px',
-  paddingBottom: '5px',
-  paddingLeft: '5px',
+  paddingLeft: '10px',
   borderTop: '5px solid #21252B',
 };
 

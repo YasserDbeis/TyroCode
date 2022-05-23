@@ -40,19 +40,31 @@ const tabOverText = (editorTextarea, tabbedOverLinesStartPos) => {
 };
 
 const unTabText = (editorTextarea, code, tabbedOverLinesStartPos) => {
+  let startShift = 0;
+  let endShift = 0;
+
   const numTabbedLines = tabbedOverLinesStartPos.length;
 
   for (let i = numTabbedLines - 1; i >= 0; i--) {
     const cursorPos = tabbedOverLinesStartPos[i];
 
-    editorTextarea.focus();
-
     const whiteSpaceSize = getWhiteSpaceSize(code, cursorPos);
 
-    editorTextarea.setSelectionRange(cursorPos, cursorPos + whiteSpaceSize);
+    // if there is non-zero whitespace, shift-tab
+    if (whiteSpaceSize > 0) {
+      editorTextarea.focus();
+      editorTextarea.setSelectionRange(cursorPos, cursorPos + whiteSpaceSize);
+      document.execCommand('delete');
 
-    document.execCommand('delete');
+      if (i == 0) {
+        startShift = whiteSpaceSize;
+      }
+    }
+
+    endShift += whiteSpaceSize;
   }
+
+  return [startShift, endShift];
 };
 
 const getWhiteSpaceSize = (code, cursorPos) => {

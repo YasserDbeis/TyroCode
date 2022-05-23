@@ -1,18 +1,14 @@
 // Bugs
+1. Paste isnt registered into the undo/redo stack
+2. deleting from second to first line doesnt register in terminal
+3. Open curly brace uses bracket button (cant use bracket)
 
-1. when you first open app the text editor width sets and doesnt change when you full screen or even resize
-2. initial terminal width is too large
-3. when sidebar is triggered, the terminal width does not resize
-
-// Potential Fixes
-1. Always have terminal open, you already allow resizing
-
+// Clean Up
+1. Remove "Toggle Terminal Button" + relavant code
 
 // Features
-
 - Draggable Tabs
 - File Directory
-- Make the collapsed sidebar button trigger the sidebar to open
 - custom titlebar
     - add terminal toggle to this or consider adding it as a button to be more intuitive
 - make a tiktok advertising yscode

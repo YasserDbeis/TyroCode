@@ -15,6 +15,11 @@ export default class UndoStack {
     return this.history.empty() ? null : this.history.peek();
   }
 
+  getPrevFrame() {
+    const historyLen = this.history.length;
+    return historyLen > 1 ? this.history[historyLen - 2] : null;
+  }
+
   popHistory() {
     return this.history.empty() ? null : this.history.pop();
   }

@@ -28,13 +28,14 @@ import UndoStack from '../../StateManagement/UndoStack';
 
 const TAB_HEIGHT = 40;
 const TAB_KEYCODE = 9;
-const OPEN_CURLY_BRACE_KEYCODE = 219;
+const OPEN_BRACKETS_KEYCODE = 219;
 const Z_KEYCODE = 90;
 const MAC_PLATFORM = 'darwin';
 const META_KEYCODE = 91;
 const CTRL_KEYCODE = 17;
 const SHIFT_KEYCODE = 16;
 const ALT_KEYCODE = 18;
+const ENTER_KEYCODE = 13;
 const NO_REPITITIONS = -1;
 const FOUR_SPACE_TAB = ' '.repeat(4);
 const TAB_SIZE = 4;
@@ -78,7 +79,6 @@ const TextEditor = (props) => {
     if (cursor && editorRef.current) {
       editorRef.current.focus();
       editorRef.current.setSelectionRange(cursor[0], cursor[1]);
-      console.log('BEEP:', cursor);
     }
   }, [cursor]);
 
@@ -97,7 +97,9 @@ const TextEditor = (props) => {
     if (
       !e.metaKey &&
       !e.ctrlKey &&
-      (!e.shiftKey || e.keyCode == TAB_KEYCODE) &&
+      (!e.shiftKey ||
+        e.keyCode == TAB_KEYCODE ||
+        e.keyCode == OPEN_BRACKETS_KEYCODE) &&
       !e.altKey &&
       !comboKeys.includes(e.keyCode)
     ) {
@@ -120,10 +122,6 @@ const TextEditor = (props) => {
           console.log('UNDO');
           const undidFrame = undoStack.current.undo();
 
-          // console.log(
-          //   'UNDID: ' + undidFrame.keyCode + ', ' + undidFrame.repetitions
-          // );
-
           if (undidFrame != null) {
             const numRepitions = undidFrame.repetitions;
             if (numRepitions != NO_REPITITIONS) {
@@ -135,10 +133,23 @@ const TextEditor = (props) => {
           }
         }
       }
-    } else if (e.keyCode == OPEN_CURLY_BRACE_KEYCODE) {
-      // if key is open curly brace
+    } else if (e.keyCode == ENTER_KEYCODE) {
+      const prevFrame = undoStack.current.getPrevFrame();
 
-      document.execCommand('insertText', false, '{}');
+      if (prevFrame) {
+        const prevWasBracket = prevFrame.keyCode == OPEN_BRACKETS_KEYCODE;
+        document.execCommand('insertText', false, '\n');
+        setCursor([
+          editorRef.current.selectionStart - 1,
+          editorRef.current.selectionStart - 1,
+        ]);
+      }
+    } else if (e.keyCode == OPEN_BRACKETS_KEYCODE) {
+      // if key is open brackets or curly braces
+
+      const brackets = e.shiftKey ? '{}' : '[]';
+
+      document.execCommand('insertText', false, brackets);
 
       setCursor([
         editorRef.current.selectionStart - 1,
@@ -163,6 +174,8 @@ const TextEditor = (props) => {
           endCursor
         );
 
+        // IF YOU KEEP SHIFT TABBING IT DELETES THE CODE
+
         const numTabbedOverLines = tabbedOverLinesStartPos.length;
 
         const currentStackFrame = undoStack.current.getCurrentFrame();
@@ -170,17 +183,24 @@ const TextEditor = (props) => {
 
         if (e.shiftKey) {
           console.log('SHIFT + TAB');
-          unTabText(editorRef.current, currCode, tabbedOverLinesStartPos);
+          const [startShift, endShift] = unTabText(
+            editorRef.current,
+            currCode,
+            tabbedOverLinesStartPos
+          );
+
           editorRef.current.setSelectionRange(
-            startCursor - TAB_SIZE,
-            endCursor - 2 * TAB_SIZE
+            startCursor - startShift,
+            endCursor - endShift
           );
         } else {
           console.log('TAB');
           tabOverText(editorRef.current, tabbedOverLinesStartPos);
+
+          const numShiftedLines = tabbedOverLinesStartPos.length;
           editorRef.current.setSelectionRange(
             startCursor + TAB_SIZE,
-            endCursor + 2 * TAB_SIZE
+            endCursor + numShiftedLines * TAB_SIZE
           );
         }
       } else {

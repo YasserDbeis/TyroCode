@@ -44,6 +44,7 @@ const resizeTerminal = () => {
 
 const createTerminal = () => {
   termProxy = new Terminal({
+    convertEol: true,
     rows: 30,
     cols: 80,
     cursorBlink: true,
@@ -58,27 +59,23 @@ const createTerminal = () => {
 };
 
 const writeEnter = async () => {
-  termProxy.write('\r\n');
+  termProxy.writeln('');
 
   for (let welcomeMessageChar of terminalWelcomeMessage) {
     termProxy.write(welcomeMessageChar);
-    await new Promise((r) => setTimeout(r, 75));
+    await new Promise((r) => setTimeout(r, 50));
   }
+  termProxy.writeln('');
 };
 
 const writeCodeResult = (result) => {
-  termProxy.write('\r\n');
+  termProxy.writeln('');
 
   termProxy.write(result);
 
-  termProxy.write('\r');
+  termProxy.writeln('');
+
   termProxy.focus();
-  // termProxy.write([
-  //   67, 58, 92, 85, 115, 101, 114, 115, 92, 85, 115, 101, 114, 92, 68, 101, 115,
-  //   107, 116, 111, 112, 92, 80, 101, 114, 115, 111, 110, 97, 108, 32, 80, 114,
-  //   111, 106, 101, 99, 116, 115, 92, 121, 115, 99, 111, 100, 101, 62,
-  // ]);
-  //writeEnter()
 };
 
 export {

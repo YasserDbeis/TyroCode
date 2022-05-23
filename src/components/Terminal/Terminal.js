@@ -44,6 +44,8 @@ const Terminal = (props) => {
           width: windowWidth,
           height: termHeight,
         }}
+        minHeight="10vh"
+        maxHeight="50vh"
         onResizeStop={(e, direction, ref, d) => {
           if (direction !== 'top') return;
           resizeTerminal();

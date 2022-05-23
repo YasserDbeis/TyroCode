@@ -58,7 +58,7 @@ app.on('ready', () => {
 
   ptyProcess.on('data', (data) => {
     win.webContents.send('terminal.incomingData', data);
-    // console.log('Data sent');
+    console.log('Data sent');
   });
 
   ipcMain.on('terminal.keystroke', (event, key) => {
