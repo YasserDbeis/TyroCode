@@ -1,6 +1,8 @@
 const ipc = require('electron').ipcRenderer;
 import { FitAddon } from 'xterm-addon-fit';
 
+const terminalWelcomeMessage = 'Press Enter to Use The YSCode Terminal...';
+
 let fitAdd = null;
 let termProxy = null;
 
@@ -13,8 +15,6 @@ const initTerminal = () => {
   term.open(document.getElementById('terminal'));
   ipc.on('terminal.incomingData', (event, data) => {
     term.write(data);
-    var enc = new TextEncoder();
-    console.log(data);
   });
 
   term.onData((e) => {
@@ -57,13 +57,13 @@ const createTerminal = () => {
   return termProxy;
 };
 
-const writeEnter = () => {
-  termProxy.write('\n');
-  termProxy.write([
-    67, 58, 92, 85, 115, 101, 114, 115, 92, 85, 115, 101, 114, 92, 68, 101, 115,
-    107, 116, 111, 112, 92, 80, 101, 114, 115, 111, 110, 97, 108, 32, 80, 114,
-    111, 106, 101, 99, 116, 115, 92, 121, 115, 99, 111, 100, 101, 62,
-  ]);
+const writeEnter = async () => {
+  termProxy.write('\r\n');
+
+  for (let welcomeMessageChar of terminalWelcomeMessage) {
+    termProxy.write(welcomeMessageChar);
+    await new Promise((r) => setTimeout(r, 75));
+  }
 };
 
 const writeCodeResult = (result) => {
@@ -73,11 +73,11 @@ const writeCodeResult = (result) => {
 
   termProxy.write('\r');
   termProxy.focus();
-  termProxy.write([
-    67, 58, 92, 85, 115, 101, 114, 115, 92, 85, 115, 101, 114, 92, 68, 101, 115,
-    107, 116, 111, 112, 92, 80, 101, 114, 115, 111, 110, 97, 108, 32, 80, 114,
-    111, 106, 101, 99, 116, 115, 92, 121, 115, 99, 111, 100, 101, 62,
-  ]);
+  // termProxy.write([
+  //   67, 58, 92, 85, 115, 101, 114, 115, 92, 85, 115, 101, 114, 92, 68, 101, 115,
+  //   107, 116, 111, 112, 92, 80, 101, 114, 115, 111, 110, 97, 108, 32, 80, 114,
+  //   111, 106, 101, 99, 116, 115, 92, 121, 115, 99, 111, 100, 101, 62,
+  // ]);
   //writeEnter()
 };
 

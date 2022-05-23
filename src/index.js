@@ -5,9 +5,10 @@ import App from './containers/App';
 import registerServiceWorker from './registerServiceWorker';
 // const {initTerminal} = require('./components/Terminal/TerminalSetup');
 
-ReactDOM.render(<App appTitle="Person Manager" />, document.getElementById('root'));
+ReactDOM.render(
+  <App appTitle="Person Manager" />,
+  document.getElementById('root')
+);
 // initTerminal()
-
-
 
 registerServiceWorker();
