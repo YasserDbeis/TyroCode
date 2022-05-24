@@ -7,6 +7,7 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-java';
 const fs = require('fs');
+
 import { useResizeDetector } from 'react-resize-detector';
 import {
   getHighlightedCode,
@@ -255,6 +256,7 @@ const TextEditor = (props) => {
         <div
           className="scroller editor-area"
           dangerouslySetInnerHTML={{ __html: highlightedCode }}
+          // FIND AND REPLACE HTML TAGS WITH &amp and &WHATEVER
           align="left"
           style={{
             height: props.windowHeight - props.terminalHeight - TAB_HEIGHT,

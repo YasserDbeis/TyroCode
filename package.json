@@ -9,7 +9,6 @@
     "start": "electron .",
     "rebuild": "electron-rebuild",
     "build": "electron-builder install-app-deps"
-
   },
   "keywords": [],
   "author": "",

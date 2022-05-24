@@ -1,12 +1,12 @@
 // Bugs
 1. Paste isnt registered into the undo/redo stack
 2. deleting from second to first line doesnt register in terminal
-3. Open curly brace uses bracket button (cant use bracket)
 
 // Clean Up
 1. Remove "Toggle Terminal Button" + relavant code
 
 // Features
+- Add 4 spaces after bracket + enter combo
 - Draggable Tabs
 - File Directory
 - custom titlebar

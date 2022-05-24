@@ -3,7 +3,16 @@ import * as langs from '../enums/ProgLanguages';
 const TAB_SIZE = 4;
 
 const getHighlightedCode = (code) => {
+  console.log('CODE', code);
   let result = '';
+
+  code = code
+    .replace(/&/g, '&amp;')
+    .replace(/>/g, '&gt;')
+    .replace(/</g, '&lt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+
   for (let c of code) {
     if (c === '{' || c === '}') {
       result += '<span style="color:teal;">';
@@ -14,7 +23,11 @@ const getHighlightedCode = (code) => {
     }
   }
 
+  console.log('RESULT', result);
+
   return result;
+
+  // return result;
 };
 
 const insertBraceAtPos = (code, pos) => {
