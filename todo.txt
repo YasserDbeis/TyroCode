@@ -1,4 +1,5 @@
 // Bugs
+0. When you create a new file, it does not get highlighted/selected
 1. Paste isnt registered into the undo/redo stack
 2. Tabbing a single line (with the top empty line also selected) multiple times doesnt work well
 3. If you press enter until cursor is at bottom of editor, it cuts off last line

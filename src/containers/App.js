@@ -10,7 +10,14 @@ import { Layout, Menu, Breadcrumb, Divider, Button, Dropdown } from 'antd';
 import Tabs from '../components/Tabs/Tabs';
 
 import { Scrollbars } from 'react-custom-scrollbars';
-import { getFolderContents, getFileText } from '../helpers/FileDirectory';
+import {
+  getFolderContents,
+  getFileText,
+  getCurrentDirectory,
+  fetchFolderContent,
+  getFullPath,
+} from '../helpers/FileDirectory';
+import { createNewFile } from '../helpers/FileWriting';
 import { Resizable } from 're-resizable';
 import { FaRegPlayCircle } from 'react-icons/fa';
 import { languageOptions, defaultLanguage } from '../content/LanguageMenu';
@@ -46,7 +53,8 @@ class App extends Component {
       folderContent: null,
       folderName: null,
       sidebarWidth: 300,
-      folderDropdownSelection: null,
+      folderDropdownSelectionElement: null,
+      currentDirectory: null,
       languageSelection: { ...defaultLanguage },
     };
   }
@@ -72,14 +80,7 @@ class App extends Component {
     // console.log('[App.js] componentDidMount');
     window.addEventListener('resize', this.resize);
 
-    const fetchFolderContent = async () => {
-      const folderName = path.join(process.cwd(), 'src').split('\\').pop();
-      const folderContent = getFolderContents(path.join(process.cwd(), 'src'));
-
-      this.setState({ folderContent: folderContent, folderName: folderName });
-    };
-
-    fetchFolderContent();
+    fetchFolderContent(this);
 
     this.setState({ showTerminal: true });
   }
@@ -122,29 +123,43 @@ class App extends Component {
     this.setState({ showTerminal: !showingTerminal });
   };
 
-  addFileToTabs = (fileNode) => {
-    console.log('FILENODE', fileNode);
-    let code = fileNode.path == '.' ? '' : getFileText(fileNode.path);
-    this.child.add(fileNode.name, code);
+  newFileCreatedHandler = (fileName) => {
+    console.log('added', fileName);
+    const currDirectory = this.state.currentDirectory;
+    const path = getFullPath(currDirectory, fileName);
+
+    createNewFile(path);
+
+    this.tabs.add(fileName, path, '');
+
+    fetchFolderContent(this);
   };
 
-  folderDropdownNodeClickHandler = (element, node) => {
-    if (node.type == 'file') {
-      this.addFileToTabs(node);
+  addExistingFileToTabs = (fileNode) => {
+    let code = getFileText(fileNode.path);
+    this.tabs.add(fileNode.name, fileNode.path, code);
+  };
+
+  folderDropdownNodeClickHandler = (element, directoryNode) => {
+    if (directoryNode.type == 'file') {
+      this.addExistingFileToTabs(directoryNode);
     }
 
-    const prevSelectedElement = this.state.folderDropdownSelection;
+    const currDirectory = getCurrentDirectory(directoryNode);
+    this.setState({ currentDirectory: currDirectory });
+
+    const prevSelectedElement = this.state.folderDropdownSelectionElement;
     if (prevSelectedElement != null) {
       prevSelectedElement.style.backgroundColor = 'transparent';
     }
 
-    this.setState({ folderDropdownSelection: element });
+    this.setState({ folderDropdownSelectionElement: element });
 
-    element.style.backgroundColor = 'blue';
+    element.style.backgroundColor = '#8CC0DE';
   };
 
   runButtonHandler = () => {
-    this.child.runCurrentCode(this.state.languageSelection.compilerName);
+    this.tabs.runCurrentCode(this.state.languageSelection.compilerName);
   };
 
   languageOptionClickHandler = (lang) => {
@@ -189,13 +204,9 @@ class App extends Component {
             });
 
             resizeTerminal();
-            //this.child.adjustTerminalWidth(this.state.sidebarWidth + d.width)
-
-            // console.log(this.state.sidebarWidth);
           }}
           onResize={(e, direction, ref, d) => {
             resizeTerminal();
-            //
           }}
         >
           <Scrollbars>
@@ -211,7 +222,7 @@ class App extends Component {
                 </Button>
               </Dropdown>
               <NewFileModal
-                onFilenameInputSuccess={this.addFileToTabs}
+                onFilenameInputSuccess={this.newFileCreatedHandler}
               ></NewFileModal>
             </div>
 
@@ -231,7 +242,7 @@ class App extends Component {
           <Tabs
             windowHeight={this.state.windowHeight}
             terminalHeight={this.state.terminalHeight}
-            onRef={(ref) => (this.child = ref)}
+            onRef={(ref) => (this.tabs = ref)}
           />
           {this.state.showTerminal ? (
             <Terminal

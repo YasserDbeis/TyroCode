@@ -2,13 +2,18 @@ import React, { Component } from 'react';
 import { Tabs, Button } from 'antd';
 import { writeCodeResult } from '../Terminal/TerminalSetup';
 import TextEditorWrapper from '../TextEditor/TextEditorWrapper';
+import { getPWD } from '../../helpers/FileDirectory';
 import './Tabs.css';
+import { last, update } from 'lodash';
 
 const { TabPane } = Tabs;
+const ADD = 0;
+const REMOVE = 1;
 
 const initialPanes = [
   {
     title: 'Welcome!',
+    path: getPWD(),
     content: 'HELLO\nWORLD',
     key: '1',
   },
@@ -22,6 +27,7 @@ class Tabbing extends Component {
     this.state = {
       activeKey: initialPanes[0].key,
       panes: initialPanes,
+      pathToKey: new Map(),
     };
 
     this.codeChange = this.codeChange.bind(this);
@@ -43,11 +49,21 @@ class Tabbing extends Component {
     this[action](targetKey);
   };
 
-  add = (name, code) => {
-    const { panes } = this.state;
+  add = (name, path, code) => {
+    const pathToKey = this.state.pathToKey;
     const activeKey = `newTab${this.newTabIndex++}`;
+
+    if (pathToKey.has(path)) {
+      const activeKey = this.state.pathToKey.get(path);
+      this.setState({ activeKey });
+      return;
+    } else {
+      this.state.pathToKey.set(path, activeKey);
+    }
+
+    const { panes } = this.state;
     const newPanes = panes.length == 1 && panes[0].key == 1 ? [] : [...panes];
-    newPanes.push({ title: name, content: code, key: activeKey });
+    newPanes.push({ title: name, path: path, content: code, key: activeKey });
 
     this.setState({
       panes: newPanes,
@@ -64,6 +80,10 @@ class Tabbing extends Component {
         lastIndex = i - 1;
       }
     });
+
+    const filePathToDelete = panes[lastIndex + 1].path;
+    this.updatePathsSeen(filePathToDelete, null, REMOVE);
+
     const newPanes = panes.filter((pane) => pane.key !== targetKey);
     if (newPanes.length && newActiveKey === targetKey) {
       if (lastIndex >= 0) {

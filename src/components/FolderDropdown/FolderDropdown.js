@@ -18,6 +18,7 @@ import {
   DiPython,
 } from 'react-icons/di';
 import { SiC, SiCsharp, SiCplusplus } from 'react-icons/si';
+import { getDirectoryNode } from '../../helpers/FileDirectory';
 
 /*
 Thank you to Anurag Hazra for his wonderful inspiration. His work 
@@ -68,17 +69,14 @@ const Collapsible = styled.div`
 `;
 
 const File = ({ name, path, onNodeClick }) => {
-  let ext = name.split('.')[name.split('.').length - 1];
+  const splitOnDot = name.split('.');
+  let ext = splitOnDot[splitOnDot.length - 1];
   let iconExists = FILE_ICONS[ext] != null;
 
   const fileClickHandler = (e) => {
-    const node = {
-      type: 'file',
-      name: name,
-      path: path,
-    };
+    const fileNode = getDirectoryNode('file', name, path);
 
-    onNodeClick(e.target, node);
+    onNodeClick(e.target, fileNode);
   };
 
   return (
@@ -98,12 +96,8 @@ const Folder = ({ name, path, children, onNodeClick }) => {
     e.preventDefault();
     setIsOpen(!isOpen);
 
-    const node = {
-      type: 'folder',
-      name: name,
-      path: path,
-    };
-    onNodeClick(e.target, node);
+    const folderNode = getDirectoryNode('folder', name, path);
+    onNodeClick(e.target, folderNode);
   };
 
   return (

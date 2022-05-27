@@ -19,6 +19,7 @@ const NewFileModal = (props) => {
     if (isValidFilename(filename)) {
       setIsModalVisible(false);
       console.log('SUCCESS', filename);
+      props.onFilenameInputSuccess(filename);
       setFilenameValidationStatus(null);
       setFileName('');
     } else {
