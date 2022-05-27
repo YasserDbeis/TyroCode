@@ -7,7 +7,7 @@ let languageDropdownStyle = {
 };
 
 let languageOptionStyle = {
-  textAlign: 'center',
+  textAlign: 'left',
   verticalAlign: 'baseline',
   fontSize: '15px',
   textAlign: 'left',

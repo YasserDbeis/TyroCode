@@ -41,7 +41,7 @@ const getFolderContents = (filePath) => {
       newDir.push({
         type: 'folder',
         name: currentPath.split(slash).pop(),
-        childrens: tempDir,
+        children: tempDir,
         path: currentPath,
       }); // type 1: Folder
     } else {

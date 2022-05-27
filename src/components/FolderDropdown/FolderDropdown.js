@@ -9,7 +9,7 @@ import {
   AiOutlineFolderOpen,
 } from 'react-icons/ai';
 import {
-  DiJavascript1,
+  DiJavascript,
   DiCss3Full,
   DiHtml5,
   DiReact,
@@ -27,7 +27,7 @@ and for that he deserves credit.
 */
 
 const FILE_ICONS = {
-  js: <DiJavascript1 />,
+  js: <DiJavascript />,
   css: <DiCss3Full />,
   html: <DiHtml5 />,
   jsx: <DiReact />,
@@ -67,26 +67,43 @@ const Collapsible = styled.div`
   overflow: hidden;
 `;
 
-const File = ({ name, node, onNodeClick }) => {
+const File = ({ name, path, onNodeClick }) => {
   let ext = name.split('.')[name.split('.').length - 1];
   let iconExists = FILE_ICONS[ext] != null;
+
+  const fileClickHandler = (e) => {
+    const node = {
+      type: 'file',
+      name: name,
+      path: path,
+    };
+
+    onNodeClick(e.target, node);
+  };
 
   return (
     <StyledFile>
       {iconExists ? FILE_ICONS[ext] : <AiOutlineFile />}
-      <span style={{ cursor: 'pointer' }} onClick={() => onNodeClick(node)}>
+      <span onClick={fileClickHandler} style={{ cursor: 'pointer' }}>
         {name}
       </span>
     </StyledFile>
   );
 };
 
-const Folder = ({ name, children }) => {
+const Folder = ({ name, path, children, onNodeClick }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = (e) => {
     e.preventDefault();
     setIsOpen(!isOpen);
+
+    const node = {
+      type: 'folder',
+      name: name,
+      path: path,
+    };
+    onNodeClick(e.target, node);
   };
 
   return (
@@ -112,7 +129,7 @@ const TreeRecursive = ({ data, onNodeClick }) => {
         <File
           key={item.path + '_file'}
           name={item.name}
-          node={item}
+          path={item.path}
           onNodeClick={onNodeClick}
         />
       );
@@ -120,10 +137,16 @@ const TreeRecursive = ({ data, onNodeClick }) => {
 
     if (item.type === 'folder') {
       return (
-        <Folder key={item.path + '_folder'} name={item.name} node={item}>
+        <Folder
+          key={item.path + '_folder'}
+          name={item.name}
+          path={item.path}
+          children={item.children}
+          onNodeClick={onNodeClick}
+        >
           <TreeRecursive
             key={item.toString()}
-            data={item.childrens}
+            data={item.children}
             onNodeClick={onNodeClick}
           />
         </Folder>
@@ -148,7 +171,7 @@ const errorDirectory = [
   {
     type: 'file',
     name: 'Error Loading Directory',
-    childrens: [],
+    children: [],
   },
 ];
 
@@ -158,7 +181,7 @@ const FileTree = (props) => {
   return (
     <div className="FileTree">
       <Tree
-        onNodeClick={props.fileClickHandler}
+        onNodeClick={props.folderDropdownNodeClickHandler}
         data={props.folderContent ? props.folderContent : errorDirectory}
       />
     </div>

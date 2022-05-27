@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-// const Prism = require('prismjs');
+import { tokenize } from 'prismjs/components/prism-core';
+import prism from 'prismjs/components/prism-core';
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages, plugins } from 'prismjs/components/prism-core';
@@ -17,7 +18,6 @@ import {
 } from '../../helpers/TextEditing';
 import 'prismjs/themes/prism-coy.css'; //Example style, you can use another
 import './TextEditor.css';
-
 import { Scrollbars } from 'react-custom-scrollbars';
 import TextArea from 'antd/lib/input/TextArea';
 import { useWindowResize } from 'beautiful-react-hooks';
@@ -30,6 +30,7 @@ import UndoStack from '../../StateManagement/UndoStack';
 const TAB_HEIGHT = 40;
 const TAB_KEYCODE = 9;
 const OPEN_BRACKETS_KEYCODE = 219;
+const OPEN_PAREN_KEYCODE = 57;
 const Z_KEYCODE = 90;
 const MAC_PLATFORM = 'darwin';
 const META_KEYCODE = 91;
@@ -95,15 +96,11 @@ const TextEditor = (props) => {
   function onKeyDownHandler(e) {
     const comboKeys = [META_KEYCODE, CTRL_KEYCODE, SHIFT_KEYCODE, ALT_KEYCODE];
 
-    if (
-      !e.metaKey &&
-      !e.ctrlKey &&
-      (!e.shiftKey ||
-        e.keyCode == TAB_KEYCODE ||
-        e.keyCode == OPEN_BRACKETS_KEYCODE) &&
-      !e.altKey &&
-      !comboKeys.includes(e.keyCode)
-    ) {
+    console.log(tokenize('let x = 5;', prism.languages.javascript));
+
+    console.log('ORESSED', e.keyCode);
+
+    if (!comboKeys.includes(e.keyCode)) {
       const keyCode = e.keyCode.toString();
       undoStack.current.push({
         keyCode: [keyCode],
@@ -136,19 +133,23 @@ const TextEditor = (props) => {
       }
     } else if (e.keyCode == ENTER_KEYCODE) {
       const prevFrame = undoStack.current.getPrevFrame();
-
-      if (prevFrame) {
-        const prevWasBracket = prevFrame.keyCode == OPEN_BRACKETS_KEYCODE;
+      if (prevFrame && prevFrame.keyCode == OPEN_BRACKETS_KEYCODE) {
         document.execCommand('insertText', false, '\n');
         setCursor([
           editorRef.current.selectionStart - 1,
           editorRef.current.selectionStart - 1,
         ]);
       }
-    } else if (e.keyCode == OPEN_BRACKETS_KEYCODE) {
-      // if key is open brackets or curly braces
+    } else if (
+      e.keyCode == OPEN_BRACKETS_KEYCODE ||
+      (e.keyCode == OPEN_PAREN_KEYCODE && e.shiftKey)
+    ) {
+      // default brackets to open parenthesis
+      let brackets = '()';
 
-      const brackets = e.shiftKey ? '{}' : '[]';
+      if (e.keyCode == OPEN_BRACKETS_KEYCODE) {
+        brackets = e.shiftKey ? '{}' : '[]';
+      }
 
       document.execCommand('insertText', false, brackets);
 
@@ -167,15 +168,11 @@ const TextEditor = (props) => {
       const currCodeSelection = currCode.slice(startCursor, endCursor);
 
       if (currCodeSelection.includes('\n')) {
-        // console.log('SHOULD TAB THINGS OVER');
-
         const tabbedOverLinesStartPos = getTabbedOverLinesStartPos(
           currCode,
           startCursor,
           endCursor
         );
-
-        // IF YOU KEEP SHIFT TABBING IT DELETES THE CODE
 
         const numTabbedOverLines = tabbedOverLinesStartPos.length;
 
@@ -256,7 +253,6 @@ const TextEditor = (props) => {
         <div
           className="scroller editor-area"
           dangerouslySetInnerHTML={{ __html: highlightedCode }}
-          // FIND AND REPLACE HTML TAGS WITH &amp and &WHATEVER
           align="left"
           style={{
             height: props.windowHeight - props.terminalHeight - TAB_HEIGHT,

@@ -1,6 +1,9 @@
 // Bugs
 1. Paste isnt registered into the undo/redo stack
-2. deleting from second to first line doesnt register in terminal
+2. Tabbing a single line (with the top empty line also selected) multiple times doesnt work well
+3. If you press enter until cursor is at bottom of editor, it cuts off last line
+4. deleting from second to first line doesnt register in terminal
+
 
 // Clean Up
 1. Remove "Toggle Terminal Button" + relavant code

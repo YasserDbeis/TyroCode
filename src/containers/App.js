@@ -3,6 +3,7 @@ import path from 'path';
 import './App.css';
 import Terminal from '../components/Terminal/Terminal';
 import FileTree from '../components/FolderDropdown/FolderDropdown';
+import NewFileModal from '../components/NewFileModal/NewFileModal';
 const ResizableBox = require('react-resizable').ResizableBox;
 
 import { Layout, Menu, Breadcrumb, Divider, Button, Dropdown } from 'antd';
@@ -11,7 +12,6 @@ import Tabs from '../components/Tabs/Tabs';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { getFolderContents, getFileText } from '../helpers/FileDirectory';
 import { Resizable } from 're-resizable';
-import { AiOutlineFileAdd } from 'react-icons/ai';
 import { FaRegPlayCircle } from 'react-icons/fa';
 import { languageOptions, defaultLanguage } from '../content/LanguageMenu';
 import newFile from '../content/NewFile';
@@ -19,7 +19,6 @@ import {
   languageDropdownStyle,
   languageOptionStyle,
 } from '../styles/LanguageDropdown';
-import newFileIconStyle from '../styles/NewFileIcon';
 import runButtonStyle from '../styles/RunButton';
 import { last } from 'lodash';
 
@@ -47,13 +46,12 @@ class App extends Component {
       folderContent: null,
       folderName: null,
       sidebarWidth: 300,
+      folderDropdownSelection: null,
       languageSelection: { ...defaultLanguage },
     };
   }
 
   onCollapse = (collapsed) => {
-    // console.log(collapsed);
-
     this.setState({ collapsed });
   };
 
@@ -90,9 +88,6 @@ class App extends Component {
     if (this.state.showTerminal && !this.state.terminalInitialized) {
       initTerminal();
       this.setState({ terminalInitialized: true });
-
-      // console.log('init terminal');
-
       resizeTerminal();
     }
   }
@@ -121,22 +116,31 @@ class App extends Component {
       this.setState({ terminalInitialized: false });
       this.setState({ terminalHeight: 0 });
     } else {
-      // const termHeight =
-      //   document.querySelector('#root > section > section').clientHeight / 3;
-      // this.resizeTextEditor(termHeight);
-
       this.setState({ terminalHeight: 300 });
     }
 
     this.setState({ showTerminal: !showingTerminal });
   };
 
-  fileClickHandler = (node) => {
+  addFileToTabs = (fileNode) => {
+    console.log('FILENODE', fileNode);
+    let code = fileNode.path == '.' ? '' : getFileText(fileNode.path);
+    this.child.add(fileNode.name, code);
+  };
+
+  folderDropdownNodeClickHandler = (element, node) => {
     if (node.type == 'file') {
-      let code = node.path == '.' ? '' : getFileText(node.path);
-      // console.log(code);
-      this.child.add(node.name, code);
+      this.addFileToTabs(node);
     }
+
+    const prevSelectedElement = this.state.folderDropdownSelection;
+    if (prevSelectedElement != null) {
+      prevSelectedElement.style.backgroundColor = 'transparent';
+    }
+
+    this.setState({ folderDropdownSelection: element });
+
+    element.style.backgroundColor = 'blue';
   };
 
   runButtonHandler = () => {
@@ -155,19 +159,18 @@ class App extends Component {
     const { collapsed } = this.state;
 
     let languageMenu = (
-      <Menu className="layout-font language-dropdown">
-        {languageOptions.map((lang, index) => {
-          return (
-            <Menu.Item
-              key={index}
-              style={languageOptionStyle}
-              onClick={() => this.languageOptionClickHandler(lang)}
-            >
-              {lang.name} {lang.icon}
-            </Menu.Item>
-          );
+      <Menu
+        className="layout-font language-dropdown"
+        items={languageOptions.map((lang, index) => {
+          return {
+            key: index,
+            style: languageOptionStyle,
+            onClick: () => this.languageOptionClickHandler(lang),
+            label: lang.name,
+            icon: lang.icon,
+          };
         })}
-      </Menu>
+      ></Menu>
     );
 
     // console.log(languageMenu, defaultLanguage);
@@ -202,29 +205,28 @@ class App extends Component {
                 style={runButtonStyle}
                 onClick={() => this.runButtonHandler()}
               />
-              <Dropdown overlay={languageMenu} placement="bottomCenter">
+              <Dropdown overlay={languageMenu} placement="bottom">
                 <Button style={languageDropdownStyle}>
                   Run {this.state.languageSelection.name}
                 </Button>
               </Dropdown>
-              <AiOutlineFileAdd
-                style={newFileIconStyle}
-                size={25}
-                onClick={() => this.fileClickHandler(newFile)}
-              ></AiOutlineFileAdd>
+              <NewFileModal
+                onFilenameInputSuccess={this.addFileToTabs}
+              ></NewFileModal>
             </div>
 
             <div style={{ color: 'white' }}>
               <FileTree
                 key={this.state.folderName}
                 folderContent={this.state.folderContent}
-                fileClickHandler={this.fileClickHandler}
+                folderDropdownNodeClickHandler={
+                  this.folderDropdownNodeClickHandler
+                }
               />
             </div>
             <Button onClick={this.toggleTerminal}>Open Terminal</Button>
           </Scrollbars>
         </Resizable>
-
         <Layout className="site-layout">
           <Tabs
             windowHeight={this.state.windowHeight}

@@ -3,7 +3,7 @@ import * as langs from '../enums/ProgLanguages';
 const TAB_SIZE = 4;
 
 const getHighlightedCode = (code) => {
-  console.log('CODE', code);
+  // console.log('CODE', code);
   let result = '';
 
   code = code
@@ -23,7 +23,7 @@ const getHighlightedCode = (code) => {
     }
   }
 
-  console.log('RESULT', result);
+  // console.log('RESULT', result);
 
   return result;
 

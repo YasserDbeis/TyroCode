@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@ant-design/icons": "^4.4.0",
-    "antd": "^4.12.2",
+    "antd": "^4.20.6",
     "antd-resizeable-sider": "^1.0.1",
     "babel-plugin-macros": "^3.0.1",
     "beautiful-react-hooks": "^1.0.2",
@@ -36,6 +36,7 @@
     "react-resize-panel": "^0.3.5",
     "react-simple-code-editor": "^0.11.0",
     "styled-components": "^5.2.1",
+    "valid-filename": "^4.0.0",
     "xterm": "^4.16.0",
     "xterm-addon-fit": "^0.5.0",
     "xterm-addon-web-links": "^0.5.0",
