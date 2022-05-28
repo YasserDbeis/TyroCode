@@ -155,7 +155,7 @@ class App extends Component {
 
     this.setState({ folderDropdownSelectionElement: element });
 
-    element.style.backgroundColor = '#8CC0DE';
+    element.style.backgroundColor = '#41729f';
   };
 
   runButtonHandler = () => {
@@ -210,20 +210,30 @@ class App extends Component {
           }}
         >
           <Scrollbars>
-            <div style={{ height: '2.5%' }}>
-              <FaRegPlayCircle
-                size={25}
-                style={runButtonStyle}
-                onClick={() => this.runButtonHandler()}
-              />
+            <div
+              style={{
+                height: '5px',
+                marginLeft: '20px',
+                marginRight: '20px',
+                marginTop: '20px',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                display: 'flex',
+              }}
+            >
+              <NewFileModal
+                onFilenameInputSuccess={this.newFileCreatedHandler}
+              ></NewFileModal>
               <Dropdown overlay={languageMenu} placement="bottom">
                 <Button style={languageDropdownStyle}>
                   Run {this.state.languageSelection.name}
                 </Button>
               </Dropdown>
-              <NewFileModal
-                onFilenameInputSuccess={this.newFileCreatedHandler}
-              ></NewFileModal>
+              <FaRegPlayCircle
+                size={25}
+                style={runButtonStyle}
+                onClick={() => this.runButtonHandler()}
+              />
             </div>
 
             <div style={{ color: 'white' }}>

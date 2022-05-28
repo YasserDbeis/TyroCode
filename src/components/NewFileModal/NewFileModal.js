@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { AiOutlineFileAdd } from 'react-icons/ai';
 import newFileIconStyle from '../../styles/NewFileIcon';
 import isValidFilename from 'valid-filename';
+import './NewFileModal.css';
 
 const NewFileModal = (props) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -39,13 +40,14 @@ const NewFileModal = (props) => {
         onClick={showModal}
       ></AiOutlineFileAdd>
       <Modal
-        title="File Name Input"
+        title="Create New File"
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
       >
         <Input
           value={filename}
+          placeholder="Enter File Name"
           onChange={(e) => {
             setFileName(e.target.value);
           }}

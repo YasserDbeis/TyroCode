@@ -107,6 +107,19 @@ li.ant-menu-item {
   margin-left: 10px;
 }
 
+.ant-btn:hover {
+  border-color: #41729f;
+  color: #41729f
+}
+
+#root > section > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > svg:nth-child(3):hover {
+  fill: #41729f;
+}
+
+#root > section > div > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > svg:nth-child(1):hover {
+  fill: #41729f
+} 
+
 /* svg:not(:root) {
   margin-left: 10px;
   margin-bottom: -5px;

@@ -2,8 +2,8 @@ let languageDropdownStyle = {
   cursor: 'pointer',
   color: 'whitesmoke',
   backgroundColor: 'transparent',
-  float: 'right',
-  margin: '5px',
+  // float: 'right',
+  // margin: '5px',
 };
 
 let languageOptionStyle = {
