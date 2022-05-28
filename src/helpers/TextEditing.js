@@ -1,31 +1,76 @@
 import * as langs from '../enums/ProgLanguages';
+import { tokenize } from 'prismjs/components/prism-core';
+import prism from 'prismjs';
 
 const TAB_SIZE = 4;
 
-const getHighlightedCode = (code) => {
-  // console.log('CODE', code);
-  let result = '';
+const tokenContentToString = (contents) => {
+  if (typeof contents == 'string') {
+    return contents;
+  }
 
-  code = code
-    .replace(/&/g, '&amp;')
-    .replace(/>/g, '&gt;')
-    .replace(/</g, '&lt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
+  let totalContent = '';
 
-  for (let c of code) {
-    if (c === '{' || c === '}') {
-      result += '<span style="color:teal;">';
-      result += c;
-      result += '</span>';
+  for (const content of contents) {
+    if (typeof content == 'object') {
+      totalContent += '<span style="color:teal;">';
+      totalContent += tokenContentToString(content.content);
+      totalContent += '</span>';
     } else {
-      result += c;
+      totalContent += content;
     }
   }
 
-  // console.log('RESULT', result);
+  return totalContent;
+};
+
+const getHighlightedCode = (code) => {
+  const lang = prism.languages.javascript;
+
+  const tokens = tokenize(code, lang);
+
+  console.log(tokens);
+
+  let result = '';
+
+  tokens.forEach((token) => {
+    if (typeof token == 'object') {
+      if (token.type == 'punctuation') {
+        result += '<span style="color:teal;">';
+      }
+
+      result += tokenContentToString(token.content);
+
+      if (token.type == 'punctuation') {
+        result += '</span>';
+      }
+    } else {
+      result += token;
+    }
+  });
+
+  console.log('RESULT', result);
+
+  // let result = '';
+
+  // for (let c of code) {
+  //   if (c === '{' || c === '}') {
+  //     result += '<span style="color:teal;">';
+  //     result += c;
+  //     result += '</span>';
+  //   } else {
+  //     result += c;
+  //   }
+  // }
+
+  // // console.log('RESULT', result);
 
   return result;
+  // .replace(/&/g, '&amp;')
+  // .replace(/>/g, '&gt;')
+  // .replace(/</g, '&lt;')
+  // .replace(/"/g, '&quot;')
+  // .replace(/'/g, '&apos;');
 
   // return result;
 };

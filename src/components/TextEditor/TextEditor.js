@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { tokenize } from 'prismjs/components/prism-core';
-import prism from 'prismjs/components/prism-core';
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages, plugins } from 'prismjs/components/prism-core';
@@ -96,7 +94,7 @@ const TextEditor = (props) => {
   function onKeyDownHandler(e) {
     const comboKeys = [META_KEYCODE, CTRL_KEYCODE, SHIFT_KEYCODE, ALT_KEYCODE];
 
-    console.log(tokenize('let x = 5;', prism.languages.javascript));
+    // console.log(tokenize('let x = 5;', prism.languages.javascript));
 
     console.log('ORESSED', e.keyCode);
 
