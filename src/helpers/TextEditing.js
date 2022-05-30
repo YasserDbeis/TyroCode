@@ -13,15 +13,45 @@ const tokenContentToString = (contents) => {
 
   for (const content of contents) {
     if (typeof content == 'object') {
-      totalContent += '<span style="color:teal;">';
+      // totalContent += '<span style="color:teal;">';
       totalContent += tokenContentToString(content.content);
-      totalContent += '</span>';
+      // totalContent += '</span>';
     } else {
       totalContent += content;
     }
   }
 
   return totalContent;
+};
+
+const getSyntaxColor = (tokenType, lang) => {
+  const result =
+    {
+      keyword: '#56B6C2',
+      builtin: '#abb2bf',
+      'class-name': '#e5c07b',
+      function: '#98c379',
+      'function-variable': '#98c379',
+      boolean: 'purple',
+      number: '#C678DD',
+      string: '#e5c07b',
+      char: 'cyan',
+      operator: '#E06C75',
+      comment: '#5c6370',
+      variable: 'red',
+      regex: '#e5c07b',
+      constant: '#98c379',
+      punctuation: 'whitesmoke',
+    }[tokenType] ?? '#61afef';
+
+  return result;
+};
+
+const syntaxHighlight = (token, tokenType, lang) => {
+  const syntaxColor = getSyntaxColor(tokenType, lang);
+  const highlightedToken = `<span style="color: ${syntaxColor};">${token}</span>`;
+
+  return highlightedToken;
 };
 
 const getHighlightedCode = (code) => {
@@ -34,36 +64,16 @@ const getHighlightedCode = (code) => {
   let result = '';
 
   tokens.forEach((token) => {
+    let tokenType = null;
     if (typeof token == 'object') {
-      if (token.type == 'punctuation') {
-        result += '<span style="color:teal;">';
-      }
+      tokenType = token.type;
+      const tokenContentStr = tokenContentToString(token.content);
 
-      result += tokenContentToString(token.content);
-
-      if (token.type == 'punctuation') {
-        result += '</span>';
-      }
+      result += syntaxHighlight(tokenContentStr, tokenType, lang);
     } else {
-      result += token;
+      result += syntaxHighlight(token, null, lang);
     }
   });
-
-  console.log('RESULT', result);
-
-  // let result = '';
-
-  // for (let c of code) {
-  //   if (c === '{' || c === '}') {
-  //     result += '<span style="color:teal;">';
-  //     result += c;
-  //     result += '</span>';
-  //   } else {
-  //     result += c;
-  //   }
-  // }
-
-  // // console.log('RESULT', result);
 
   return result;
   // .replace(/&/g, '&amp;')

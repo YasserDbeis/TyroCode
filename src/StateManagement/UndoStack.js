@@ -8,7 +8,7 @@ export default class UndoStack {
     this.future = new Stack();
     this.history.push(newState);
 
-    console.log(this);
+    console.log('PUSH', this);
   }
 
   getCurrentFrame() {

@@ -1,41 +1,26 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import Editor from 'react-simple-code-editor';
-import { highlight, languages, plugins } from 'prismjs/components/prism-core';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-java';
-const fs = require('fs');
-
-import { useResizeDetector } from 'react-resize-detector';
+import fs from 'fs';
 import {
   getHighlightedCode,
   tabOverText,
   unTabText,
   getTabbedOverLinesStartPos,
 } from '../../helpers/TextEditing';
-import 'prismjs/themes/prism-coy.css'; //Example style, you can use another
 import './TextEditor.css';
 import { Scrollbars } from 'react-custom-scrollbars';
 import TextArea from 'antd/lib/input/TextArea';
-import { useWindowResize } from 'beautiful-react-hooks';
-import { start } from 'repl';
-import * as langs from '../../enums/ProgLanguages';
+import * as keys from '../../enums/KeyboardCodes';
+import {
+  isNonInsertionKey,
+  isComboNonShiftKeyActive,
+} from '../../helpers/KeyDownHandlers';
 import { getProgLanguage } from '../../helpers/FilenameExtensions';
 import os from 'os';
 import UndoStack from '../../StateManagement/UndoStack';
 
 const TAB_HEIGHT = 40;
-const TAB_KEYCODE = 9;
-const OPEN_BRACKETS_KEYCODE = 219;
-const OPEN_PAREN_KEYCODE = 57;
-const Z_KEYCODE = 90;
 const MAC_PLATFORM = 'darwin';
-const META_KEYCODE = 91;
-const CTRL_KEYCODE = 17;
-const SHIFT_KEYCODE = 16;
-const ALT_KEYCODE = 18;
-const ENTER_KEYCODE = 13;
 const NO_REPITITIONS = -1;
 const FOUR_SPACE_TAB = ' '.repeat(4);
 const TAB_SIZE = 4;
@@ -92,34 +77,49 @@ const TextEditor = (props) => {
   }
 
   function onKeyDownHandler(e) {
-    const comboKeys = [META_KEYCODE, CTRL_KEYCODE, SHIFT_KEYCODE, ALT_KEYCODE];
-
-    // console.log(tokenize('let x = 5;', prism.languages.javascript));
-
     console.log('ORESSED', e.keyCode);
+    // console.log(
+    //   'VALUE:' +
+    //     ', ' +
+    //     isNonInsertionKey(e.keyCode) +
+    //     ', ' +
+    //     !isComboKeyActivated(e)
+    // );
 
-    if (!comboKeys.includes(e.keyCode)) {
-      const keyCode = e.keyCode.toString();
+    if (isNonInsertionKey(e.keyCode) && !isComboNonShiftKeyActive(e)) {
+      const keyCodeStr = e.keyCode.toString();
       undoStack.current.push({
-        keyCode: [keyCode],
-        repetitions: -1,
+        keyCode: [keyCodeStr],
+        repetitions: NO_REPITITIONS,
       });
       // console.log(e.key);
     }
 
-    if (e.keyCode == Z_KEYCODE) {
+    if (e.keyCode == keys.Z_KEYCODE) {
       const isMac = os.platform() == MAC_PLATFORM;
 
       if ((isMac && e.metaKey) || (!isMac && e.ctrlKey)) {
         if (e.shiftKey) {
           console.log('REDO');
-          undoStack.current.redo();
+          const redidFrame = undoStack.current.redo();
+
+          if (redidFrame != null) {
+            const numRepitions = redidFrame.repetitions;
+            console.log('NUM REP', numRepitions);
+            if (numRepitions != NO_REPITITIONS) {
+              for (let i = 0; i < numRepitions; i++) {
+                console.log('REDO AGAIN!!');
+                document.execCommand('redo');
+              }
+            }
+          }
         } else {
           console.log('UNDO');
           const undidFrame = undoStack.current.undo();
 
           if (undidFrame != null) {
             const numRepitions = undidFrame.repetitions;
+            console.log('NUM REP', numRepitions);
             if (numRepitions != NO_REPITITIONS) {
               for (let i = 0; i < numRepitions; i++) {
                 console.log('UNDO AGAIN!!');
@@ -129,9 +129,12 @@ const TextEditor = (props) => {
           }
         }
       }
-    } else if (e.keyCode == ENTER_KEYCODE) {
+    } else if (e.keyCode == keys.ENTER_KEYCODE) {
       const prevFrame = undoStack.current.getPrevFrame();
-      if (prevFrame && prevFrame.keyCode == OPEN_BRACKETS_KEYCODE) {
+      console.log(
+        (prevFrame == null).toString() + '::' + prevFrame.keyCode.toString()
+      );
+      if (prevFrame && prevFrame.keyCode == keys.OPEN_BRACKETS_KEYCODE) {
         document.execCommand('insertText', false, '\n');
         setCursor([
           editorRef.current.selectionStart - 1,
@@ -139,13 +142,13 @@ const TextEditor = (props) => {
         ]);
       }
     } else if (
-      e.keyCode == OPEN_BRACKETS_KEYCODE ||
-      (e.keyCode == OPEN_PAREN_KEYCODE && e.shiftKey)
+      e.keyCode == keys.OPEN_BRACKETS_KEYCODE ||
+      (e.keyCode == keys.OPEN_PAREN_KEYCODE && e.shiftKey)
     ) {
       // default brackets to open parenthesis
       let brackets = '()';
 
-      if (e.keyCode == OPEN_BRACKETS_KEYCODE) {
+      if (e.keyCode == keys.OPEN_BRACKETS_KEYCODE) {
         brackets = e.shiftKey ? '{}' : '[]';
       }
 
@@ -158,7 +161,7 @@ const TextEditor = (props) => {
 
       e.preventDefault();
       return false;
-    } else if (e.keyCode == TAB_KEYCODE) {
+    } else if (e.keyCode == keys.TAB_KEYCODE) {
       const startCursor = editorRef.current.selectionStart;
       const endCursor = editorRef.current.selectionEnd;
       const currCode = editorRef.current.value;

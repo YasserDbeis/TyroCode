@@ -23,8 +23,7 @@ function createWindow() {
 
   win.webContents.openDevTools();
   // win.loadURL('file://' + process.cwd() + '/index.html');
-  win.loadURL(`file://${__dirname}/index.html`);
-
+  win.loadURL('file://' + __dirname + '/index.html');
   // win.loadURL('file://' + path.join(__dirname, 'index.html'))   //send boolean to indicate whether this is the first start up of the app
 
   const {
@@ -56,6 +55,8 @@ var ptyProcess = pty.spawn(shell, [], {
 
 app.on('ready', () => {
   createWindow();
+
+  // require('electron-react-titlebar/main').initialize();
 
   ptyProcess.on('data', (data) => {
     win.webContents.send('terminal.incomingData', data);
