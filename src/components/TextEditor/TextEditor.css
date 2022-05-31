@@ -9,9 +9,9 @@
   -moz-user-select: none !important;
 }
 
-.scroller::-webkit-scrollbar { 
-  display: none;  /* Safari and Chrome */
-}
+/* .scroller::-webkit-scrollbar { 
+  display: none;  
+} */
 
 .scroller:focus {
   outline: none;
@@ -24,11 +24,31 @@
   background-color: #8CC0DE;
 }
 
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.line-nums {
+  width: 75px;
+  display: inline-block;
+  color: white;
+  /* border: 1px solid red; */
+}
+
+#editor-text-area {
+  left: 75px;
+  /* border: 1px solid orange; */
+}
 .editor-area {
   position: absolute;
   top: 0;
   right: 0;
-  width: 85%;
+  width: 100%;
   white-space: pre;
   overflow-wrap: normal;
   overflow-x: scroll;

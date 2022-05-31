@@ -18,6 +18,7 @@ import {
 import { getProgLanguage } from '../../helpers/FilenameExtensions';
 import os from 'os';
 import UndoStack from '../../StateManagement/UndoStack';
+import { Console } from 'console';
 
 const TAB_HEIGHT = 40;
 const MAC_PLATFORM = 'darwin';
@@ -29,9 +30,7 @@ const TAB_SIZE = 4;
 
 const TextEditor = (props) => {
   const [code, setCode] = useState(props.code);
-  const [highlightedCode, setHighlightedCode] = useState(
-    highlightCode(props.code)
-  );
+  const [highlightedCode, setHighlightedCode] = useState(props.code);
   const [lineNums, setLineNums] = useState(getLineNums(props.code));
   const [cursor, setCursor] = useState([props.code.length, props.code.length]);
 
@@ -58,6 +57,8 @@ const TextEditor = (props) => {
         );
       });
     });
+
+    setHighlightedCode(getHighlightedCode(code));
   }, []);
 
   useLayoutEffect(() => {
@@ -68,6 +69,7 @@ const TextEditor = (props) => {
   }, [cursor]);
 
   function codeChange(e) {
+    console.log('CHANGED');
     const newCode = e.target.value;
     const lineNums = getLineNums(newCode);
     setCode(newCode);
@@ -131,9 +133,9 @@ const TextEditor = (props) => {
       }
     } else if (e.keyCode == keys.ENTER_KEYCODE) {
       const prevFrame = undoStack.current.getPrevFrame();
-      console.log(
-        (prevFrame == null).toString() + '::' + prevFrame.keyCode.toString()
-      );
+      // console.log(
+      //   (prevFrame == null).toString() + '::' + prevFrame.keyCode.toString()
+      // );
       if (prevFrame && prevFrame.keyCode == keys.OPEN_BRACKETS_KEYCODE) {
         document.execCommand('insertText', false, '\n');
         setCursor([
@@ -229,28 +231,7 @@ const TextEditor = (props) => {
 
   return (
     <Scrollbars>
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <TextArea
-          unselectable="on"
-          onSelectCapture={() => {
-            return false;
-          }}
-          onMouseDown={() => {
-            return false;
-          }}
-          readOnly={true}
-          className="scroller"
-          value={lineNums}
-          style={{
-            width: '15%',
-            height: props.windowHeight - props.terminalHeight - TAB_HEIGHT,
-            backgroundColor: '#282c34',
-            color: 'white',
-            borderColor: 'transparent',
-            textAlign: 'center',
-            resize: 'none',
-          }}
-        ></TextArea>
+      <div>
         <div
           className="scroller editor-area"
           dangerouslySetInnerHTML={{ __html: highlightedCode }}
@@ -263,6 +244,7 @@ const TextEditor = (props) => {
           }}
         ></div>
         <textarea
+          id="editor-text-area"
           className="scroller editor-area"
           ref={editorRef}
           value={code}
