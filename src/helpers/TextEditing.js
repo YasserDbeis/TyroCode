@@ -1,6 +1,5 @@
 import * as langs from '../enums/ProgLanguages';
 import { tokenize } from 'prismjs/components/prism-core';
-import { int } from 'react-resize-panel';
 
 const TAB_SIZE = 4;
 
@@ -57,35 +56,23 @@ const syntaxHighlight = (token, tokenType, lang) => {
 const getHighlightedCode = (code, lang_ext) => {
   const lang = langs.extToLang(lang_ext);
 
-  const lines = code.split('\n');
   let result = '';
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const tokens = tokenize(line, lang);
+  const tokens = tokenize(code, lang);
 
-    console.log(tokens);
+  console.log(tokens);
 
-    const lineNum = i + 1;
+  tokens.forEach((token) => {
+    let tokenType = null;
+    if (typeof token == 'object') {
+      tokenType = token.type;
+      const tokenContentStr = tokenContentToString(token.content);
 
-    result += `<span class="unselectable line-nums">${lineNum}</span>`;
-
-    tokens.forEach((token) => {
-      let tokenType = null;
-      if (typeof token == 'object') {
-        tokenType = token.type;
-        const tokenContentStr = tokenContentToString(token.content);
-
-        result += syntaxHighlight(tokenContentStr, tokenType, lang);
-      } else {
-        result += syntaxHighlight(token, null, lang);
-      }
-    });
-
-    if (i != lines.length - 1) {
-      result += '\n';
+      result += syntaxHighlight(tokenContentStr, tokenType, lang);
+    } else {
+      result += syntaxHighlight(token, null, lang);
     }
-  }
+  });
 
   return result;
   // .replace(/&/g, '&amp;')
@@ -95,10 +82,6 @@ const getHighlightedCode = (code, lang_ext) => {
   // .replace(/'/g, '&apos;');
 
   // return result;
-};
-
-const insertBraceAtPos = (code, pos) => {
-  return code.slice(0, pos) + '{}' + code.slice(pos);
 };
 
 const tabOverText = (editorTextarea, tabbedOverLinesStartPos) => {
@@ -181,13 +164,6 @@ const getTabbedOverLinesStartPos = (code, start, end) => {
 
     seenFrameStart = seenFrameEnd + 1;
     seenFrameEnd = seenFrameStart + len - 1;
-
-    // console.log('INDEX:', i);
-    // console.log('START: ', start);
-    // console.log('END: ', end);
-    // console.log('seenFrameStart: ', seenFrameStart);
-    // console.log('seenFrameEnd: ', seenFrameEnd);
-    // console.log('len: ', len);
 
     if (line.trim().length == 0) {
       continue;

@@ -19,6 +19,7 @@ import { getProgLanguage } from '../../helpers/FilenameExtensions';
 import os from 'os';
 import UndoStack from '../../StateManagement/UndoStack';
 import { Console } from 'console';
+import autosize from 'autosize';
 
 const TAB_HEIGHT = 40;
 const MAC_PLATFORM = 'darwin';
@@ -38,25 +39,28 @@ const TextEditor = (props) => {
   let undoStack = useRef(new UndoStack());
 
   useEffect(() => {
-    var scrollers = document.getElementsByClassName('scroller');
+    // var scrollers = document.getElementsByClassName('scroller');
 
-    function scrollAll(scrollTop, scrollLeft, scrollRight) {
-      scrollers.forEach(function (element, index, array) {
-        element.scrollTop = scrollTop;
-        element.scrollLeft = scrollLeft;
-        element.scrollRight = scrollRight;
-      });
-    }
+    // function scrollAll(scrollTop, scrollLeft, scrollRight) {
+    //   scrollers.forEach(function (element, index, array) {
+    //     element.scrollTop = scrollTop;
+    //     element.scrollLeft = scrollLeft;
+    //     element.scrollRight = scrollRight;
+    //   });
+    // }
 
-    scrollers.forEach(function (element, index, array) {
-      element.addEventListener('scroll', function (e) {
-        scrollAll(
-          e.target.scrollTop,
-          e.target.scrollLeft,
-          e.target.scrollRight
-        );
-      });
-    });
+    // scrollers.forEach(function (element, index, array) {
+    //   element.addEventListener('scroll', function (e) {
+    //     scrollAll(
+    //       e.target.scrollTop,
+    //       e.target.scrollLeft,
+    //       e.target.scrollRight
+    //     );
+    //   });
+    // });
+
+    // editorRef.current.focus();
+    // autosize(editorRef.current);
 
     setHighlightedCode(getHighlightedCode(code));
   }, []);
@@ -221,45 +225,53 @@ const TextEditor = (props) => {
     return getHighlightedCode(input, lang);
   }
 
-  // function courtesy of https://github.com/bogutski
   function getLineNums(input) {
     return input
       .split('\n')
-      .map((line, i) => `${i + 1}`)
-      .join('\n');
+      .map((line, i) => `<span class="unselectable line-nums">${i + 1}</span>`)
+      .join('</br>');
   }
 
   return (
-    <Scrollbars>
-      <div>
+    <div
+      id="text-editor-container"
+      style={{
+        height: props.windowHeight - props.terminalHeight - TAB_HEIGHT,
+      }}
+    >
+      <div
+        id="line-num-container"
+        className="scroller text-editor-child"
+        dangerouslySetInnerHTML={{ __html: lineNums }}
+        style={{
+          height: props.windowHeight - props.terminalHeight - TAB_HEIGHT,
+          backgroundColor: '#282c34',
+          borderColor: 'transparent',
+        }}
+      ></div>
+      <div
+        id="editor-container"
+        className="scroller text-editor-child"
+        style={{
+          height: 'inherit',
+        }}
+      >
         <div
-          className="scroller editor-area"
+          id="editor-child-div"
+          className="editor-child"
           dangerouslySetInnerHTML={{ __html: highlightedCode }}
           align="left"
-          style={{
-            height: props.windowHeight - props.terminalHeight - TAB_HEIGHT,
-            color: 'white',
-            zIndex: 1,
-            pointerEvents: 'none',
-          }}
         ></div>
         <textarea
-          id="editor-text-area"
-          className="scroller editor-area"
+          id="editor-child-textarea"
+          className="editor-child"
           ref={editorRef}
           value={code}
           onChange={codeChange}
           onKeyDown={onKeyDownHandler}
-          style={{
-            height: props.windowHeight - props.terminalHeight - TAB_HEIGHT,
-            color: 'transparent',
-            caretColor: 'white',
-            pointerEvents: 'auto',
-            resize: 'none',
-          }}
         ></textarea>
       </div>
-    </Scrollbars>
+    </div>
   );
 };
 

@@ -17,6 +17,7 @@
     "@ant-design/icons": "^4.4.0",
     "antd": "^4.20.6",
     "antd-resizeable-sider": "^1.0.1",
+    "autosize": "^5.0.1",
     "babel-plugin-macros": "^3.0.1",
     "beautiful-react-hooks": "^1.0.2",
     "electron-devtools-installer": "^3.1.1",
