@@ -79,31 +79,35 @@
   background-color: transparent;
   /* height: 100%; */
   width: 100%;
+
   overflow-wrap: normal;
   overflow: scroll;
 }
 
 #editor-child-textarea {
-  color: transparent;
+  color: red;
   caret-color: white;
   pointer-events: auto;
-  overflow: hidden;
+  /* overflow: hidden; */
   background-color: orange;
   outline: none;
   border: none;
-}
 
+}
+/* 
 #editor-child-textarea::-webkit-scrollbar {
   display: none;
-}
+} */
 
-#editor-child-div::-webkit-scrollbar {
+/* #editor-child-div::-webkit-scrollbar {
   display: none;
-}
+} */
 
 #editor-child-div {
   color: white;
   z-index: 1;
   pointer-events: none;
-  overflow: hidden;
+  /* overflow: scroll; */
 }
+
+/* NO MATTER WHAT THE SOLUTION IS, THE ScROLL ONLY REGISTERING ON TOP ELEMENT */

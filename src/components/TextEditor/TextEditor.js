@@ -36,28 +36,22 @@ const TextEditor = (props) => {
   const [cursor, setCursor] = useState([props.code.length, props.code.length]);
 
   const editorRef = useRef(null);
-  let undoStack = useRef(new UndoStack());
+  const undoStack = useRef(new UndoStack());
 
   useEffect(() => {
-    // var scrollers = document.getElementsByClassName('scroller');
+    var scrollers = document.getElementsByClassName('scroller');
 
-    // function scrollAll(scrollTop, scrollLeft, scrollRight) {
-    //   scrollers.forEach(function (element, index, array) {
-    //     element.scrollTop = scrollTop;
-    //     element.scrollLeft = scrollLeft;
-    //     element.scrollRight = scrollRight;
-    //   });
-    // }
+    function scrollAll(scrollLeft) {
+      scrollers.forEach(function (element, index, array) {
+        element.scrollLeft = scrollLeft;
+      });
+    }
 
-    // scrollers.forEach(function (element, index, array) {
-    //   element.addEventListener('scroll', function (e) {
-    //     scrollAll(
-    //       e.target.scrollTop,
-    //       e.target.scrollLeft,
-    //       e.target.scrollRight
-    //     );
-    //   });
-    // });
+    scrollers.forEach(function (element, index, array) {
+      element.addEventListener('scroll', function (e) {
+        scrollAll(e.target.scrollLeft);
+      });
+    });
 
     // editorRef.current.focus();
     // autosize(editorRef.current);
@@ -251,20 +245,20 @@ const TextEditor = (props) => {
       ></div>
       <div
         id="editor-container"
-        className="scroller text-editor-child"
+        className="text-editor-child"
         style={{
           height: 'inherit',
         }}
       >
         <div
           id="editor-child-div"
-          className="editor-child"
+          className="scroller editor-child"
           dangerouslySetInnerHTML={{ __html: highlightedCode }}
           align="left"
         ></div>
         <textarea
           id="editor-child-textarea"
-          className="editor-child"
+          className="scroller editor-child"
           ref={editorRef}
           value={code}
           onChange={codeChange}
