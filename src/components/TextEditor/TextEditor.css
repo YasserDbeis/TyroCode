@@ -9,9 +9,18 @@
   -moz-user-select: none !important;
 } */
 
-/* .scroller::-webkit-scrollbar { 
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+#editor-child-textarea::-webkit-scrollbar { 
   display: none; 
-} */
+}
 
 #text-editor-container {
   /* position: relative; */
@@ -48,10 +57,11 @@
   /* padding: 5px;
   float: left; */
   max-width: 100%;
-  background:red !important;
+  /* background:red !important; */
   white-space:nowrap;
   padding: 5px;
   overflow: scroll;
+  text-align: right;
 }
 
 #editor-container {
@@ -62,10 +72,12 @@
   padding: 5px;
   border-color: transparent;
   /* overflow-wrap: normal; */
-  background:yellow;
+  /* background:yellow; */
   white-space:nowrap;
   position: relative;
-  width: 100%
+  width: 100%;
+  pointer-events: none;
+
 }
 
 .editor-child {
@@ -84,12 +96,17 @@
   overflow: scroll;
 }
 
+.editor-child::selection {
+  background-color: #8CC0DE;
+
+}
+
 #editor-child-textarea {
-  color: red;
+  /* color: red; */
   caret-color: white;
   pointer-events: auto;
   /* overflow: hidden; */
-  background-color: orange;
+  /* background-color: orange; */
   outline: none;
   border: none;
 
