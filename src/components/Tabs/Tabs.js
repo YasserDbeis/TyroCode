@@ -3,8 +3,11 @@ import { Tabs, Button } from 'antd';
 import { writeCodeResult } from '../Terminal/TerminalSetup';
 import TextEditorWrapper from '../TextEditor/TextEditorWrapper';
 import { getPWD } from '../../helpers/FileDirectory';
+import { saveFileContent } from '../../helpers/FileWriting';
 import './Tabs.css';
 import { last, update } from 'lodash';
+import { EditOutlined } from '@ant-design/icons';
+import { write } from 'original-fs';
 
 const { TabPane } = Tabs;
 const ADD = 0;
@@ -12,9 +15,10 @@ const REMOVE = 1;
 
 const initialPanes = [
   {
-    title: 'Welcome!',
+    title: 'Welcome',
     path: getPWD(),
     content: 'HELLO\nWORLD',
+    saved: false,
     key: '1',
   },
 ];
@@ -33,8 +37,18 @@ class Tabbing extends Component {
     this.codeChange = this.codeChange.bind(this);
   }
 
+  // shouldComponentUpdate(oldProps, newProps) {
+  //   console.log('OLD PROPS', oldProps);
+
+  //   return true;
+  // }
+
   componentDidMount() {
     this.props.onRef(this);
+  }
+
+  componentDidUpdate() {
+    this.resizeTextEditor(this.state.activeKey - 1);
   }
 
   componentWillUnmount() {
@@ -49,9 +63,35 @@ class Tabbing extends Component {
     this[action](targetKey);
   };
 
+  onSave = (filepath) => {
+    console.log('RECEIVED SAVE FROM', filepath);
+
+    console.log(this.state.pathToKey);
+
+    const { pathToKey } = this.state;
+
+    if (pathToKey.has(filepath)) {
+      const savedFileKey = pathToKey.get(filepath);
+
+      const { panes } = this.state;
+
+      const newPanes = panes.map((pane, i) => {
+        if (pane.key == savedFileKey && !pane.saved) {
+          saveFileContent(pane.content, pane.path);
+
+          return { ...pane, saved: true };
+        }
+
+        return pane;
+      });
+
+      this.setState({ panes: newPanes });
+    }
+  };
+
   add = (name, path, code) => {
     const pathToKey = this.state.pathToKey;
-    const activeKey = `newTab${this.newTabIndex++}`;
+    const activeKey = `code-tab-${this.newTabIndex++}`;
 
     if (pathToKey.has(path)) {
       const activeKey = this.state.pathToKey.get(path);
@@ -63,7 +103,13 @@ class Tabbing extends Component {
 
     const { panes } = this.state;
     const newPanes = panes.length == 1 && panes[0].key == 1 ? [] : [...panes];
-    newPanes.push({ title: name, path: path, content: code, key: activeKey });
+    newPanes.push({
+      title: name,
+      path: path,
+      content: code,
+      saved: true,
+      key: activeKey,
+    });
 
     this.setState({
       panes: newPanes,
@@ -82,7 +128,7 @@ class Tabbing extends Component {
     });
 
     const filePathToDelete = panes[lastIndex + 1].path;
-    this.updatePathsSeen(filePathToDelete, null, REMOVE);
+    this.state.pathToKey.delete(filePathToDelete);
 
     const newPanes = panes.filter((pane) => pane.key !== targetKey);
     if (newPanes.length && newActiveKey === targetKey) {
@@ -98,10 +144,6 @@ class Tabbing extends Component {
       activeKey: newActiveKey,
     });
   };
-
-  componentDidUpdate() {
-    this.resizeTextEditor(this.state.activeKey - 1);
-  }
 
   resizeTextEditor = (activeTab) => {
     const term = document.getElementById('terminal');
@@ -178,6 +220,7 @@ class Tabbing extends Component {
     let currPaneIndex = this.getCurrentPaneIndex();
     let panesCopy = this.state.panes;
     panesCopy[currPaneIndex].content = code;
+    panesCopy[currPaneIndex].saved = false;
     this.setState({ panes: panesCopy });
   };
 
@@ -192,14 +235,29 @@ class Tabbing extends Component {
         onEdit={this.onEdit}
       >
         {panes.map((pane) => (
-          <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
+          <TabPane
+            tab={
+              pane.saved ? (
+                <span>{pane.title}</span>
+              ) : (
+                <span>
+                  <EditOutlined className="unsaved" />
+                  <span className="unsaved">{pane.title}</span>
+                </span>
+              )
+            }
+            key={pane.key}
+            closable={pane.closable}
+          >
             <TextEditorWrapper
               filename={pane.title}
+              filepath={pane.path}
               windowHeight={this.props.windowHeight}
               terminalHeight={this.props.terminalHeight}
               codeChange={this.codeChange}
               code={pane.content}
               className="text-editor-wrappers"
+              onSave={this.onSave}
             />
           </TabPane>
         ))}

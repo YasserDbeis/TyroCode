@@ -15,11 +15,17 @@ import {
   isNonInsertionKey,
   isComboNonShiftKeyActive,
 } from '../../helpers/KeyDownHandlers';
+import { getFullPath } from '../../helpers/FileDirectory';
 import { getProgLanguage } from '../../helpers/FilenameExtensions';
 import os from 'os';
 import UndoStack from '../../StateManagement/UndoStack';
 import { Console } from 'console';
 import autosize from 'autosize';
+import 'floating-scroll/dist/jquery.floatingscroll.css';
+// import * as l from 'floating-scroll'
+import './jquery.floatingscroll';
+import $ from 'jquery';
+// import 'floating-scroll/src/jquery.floatingscroll.js';
 
 const TAB_HEIGHT = 40;
 const MAC_PLATFORM = 'darwin';
@@ -53,6 +59,8 @@ const TextEditor = (props) => {
       });
     });
 
+    // $('#editor-child-div').floatingScroll();
+
     // editorRef.current.focus();
     // autosize(editorRef.current);
 
@@ -74,6 +82,8 @@ const TextEditor = (props) => {
     setLineNums(lineNums);
     setHighlightedCode(highlightCode(newCode));
     props.codeChange(newCode);
+
+    // $('#editor-child-div').floatingScroll('update');
   }
 
   function onKeyDownHandler(e) {
@@ -94,10 +104,16 @@ const TextEditor = (props) => {
       });
       // console.log(e.key);
     }
+    const isMac = os.platform() == MAC_PLATFORM;
 
-    if (e.keyCode == keys.Z_KEYCODE) {
-      const isMac = os.platform() == MAC_PLATFORM;
+    if (
+      ((isMac && e.metaKey) || (!isMac && e.ctrlKey)) &&
+      e.keyCode == keys.S_KEYCODE
+    ) {
+      console.log('SAVING!', props.filepath);
 
+      props.onSave(props.filepath);
+    } else if (e.keyCode == keys.Z_KEYCODE) {
       if ((isMac && e.metaKey) || (!isMac && e.ctrlKey)) {
         if (e.shiftKey) {
           console.log('REDO');
@@ -238,18 +254,11 @@ const TextEditor = (props) => {
         className="scroller text-editor-child"
         dangerouslySetInnerHTML={{ __html: lineNums }}
         style={{
-          height: props.windowHeight - props.terminalHeight - TAB_HEIGHT,
           backgroundColor: '#282c34',
-          borderColor: 'transparent',
+          borderColor: 'red',
         }}
       ></div>
-      <div
-        id="editor-container"
-        className="text-editor-child"
-        style={{
-          height: 'inherit',
-        }}
-      >
+      <div id="editor-container" className="text-editor-child">
         <div
           id="editor-child-div"
           className="scroller editor-child"

@@ -10,6 +10,7 @@ export const CTRL_KEYCODE = 17;
 export const SHIFT_KEYCODE = 16;
 export const ALT_OR_OPT_KEYCODE = 18;
 export const ENTER_KEYCODE = 13;
+export const S_KEYCODE = 83;
 
 export const comboKeys = [
   LEFT_META_KEYCODE,

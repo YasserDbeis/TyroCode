@@ -44,10 +44,12 @@ class TextEditorWrapper extends Component {
       >
         <TextEditor
           filename={this.props.filename}
+          filepath={this.props.filepath}
           windowHeight={this.props.windowHeight}
           terminalHeight={this.props.terminalHeight}
           codeChange={this.codeChange}
           code={this.props.code}
+          onSave={this.props.onSave}
         />
       </div>
     );

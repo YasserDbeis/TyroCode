@@ -18,9 +18,10 @@
   user-select: none;
 }
 
-#editor-child-textarea::-webkit-scrollbar { 
+
+/* #editor-child-textarea::-webkit-scrollbar { 
   display: none; 
-}
+} */
 
 #text-editor-container {
   /* position: relative; */
@@ -62,11 +63,12 @@
   padding: 5px;
   overflow: scroll;
   text-align: right;
+  height: inherit;
 }
 
 #editor-container {
   /* overflow-x: scroll; */
-  overflow: scroll;
+  overflow: auto;
   border: none;
   background-color: transparent;
   padding: 5px;
@@ -77,7 +79,7 @@
   position: relative;
   width: 100%;
   pointer-events: none;
-
+  height: inherit;
 }
 
 .editor-child {
@@ -93,12 +95,11 @@
   width: 100%;
 
   overflow-wrap: normal;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .editor-child::selection {
   background-color: #8CC0DE;
-
 }
 
 #editor-child-textarea {
@@ -109,6 +110,7 @@
   /* background-color: orange; */
   outline: none;
   border: none;
+  resize: none;
 
 }
 /* 

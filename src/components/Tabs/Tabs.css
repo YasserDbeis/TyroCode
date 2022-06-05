@@ -24,12 +24,12 @@
 }
 
 .ant-tabs-tab .ant-tabs-tab-btn {
-    color: grey !important;
+    color: grey;
 }
 
 
 .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: whitesmoke !important;
+    color: whitesmoke;
 }
 
 #root > section > section > div > div.ant-tabs-nav > div.ant-tabs-nav-wrap > div > div.ant-tabs-tab.ant-tabs-tab-with-remove.ant-tabs-tab-active > button > span > svg {
@@ -39,4 +39,8 @@
 #root > section > section > div > div.ant-tabs-nav > div.ant-tabs-nav-wrap > div > div > button > span > svg,
 #root > section > section > div > div.ant-tabs-nav > div.ant-tabs-nav-wrap > div > button > span > svg {
     color: grey !important;
+}
+
+.unsaved {
+    color: #E2C08D !important;
 }
