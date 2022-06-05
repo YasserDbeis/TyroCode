@@ -15,10 +15,10 @@ const saveFileContent = (content, path) => {
   console.log('CONTENT', content);
   console.log('PATH', path);
 
-  // fs.writeFile(path, content, function (err) {
-  //   if (err) throw err;
-  //   else console.log('File is saved successfully.');
-  // });
+  fs.writeFile(path, content, function (err) {
+    if (err) throw err;
+    else console.log('File is saved successfully.');
+  });
 };
 
 export { createNewFile, saveFileContent };
