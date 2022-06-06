@@ -1,4 +1,4 @@
-import * as langs from '../enums/ProgLanguages';
+import { extToPrismLang } from './FilenameExtensions';
 import { tokenize } from 'prismjs/components/prism-core';
 
 const TAB_SIZE = 4;
@@ -54,7 +54,7 @@ const syntaxHighlight = (token, tokenType, lang) => {
 };
 
 const getHighlightedCode = (code, lang_ext) => {
-  const lang = langs.extToLang(lang_ext);
+  const lang = extToPrismLang(lang_ext);
 
   let result = '';
 

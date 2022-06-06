@@ -1,13 +1,3 @@
-import prism from 'prismjs';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-c';
-import 'prismjs/components/prism-cpp';
-import 'prismjs/components/prism-csharp';
-import 'prismjs/components/prism-go';
-import 'prismjs/components/prism-java';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-python';
-
 export const js = 0;
 export const css = 1;
 export const html = 2;
@@ -20,34 +10,3 @@ export const cs = 8;
 export const cpp = 9;
 export const cc = 10;
 export const none = 11;
-
-export const ext_to_lang = new Map([
-  ['js', js],
-  ['css', css],
-  ['html', html],
-  ['jsx', jsx],
-  ['go', go],
-  ['java', java],
-  ['py', py],
-  ['c', c],
-  ['cs', cs],
-  ['cpp', cpp],
-  ['cc', cc],
-]);
-
-export const extToLang = (lang_ext) => {
-  const lang =
-    {
-      js: 'javascript',
-      go: 'go',
-      c,
-      cc: 'cpp',
-      cpp,
-      java,
-      py: 'python',
-      py3: 'python',
-      cs: 'csharp',
-    }[lang_ext] ?? 'clike';
-
-  return prism.languages[lang];
-};

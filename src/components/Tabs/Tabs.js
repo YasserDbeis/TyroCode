@@ -8,7 +8,9 @@ import './Tabs.css';
 import { last, update } from 'lodash';
 import { EditOutlined } from '@ant-design/icons';
 import { write } from 'original-fs';
-
+import { getProgLanguage } from '../../helpers/FilenameExtensions';
+import * as langs from '../../enums/ProgLanguages';
+import { langToIcon } from '../../helpers/FilenameExtensions';
 const { TabPane } = Tabs;
 const ADD = 0;
 const REMOVE = 1;
@@ -20,6 +22,7 @@ const initialPanes = [
     content: 'HELLO\nWORLD',
     saved: false,
     key: '1',
+    lang: langs.none,
   },
 ];
 
@@ -109,6 +112,7 @@ class Tabbing extends Component {
       content: code,
       saved: true,
       key: activeKey,
+      lang: getProgLanguage(name),
     });
 
     this.setState({
@@ -237,14 +241,13 @@ class Tabbing extends Component {
         {panes.map((pane) => (
           <TabPane
             tab={
-              pane.saved ? (
-                <span>{pane.title}</span>
-              ) : (
-                <span>
-                  <EditOutlined className="unsaved" />
-                  <span className="unsaved">{pane.title}</span>
+              <span>
+                {pane.saved ? null : <EditOutlined className="unsaved" />}
+                <span className={pane.saved ? null : 'unsaved'}>
+                  {pane.title}
                 </span>
-              )
+                {langToIcon(pane.lang)}
+              </span>
             }
             key={pane.key}
             closable={pane.closable}
