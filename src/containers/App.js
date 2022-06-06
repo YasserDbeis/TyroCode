@@ -5,6 +5,7 @@ import Terminal from '../components/Terminal/Terminal';
 import FileTree from '../components/FolderDropdown/FolderDropdown';
 import NewFileModal from '../components/NewFileModal/NewFileModal';
 const ResizableBox = require('react-resizable').ResizableBox;
+import { debounce } from 'lodash';
 
 import { Layout, Menu, Breadcrumb, Divider, Button, Dropdown } from 'antd';
 import Tabs from '../components/Tabs/Tabs';
@@ -31,6 +32,7 @@ import { last } from 'lodash';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
+const HANDLE_HEIGHT = 10;
 
 let lastHeight = 0;
 
@@ -42,10 +44,12 @@ const {
 class App extends Component {
   constructor(props) {
     super(props);
+
+    this.term = React.createRef();
     // console.log('[App.js] constructor');
 
     this.state = {
-      showTerminal: false,
+      showTerminal: true,
       collapsed: false,
       terminalInitialized: false,
       terminalHeight: 300,
@@ -63,14 +67,17 @@ class App extends Component {
     this.setState({ collapsed });
   };
 
-  resize = (e) => {
+  resize = debounce((e) => {
     if (e.target.innerHeight != lastHeight) {
       this.setState({
         windowHeight: e.target.innerHeight,
+        terminalHeight: this.term.current
+          ? this.term.current.clientHeight + HANDLE_HEIGHT
+          : this.state.terminalHeight,
       });
     }
     lastHeight = e.target.innerHeight;
-  };
+  }, 300);
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.resize);
@@ -82,7 +89,9 @@ class App extends Component {
 
     fetchFolderContent(this);
 
-    this.setState({ showTerminal: true });
+    this.setState({
+      showTerminal: true,
+    });
   }
 
   componentDidUpdate() {
@@ -254,12 +263,13 @@ class App extends Component {
             terminalHeight={this.state.terminalHeight}
             onRef={(ref) => (this.tabs = ref)}
           />
-          {this.state.showTerminal ? (
-            <Terminal
-              onTermExpand={this.onTermExpand}
-              sidebarWidth={this.state.sidebarWidth}
-            />
-          ) : null}
+          {/* {this.state.showTerminal ? ( */}
+          <Terminal
+            onTermExpand={this.onTermExpand}
+            sidebarWidth={this.state.sidebarWidth}
+            ref={this.term}
+          />
+          {/* ) : null} */}
         </Layout>
       </Layout>
     );

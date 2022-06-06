@@ -10,7 +10,7 @@ body {
   display: none;
 } */
 
-body {
+html body {
   overflow: hidden; /* Hide scrollbars */
   background-color:#282C34;
 }

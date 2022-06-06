@@ -1,5 +1,6 @@
 const ipc = require('electron').ipcRenderer;
 import { FitAddon } from 'xterm-addon-fit';
+import { debounce } from 'lodash';
 
 const terminalWelcomeMessage = 'Press Enter to Use The YSCode Terminal...';
 
@@ -33,14 +34,15 @@ const getFitAddon = () => {
   return fitAdd;
 };
 
-const resizeTerminal = () => {
+const resizeTerminal = debounce((e) => {
+  // console.log('RESIZED');
   if (fitAdd != null) {
     fitAdd.fit();
     // console.log('resizing');
   } else {
     // console.log('not resizing');
   }
-};
+}, 300);
 
 const createTerminal = () => {
   termProxy = new Terminal({

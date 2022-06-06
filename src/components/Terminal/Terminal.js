@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component, useEffect, forwardRef } from 'react';
 import { XTerm } from 'xterm-for-react';
 const ResizableBox = require('react-resizable').ResizableBox;
 const { ipcRenderer } = require('electron');
@@ -15,18 +15,19 @@ import { useState } from 'react';
 import './Terminal.css';
 import './TerminalContainer.css';
 import { useWindowResize } from 'beautiful-react-hooks';
+import { useDebounce } from 'use-debounce';
 
 const HANDLE_HEIGHT = 10;
 
-const Terminal = (props) => {
+const Terminal = forwardRef((props, ref) => {
+  const [windowWidth, setWindowWidth] = useState(
+    window.innerWidth - props.sidebarWidth
+  );
+
   useEffect(() => {
     setWindowWidth(window.innerWidth - props.sidebarWidth);
     resizeTerminal();
   });
-
-  const [windowWidth, setWindowWidth] = useState(
-    window.innerWidth - props.sidebarWidth
-  );
 
   useWindowResize((event) => {
     setWindowWidth(window.innerWidth - props.sidebarWidth);
@@ -36,7 +37,7 @@ const Terminal = (props) => {
   const [termHeight, setTermHeight] = useState(300 - HANDLE_HEIGHT);
 
   return (
-    <Footer style={terminalStyle}>
+    <Footer ref={ref} style={terminalStyle}>
       <Resizable
         id="terminal"
         style={{ backgroundColor: '#282C34' }}
@@ -45,7 +46,7 @@ const Terminal = (props) => {
           height: termHeight,
         }}
         minHeight="10vh"
-        maxHeight="50vh"
+        maxHeight="90vh"
         onResizeStop={(e, direction, ref, d) => {
           if (direction !== 'top') return;
           resizeTerminal();
@@ -55,6 +56,6 @@ const Terminal = (props) => {
       ></Resizable>
     </Footer>
   );
-};
+});
 
 export default Terminal;
