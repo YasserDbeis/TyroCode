@@ -132,7 +132,7 @@ export const langToIcon = (lang, style) => {
           src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-plain.svg"
         />
       ),
-    }[lang] ?? <AiOutlineFile style={style} />
+    }[lang] ?? <img style={style} src="./src/assets/fileIcon.svg" />
   );
 };
 

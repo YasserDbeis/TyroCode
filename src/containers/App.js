@@ -29,6 +29,7 @@ import {
 } from '../styles/LanguageDropdown';
 import runButtonStyle from '../styles/RunButton';
 import { last } from 'lodash';
+import { testAPI } from '../helpers/CodeExecution';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -92,6 +93,8 @@ class App extends Component {
     this.setState({
       showTerminal: true,
     });
+
+    // testAPI();
   }
 
   componentDidUpdate() {

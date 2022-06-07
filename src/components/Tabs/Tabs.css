@@ -44,3 +44,12 @@
 .unsaved {
     color: #E2C08D !important;
 }
+
+.ant-tabs-tab-remove {
+    padding: 0;
+}
+
+.ant-tabs-tab-btn {
+    line-height: 0px;
+    padding: 5px;
+}
