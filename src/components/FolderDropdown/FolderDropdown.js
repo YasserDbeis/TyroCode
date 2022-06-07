@@ -19,7 +19,7 @@ import {
 } from 'react-icons/di';
 import { SiC, SiCsharp, SiCplusplus } from 'react-icons/si';
 import { getDirectoryNode } from '../../helpers/FileDirectory';
-
+import { getProgLanguage, langToIcon } from '../../helpers/FilenameExtensions';
 /*
 Thank you to Anurag Hazra for his wonderful inspiration. His work 
 in article https://anuraghazra.github.io/blog/building-a-react-folder-tree-component
@@ -70,8 +70,10 @@ const Collapsible = styled.div`
 
 const File = ({ name, path, onNodeClick }) => {
   const splitOnDot = name.split('.');
-  let ext = splitOnDot[splitOnDot.length - 1];
-  let iconExists = FILE_ICONS[ext] != null;
+  // let ext = splitOnDot[splitOnDot.length - 1];
+  // let iconExists = FILE_ICONS[ext] != null;
+
+  const lang = getProgLanguage(name);
 
   const fileClickHandler = (e) => {
     const fileNode = getDirectoryNode('file', name, path);
@@ -81,7 +83,7 @@ const File = ({ name, path, onNodeClick }) => {
 
   return (
     <StyledFile>
-      {iconExists ? FILE_ICONS[ext] : <AiOutlineFile />}
+      {langToIcon(lang, { height: '14px', width: '14px' })}
       <span onClick={fileClickHandler} style={{ cursor: 'pointer' }}>
         {name}
       </span>

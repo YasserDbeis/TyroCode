@@ -10,17 +10,17 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-python';
 
 import React from 'react';
-// import {
-//   DiJavascript,
-//   DiCss3Full,
-//   DiHtml5,
-//   DiReact,
-//   DiGo,
-//   DiJava,
-//   DiPython,
-// } from 'react-icons/di';
-// import { SiC, SiCsharp, SiCplusplus } from 'react-icons/si';
-// import { AiOutlineFileText } from 'react-icons/ai';
+import {
+  DiJavascript,
+  DiCss3Full,
+  DiHtml5,
+  DiReact,
+  DiGo,
+  DiJava,
+  DiPython,
+} from 'react-icons/di';
+import { SiC, SiCsharp, SiCplusplus } from 'react-icons/si';
+import { AiOutlineFile } from 'react-icons/ai';
 
 export const getProgLanguage = (filename) => {
   let ext = getFileExtension(filename);
@@ -63,45 +63,77 @@ export const extToPrismLang = (lang_ext) => {
   return prism.languages[lang];
 };
 
-export const langToIcon = (lang) => {
-  console.log('LANG', lang);
-
+export const langToIcon = (lang, style) => {
   return (
-    <img
-      height={20}
-      width={20}
-      style={{
-        marginLeft: '10px',
-      }}
-      src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-plain.svg"
-    />
+    {
+      [langs.js]: (
+        <img
+          style={style}
+          src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-plain.svg"
+        />
+      ),
+      [langs.css]: (
+        <img
+          style={style}
+          src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-plain.svg"
+        />
+      ),
+      [langs.html]: (
+        <img
+          style={style}
+          src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-plain.svg"
+        />
+      ),
+      [langs.jsx]: (
+        <img
+          style={style}
+          src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
+        />
+      ),
+      [langs.go]: (
+        <img
+          style={style}
+          src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg"
+        />
+      ),
+      [langs.java]: (
+        <img
+          style={style}
+          src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-plain.svg"
+        />
+      ),
+      [langs.py]: (
+        <img
+          style={style}
+          src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"
+        />
+      ),
+      [langs.c]: (
+        <img
+          style={style}
+          src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-plain.svg"
+        />
+      ),
+      [langs.cs]: (
+        <img
+          style={style}
+          src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-plain.svg"
+        />
+      ),
+      [langs.cpp]: (
+        <img
+          style={style}
+          src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-plain.svg"
+        />
+      ),
+      [langs.cc]: (
+        <img
+          style={style}
+          src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-plain.svg"
+        />
+      ),
+    }[lang] ?? <AiOutlineFile style={style} />
   );
-
-  // return (
-  //   {
-  //     [langs.js]: <IconC height={15} width={15} />,
-  //     [langs.css]: <DiCss3Full size={15} />,
-  //     [langs.html]: <DiHtml5 size={15} />,
-  //     [langs.jsx]: <DiReact size={15} />,
-  //     [langs.go]: <DiGo size={15} />,
-  //     [langs.java]: (
-  //       <img
-  // height={20}
-  // width={20}
-  // style={{
-  //   marginLeft: '10px',
-  //   marginBottom: '5px',
-  // }}
-  //         src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-plain.svg"
-  //       />
-  //     ),
-  //     [langs.py]: <DiPython size={15} />,
-  //     [langs.c]: <SiC size={15} />,
-  //     [langs.cs]: <SiCsharp size={15} />,
-  //     [langs.cpp]: <SiCplusplus size={15} />,
-  //     [langs.cc]: <SiCplusplus size={15} />,
-  //   }[lang] ?? <AiOutlineFileText size={15} />
-  // );
 };
 
 const getFileExtension = (filename) => {

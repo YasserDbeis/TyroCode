@@ -246,7 +246,11 @@ class Tabbing extends Component {
                 <span className={pane.saved ? null : 'unsaved'}>
                   {pane.title}
                 </span>
-                {langToIcon(pane.lang)}
+                {langToIcon(pane.lang, {
+                  marginLeft: '10px',
+                  height: '20px',
+                  width: '20px',
+                })}
               </span>
             }
             key={pane.key}
