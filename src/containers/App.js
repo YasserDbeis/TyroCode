@@ -21,13 +21,14 @@ import {
 import { createNewFile } from '../helpers/FileWriting';
 import { Resizable } from 're-resizable';
 import { FaRegPlayCircle } from 'react-icons/fa';
+import { LoadingOutlined } from '@ant-design/icons';
 import { languageOptions, defaultLanguage } from '../content/LanguageMenu';
 import newFile from '../content/NewFile';
 import {
   languageDropdownStyle,
   languageOptionStyle,
 } from '../styles/LanguageDropdown';
-import runButtonStyle from '../styles/RunButton';
+import { runButtonStyle, runButtonLoadingStyle } from '../styles/RunButton';
 import { last } from 'lodash';
 import { testAPI } from '../helpers/CodeExecution';
 
@@ -61,6 +62,7 @@ class App extends Component {
       folderDropdownSelectionElement: null,
       currentDirectory: null,
       languageSelection: { ...defaultLanguage },
+      codeRunning: false,
     };
   }
 
@@ -171,7 +173,15 @@ class App extends Component {
   };
 
   runButtonHandler = () => {
-    this.tabs.runCurrentCode(this.state.languageSelection.compilerName);
+    this.setState({ codeRunning: true });
+    this.tabs.runCurrentCode(
+      this.state.languageSelection.compilerName,
+      this.codeExitedHandler
+    );
+  };
+
+  codeExitedHandler = () => {
+    this.setState({ codeRunning: false });
   };
 
   languageOptionClickHandler = (lang) => {
@@ -241,11 +251,23 @@ class App extends Component {
                   Run {this.state.languageSelection.name}
                 </Button>
               </Dropdown>
-              <FaRegPlayCircle
-                size={25}
-                style={runButtonStyle}
-                onClick={() => this.runButtonHandler()}
-              />
+              {this.state.codeRunning ? (
+                <LoadingOutlined style={runButtonLoadingStyle} />
+              ) : (
+                <FaRegPlayCircle
+                  size={25}
+                  style={runButtonStyle}
+                  onClick={() => this.runButtonHandler()}
+                />
+              )}
+
+              {/* <div ref={this.runCodeBtnRef}>
+                <FaRegPlayCircle
+                  size={25}
+                  style={runButtonStyle}
+                  onClick={() => this.runButtonHandler()}
+                />
+              </div> */}
             </div>
 
             <div style={{ color: 'white' }}>

@@ -10,17 +10,6 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-python';
 
 import React from 'react';
-import {
-  DiJavascript,
-  DiCss3Full,
-  DiHtml5,
-  DiReact,
-  DiGo,
-  DiJava,
-  DiPython,
-} from 'react-icons/di';
-import { SiC, SiCsharp, SiCplusplus } from 'react-icons/si';
-import { AiOutlineFile } from 'react-icons/ai';
 
 export const getProgLanguage = (filename) => {
   let ext = getFileExtension(filename);

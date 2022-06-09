@@ -11,42 +11,49 @@ import { SiC, SiCsharp, SiCplusplus } from 'react-icons/si';
 import { Menu } from 'antd';
 import React, { Component } from 'react';
 import { languageOptionStyle } from '../styles/LanguageDropdown';
+import * as langs from '../enums/ProgLanguages';
+import { langToIcon } from '../helpers/FilenameExtensions';
 
-let languageOptions = [
+const langIconStyle = {
+  height: '20px',
+  width: '20px',
+};
+
+const languageOptions = [
   {
     name: 'Python 3',
-    icon: <DiPython size={20} />,
-    compilerName: 'python3',
+    icon: langToIcon(langs.py, langIconStyle),
+    compilerName: 'py',
   },
   {
     name: 'JavaScript',
-    icon: <DiJavascript size={20} />,
-    compilerName: 'nodejs',
+    icon: langToIcon(langs.js, langIconStyle),
+    compilerName: 'js',
   },
   {
     name: 'C++',
-    icon: <SiCplusplus size={20} />,
+    icon: langToIcon(langs.cpp, langIconStyle),
     compilerName: 'cpp',
   },
   {
     name: 'C',
-    icon: <SiC size={20} />,
+    icon: langToIcon(langs.c, langIconStyle),
     compilerName: 'c',
   },
   {
     name: 'Go',
-    icon: <DiGo size={20} />,
+    icon: langToIcon(langs.go, langIconStyle),
     compilerName: 'go',
   },
   {
     name: 'Java',
-    icon: <DiJava size={20} />,
+    icon: langToIcon(langs.java, langIconStyle),
     compilerName: 'java',
   },
   {
     name: 'C#',
-    icon: <SiCsharp size={20} />,
-    compilerName: 'csharp',
+    icon: langToIcon(langs.cs, langIconStyle),
+    compilerName: 'cs',
   },
 ];
 

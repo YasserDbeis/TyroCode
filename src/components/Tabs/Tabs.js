@@ -11,6 +11,7 @@ import { write } from 'original-fs';
 import { getProgLanguage } from '../../helpers/FilenameExtensions';
 import * as langs from '../../enums/ProgLanguages';
 import { langToIcon } from '../../helpers/FilenameExtensions';
+import { runCode } from '../../helpers/CodeExecution';
 const { TabPane } = Tabs;
 const ADD = 0;
 const REMOVE = 1;
@@ -186,36 +187,62 @@ class Tabbing extends Component {
     return i;
   };
 
-  runCurrentCode = (language) => {
+  runCurrentCode = async (language, codeExitedHandler) => {
     let paneIndex = this.getCurrentPaneIndex();
 
     let code = this.state.panes[paneIndex].content;
 
-    var request = require('request');
+    try {
+      const result = await runCode(language, code, 'Sample Input');
+      console.log(result);
+      const success = result.success;
 
-    var program = {
-      script: code,
-      stdin: 'Yasser',
-      language: language,
-      versionIndex: '0',
-      clientId: 'e7f1ebfe96c749a4f6d493bf24d809d2',
-      clientSecret:
-        'ffc186bff12de9db1b39e74621bae2b145889b3c68222bb269d28e0c06cb4582',
-    };
-    request(
-      {
-        url: 'https://api.jdoodle.com/v1/execute',
-        method: 'POST',
-        json: program,
-      },
-      function (error, response, body) {
-        console.log('error:', error);
-        console.log('statusCode:', response && response.statusCode);
-        console.log('body:', body);
-
-        writeCodeResult(body.output);
+      let output;
+      if (success) {
+        output = result.output;
+      } else {
+        output = result.error;
       }
-    );
+
+      writeCodeResult(output);
+      codeExitedHandler();
+    } catch (e) {
+      console.log(e);
+    }
+
+    // (async () => {
+    //   try {
+    //     this.setState({ data: await this.getData() });
+    //   } catch (e) {
+    //     //...handle the error...
+    //   }
+    // })();
+
+    // var request = require('request');
+
+    // var program = {
+    //   script: code,
+    //   stdin: 'Yasser',
+    //   language: language,
+    //   versionIndex: '0',
+    //   clientId: 'e7f1ebfe96c749a4f6d493bf24d809d2',
+    //   clientSecret:
+    //     'ffc186bff12de9db1b39e74621bae2b145889b3c68222bb269d28e0c06cb4582',
+    // };
+    // request(
+    //   {
+    //     url: 'https://api.jdoodle.com/v1/execute',
+    //     method: 'POST',
+    //     json: program,
+    //   },
+    //   function (error, response, body) {
+    //     console.log('error:', error);
+    //     console.log('statusCode:', response && response.statusCode);
+    //     console.log('body:', body);
+
+    //     writeCodeResult(body.output);
+    //   }
+    // );
   };
 
   codeChange = (code) => {

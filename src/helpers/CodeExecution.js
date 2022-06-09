@@ -1,25 +1,32 @@
 var axios = require('axios');
 var qs = require('qs');
-var data = qs.stringify({
-  code: 'import java.util.Scanner;\npublic class MatSym {\n    public static void main(String[]args) {\n       Scanner in = new Scanner(System.in);\nSystem.out.println(in.nextLine());\nSystem.out.println(in.nextLine());\n    }\n}',
-  language: 'java',
-  input: 'Hello\nWorld',
-});
-var config = {
-  method: 'post',
-  url: 'https://codex-api.herokuapp.com/',
-  headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
-  },
-  data: data,
+const POST = 'post';
+const CODEX_API_URL = 'https://codex-api.herokuapp.com/';
+const CONTENT_TYPE = 'application/x-www-form-urlencoded';
+
+const getDataQS = (language, code, input) => {
+  return qs.stringify({
+    language,
+    code,
+    input,
+  });
 };
 
-export const testAPI = () => {
-  axios(config)
-    .then(function (response) {
-      console.log(JSON.stringify(response.data));
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+const getConfig = (data) => {
+  return {
+    method: POST,
+    url: CODEX_API_URL,
+    headers: {
+      'Content-Type': CONTENT_TYPE,
+    },
+    data: data,
+  };
+};
+
+export const runCode = async (language, code, input) => {
+  const data = getDataQS(language, code, input);
+  const config = getConfig(data);
+
+  const response = await axios(config);
+  return response.data;
 };

@@ -1,10 +1,21 @@
-let runButtonStyle = {
-  cursor: 'pointer',
+let baseLineStyle = {
   color: 'whitesmoke',
   backgroundColor: 'transparent',
   float: 'right',
-  // marginTop: '8.5px',
-  // marginRight: '5px',
 };
 
-export default runButtonStyle;
+let runButtonStyle = {
+  cursor: 'pointer',
+  ...baseLineStyle,
+};
+
+let runButtonLoadingStyle = {
+  cursor: 'none',
+  fontSize: '25px',
+  ...baseLineStyle,
+};
+
+module.exports = {
+  runButtonLoadingStyle,
+  runButtonStyle,
+};
