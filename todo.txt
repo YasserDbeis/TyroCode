@@ -1,6 +1,5 @@
 // Bugs
--4. Find free unlimited alternative to jdoodle api
--3. Dragging left border of app sometimes gets caught on something else to expand
+-3. Find free unlimited alternative to jdoodle api
 -2. Editing a file in another text editor doesnt reflect in yscode
 -1. On startup, creating a new file doesnt have a valid directory to store to
 0. When you create a new file, it does not get highlighted/selected

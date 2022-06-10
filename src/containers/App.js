@@ -221,6 +221,7 @@ class App extends Component {
         <Sider width={0} />
         <Resizable
           className="ant-layout-sider-children"
+          enable={{ left: false, right: true }}
           size={{ width: this.state.sidebarWidth }}
           maxWidth="500px"
           minWidth="250px"
