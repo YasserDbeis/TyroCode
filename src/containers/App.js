@@ -9,6 +9,7 @@ import { debounce } from 'lodash';
 
 import { Layout, Menu, Breadcrumb, Divider, Button, Dropdown } from 'antd';
 import Tabs from '../components/Tabs/Tabs';
+import CodeInput from '../components/CodeInput/CodeInput';
 
 import { Scrollbars } from 'react-custom-scrollbars';
 import {
@@ -48,6 +49,7 @@ class App extends Component {
     super(props);
 
     this.term = React.createRef();
+    this.codeInput = React.createRef();
     // console.log('[App.js] constructor');
 
     this.state = {
@@ -174,8 +176,10 @@ class App extends Component {
 
   runButtonHandler = () => {
     this.setState({ codeRunning: true });
+    const input = this.codeInput.current.el.current.innerText;
     this.tabs.runCurrentCode(
       this.state.languageSelection.compilerName,
+      input,
       this.codeExitedHandler
     );
   };
@@ -213,13 +217,14 @@ class App extends Component {
     // console.log(languageMenu, defaultLanguage);
 
     return (
-      <Layout className="layout-font" style={{ minHeight: '100vh' }}>
+      <Layout className="layout-font" style={{ height: '100vh' }}>
         <Sider width={0} />
         <Resizable
           className="ant-layout-sider-children"
           size={{ width: this.state.sidebarWidth }}
           maxWidth="500px"
           minWidth="250px"
+          height="100vh"
           onResizeStop={(e, direction, ref, d) => {
             this.setState({
               sidebarWidth: this.state.sidebarWidth + d.width,
@@ -231,45 +236,38 @@ class App extends Component {
             resizeTerminal();
           }}
         >
-          <Scrollbars>
-            <div
-              style={{
-                height: '5px',
-                marginLeft: '20px',
-                marginRight: '20px',
-                marginTop: '20px',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                display: 'flex',
-              }}
-            >
-              <NewFileModal
-                onFilenameInputSuccess={this.newFileCreatedHandler}
-              ></NewFileModal>
-              <Dropdown overlay={languageMenu} placement="bottom">
-                <Button style={languageDropdownStyle}>
-                  Run {this.state.languageSelection.name}
-                </Button>
-              </Dropdown>
-              {this.state.codeRunning ? (
-                <LoadingOutlined style={runButtonLoadingStyle} />
-              ) : (
-                <FaRegPlayCircle
-                  size={25}
-                  style={runButtonStyle}
-                  onClick={() => this.runButtonHandler()}
-                />
-              )}
+          <div
+            style={{
+              height: '25px',
+              marginLeft: '20px',
+              marginRight: '20px',
+              marginBottom: '10px',
+              marginTop: '10px',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              display: 'flex',
+            }}
+          >
+            <NewFileModal
+              onFilenameInputSuccess={this.newFileCreatedHandler}
+            ></NewFileModal>
+            <Dropdown overlay={languageMenu} placement="bottom">
+              <Button style={languageDropdownStyle}>
+                Run {this.state.languageSelection.name}
+              </Button>
+            </Dropdown>
+            {this.state.codeRunning ? (
+              <LoadingOutlined style={runButtonLoadingStyle} />
+            ) : (
+              <FaRegPlayCircle
+                size={25}
+                style={runButtonStyle}
+                onClick={() => this.runButtonHandler()}
+              />
+            )}
+          </div>
 
-              {/* <div ref={this.runCodeBtnRef}>
-                <FaRegPlayCircle
-                  size={25}
-                  style={runButtonStyle}
-                  onClick={() => this.runButtonHandler()}
-                />
-              </div> */}
-            </div>
-
+          <Scrollbars style={{ height: '80%' }}>
             <div style={{ color: 'white' }}>
               <FileTree
                 key={this.state.folderName}
@@ -279,14 +277,15 @@ class App extends Component {
                 }
               />
             </div>
-            <Button onClick={this.toggleTerminal}>Open Terminal</Button>
+            {/* <Button onClick={this.toggleTerminal}>Open Terminal</Button> */}
           </Scrollbars>
+          <CodeInput ref={this.codeInput} />
         </Resizable>
         <Layout className="site-layout">
           <Tabs
             windowHeight={this.state.windowHeight}
             terminalHeight={this.state.terminalHeight}
-            onRef={(ref) => (this.tabs = ref)}
+            onRef={(tabRef) => (this.tabs = tabRef)}
           />
           {/* {this.state.showTerminal ? ( */}
           <Terminal

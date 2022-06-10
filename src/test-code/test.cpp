@@ -7,10 +7,12 @@ int main()
 {
 
     string name;
+    string name2;
 
     cin >> name;
+    cin >> name2;
 
-    cout << "Hello, " << name << "!" << endl;
+    cout << "Hello, " << name << ", " << name2 << "!" << endl;
 
     return 0;
 }
