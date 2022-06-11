@@ -11,11 +11,70 @@ const getFullPath = (currDirectory, filename) => {
   return `${currDirectory}${slash}${filename}`;
 };
 
-const fetchFolderContent = async (app) => {
-  const folderName = path.join(process.cwd(), 'src').split('\\').pop();
-  const folderContent = getFolderContents(path.join(process.cwd(), 'src'));
+const getBaseFolderContent = (app) => {
+  const pwd = getPWD();
+  const folderName = pwd.split(slash).pop();
+  const folderContent = getFolderContent(pwd);
 
   app.setState({ folderContent: folderContent, folderName: folderName });
+};
+
+const getTargetDirectory = (folderPath, folderContent) => {
+  const baseDir = getPWD();
+
+  const targetPath = folderPath.replace(baseDir + slash, '');
+
+  console.log('FOLDER CLICK!!', targetPath);
+  console.log('FOLDER CLICK!!', targetPath.split(slash));
+
+  const paths = targetPath.split(slash);
+
+  // let baseFolderContent = [...app.state.folderContent];
+
+  let folderPtr = folderContent;
+
+  for (const path of paths) {
+    for (const base of folderPtr) {
+      console.log(path + '---' + base.type + ', ' + base?.name);
+      if (base.type == 'folder' && base.name == path) {
+        folderPtr = base.children;
+        break;
+      }
+    }
+  }
+
+  return folderPtr;
+};
+
+const setFolderContent = (folderPath, options, app) => {
+  const folderContent = [...app.state.folderContent];
+
+  const folderPtr = getTargetDirectory(folderPath, folderContent);
+
+  const { isUpdate, updateType, filePath } = options;
+
+  if (isUpdate && updateType == 'add') {
+    const fileName = getDirectoryNodeName('file', filePath);
+
+    folderPtr.push({
+      type: 'file',
+      name: fileName,
+      path: folderPath,
+    });
+  } else if (!isUpdate) {
+    if (folderPtr.length > 0) {
+      console.log('ALREADY POPULATED');
+      return;
+    }
+
+    folderPtr.push(...getFolderContent(folderPath));
+  } else {
+    console.log('INVALID OPTIONS // OR NOT ACCOMODATED NOW', options);
+  }
+
+  console.log('SET FOLDER CONTENT', folderContent);
+
+  app.setState({ folderContent: folderContent });
 };
 
 const getDirectoryNode = (type, name, path) => {
@@ -70,30 +129,30 @@ const getFileText = (path) => {
   return fileData;
 };
 
-const getFolderContents = (filePath) => {
-  if (!pathExists(filePath)) {
+const getFolderContent = (folderPath) => {
+  if (!pathExists(folderPath)) {
     console.log('Path Does Not Exist.');
     return;
   }
 
   var newDir = [];
 
-  const baseDir = readDirectory(filePath);
+  const baseDir = readDirectory(folderPath);
 
   for (const f of baseDir) {
-    var currentPath = path.join(filePath, f);
+    var currentPath = path.join(folderPath, f);
 
     const currentPathIsDir = isDirectory(currentPath);
 
     if (currentPathIsDir) {
-      var tempDir = getFolderContents(currentPath);
+      // var tempDir = getFolderContents(currentPath);
 
       const folderName = getDirectoryNodeName('folder', currentPath);
 
       newDir.push({
         type: 'folder',
         name: folderName,
-        children: tempDir,
+        children: [],
         path: currentPath,
       });
     } else {
@@ -129,9 +188,10 @@ const readDirectory = (filePath) => {
 module.exports = {
   getDirectoryNode,
   getCurrentDirectory,
-  getFolderContents,
   getFileText,
-  fetchFolderContent,
+  getBaseFolderContent,
   getPWD,
   getFullPath,
+  setFolderContent,
+  pathExists,
 };

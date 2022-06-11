@@ -123,7 +123,7 @@ const TreeRecursive = ({ data, onNodeClick }) => {
     if (item.type === 'file') {
       return (
         <File
-          key={item.path + '_file'}
+          key={item.path + '-' + item.name + '-file'}
           name={item.name}
           path={item.path}
           onNodeClick={onNodeClick}
@@ -172,7 +172,7 @@ const errorDirectory = [
 ];
 
 const FileTree = (props) => {
-  //console.log(props.folderContent)
+  console.log(props.folderContent);
 
   return (
     <div className="FileTree">

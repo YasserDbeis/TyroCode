@@ -6,18 +6,17 @@ import FileTree from '../components/FolderDropdown/FolderDropdown';
 import NewFileModal from '../components/NewFileModal/NewFileModal';
 const ResizableBox = require('react-resizable').ResizableBox;
 import { debounce } from 'lodash';
-
 import { Layout, Menu, Breadcrumb, Divider, Button, Dropdown } from 'antd';
 import Tabs from '../components/Tabs/Tabs';
 import CodeInput from '../components/CodeInput/CodeInput';
-
 import { Scrollbars } from 'react-custom-scrollbars';
 import {
-  getFolderContents,
   getFileText,
   getCurrentDirectory,
-  fetchFolderContent,
+  getBaseFolderContent,
   getFullPath,
+  getPWD,
+  setFolderContent,
 } from '../helpers/FileDirectory';
 import { createNewFile } from '../helpers/FileWriting';
 import { Resizable } from 're-resizable';
@@ -36,7 +35,7 @@ import { testAPI } from '../helpers/CodeExecution';
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 const HANDLE_HEIGHT = 10;
-
+const DEBOUNCE_TIME = 300;
 let lastHeight = 0;
 
 const {
@@ -82,7 +81,7 @@ class App extends Component {
       });
     }
     lastHeight = e.target.innerHeight;
-  }, 300);
+  }, DEBOUNCE_TIME);
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.resize);
@@ -92,7 +91,7 @@ class App extends Component {
     // console.log('[App.js] componentDidMount');
     window.addEventListener('resize', this.resize);
 
-    fetchFolderContent(this);
+    getBaseFolderContent(this);
 
     this.setState({
       showTerminal: true,
@@ -141,14 +140,26 @@ class App extends Component {
 
   newFileCreatedHandler = (fileName) => {
     console.log('added', fileName);
-    const currDirectory = this.state.currentDirectory;
-    const path = getFullPath(currDirectory, fileName);
 
-    createNewFile(path);
+    const currDirectory = this.state.currentDirectory ?? getPWD();
 
-    this.tabs.add(fileName, path, '');
+    const filePath = getFullPath(currDirectory, fileName);
 
-    fetchFolderContent(this);
+    const fileWriteSuccess = createNewFile(filePath);
+
+    if (fileWriteSuccess) {
+      this.tabs.add(fileName, filePath, '');
+
+      setFolderContent(
+        currDirectory,
+        {
+          isUpdate: true,
+          updateType: 'add',
+          filePath,
+        },
+        this
+      );
+    }
   };
 
   addExistingFileToTabs = (fileNode) => {
@@ -159,6 +170,17 @@ class App extends Component {
   folderDropdownNodeClickHandler = (element, directoryNode) => {
     if (directoryNode.type == 'file') {
       this.addExistingFileToTabs(directoryNode);
+    } else {
+      console.log('CLICKED');
+      setFolderContent(
+        directoryNode.path,
+        {
+          isUpdate: false,
+          updateType: null,
+          filePath: null,
+        },
+        this
+      );
     }
 
     const currDirectory = getCurrentDirectory(directoryNode);

@@ -1,5 +1,7 @@
 // Bugs
--3. Find free unlimited alternative to jdoodle api
+-5. Make folder content fetch on demand
+-4. Make init screen to say Hello and choose folder
+-3. Make icons and font offline
 -2. Editing a file in another text editor doesnt reflect in yscode
 -1. On startup, creating a new file doesnt have a valid directory to store to
 0. When you create a new file, it does not get highlighted/selected
@@ -9,12 +11,12 @@
 4. deleting from second to first line doesnt register in terminal
 
 // Clean Up
-1. Remove "Toggle Terminal Button" + relavant code 
+1. Change default directory from with src to without (if this still is relevant)
+2. Remove "Toggle Terminal Button" + relavant code 
 
 // Features
 - Add 4 spaces after bracket + enter combo
 - Draggable Tabs
-- File Directory
 - custom titlebar
     - add terminal toggle to this or consider adding it as a button to be more intuitive
 - make a tiktok advertising yscode

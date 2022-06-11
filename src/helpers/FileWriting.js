@@ -2,13 +2,24 @@ import fs from 'fs';
 // import { promises as fs } from 'fs';
 
 import os from 'os';
-import { getFullPath } from '../helpers/FileDirectory';
+import { getFullPath, pathExists } from '../helpers/FileDirectory';
 
 const createNewFile = (path) => {
-  fs.writeFile(path, '', function (err) {
-    if (err) throw err;
-    else console.log('File is created successfully.');
-  });
+  const fileAlreadyExists = pathExists(path);
+
+  if (fileAlreadyExists) {
+    console.log('FILE ALREADY EXISTS');
+    return false;
+  }
+
+  try {
+    fs.writeFileSync(path, '');
+    console.log('File is created successfully.');
+    return true;
+  } catch (err) {
+    console.log('FILE WRITE ERROR:', err);
+    return false;
+  }
 };
 
 const saveFileContent = (content, path) => {
