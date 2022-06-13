@@ -1,6 +1,8 @@
-import React, { Component, useEffect, useState, use } from 'react';
+import React, { useState } from 'react';
 
 import './FolderTree.css';
+
+import { Button } from 'antd';
 
 import styled from 'styled-components';
 import {
@@ -18,8 +20,12 @@ import {
   DiPython,
 } from 'react-icons/di';
 import { SiC, SiCsharp, SiCplusplus } from 'react-icons/si';
-import { getDirectoryNode } from '../../helpers/FileDirectory';
+import {
+  getDirectoryNode,
+  openFolderHandler,
+} from '../../helpers/FileDirectory';
 import { getProgLanguage, langToIcon } from '../../helpers/FilenameExtensions';
+import { openWorkspaceButtonStyle } from '../../styles/OpenWorkspaceButtonStyle';
 /*
 Thank you to Anurag Hazra for his wonderful inspiration. His work 
 in article https://anuraghazra.github.io/blog/building-a-react-folder-tree-component
@@ -172,14 +178,37 @@ const errorDirectory = [
 ];
 
 const FileTree = (props) => {
-  console.log(props.folderContent);
+  const openFolderHandler = () => {
+    const { dialog } = require('electron').remote;
+
+    dialog
+      .showOpenDialog({
+        properties: ['openDirectory', 'createDirectory'],
+      })
+      .then((promise) => {
+        const path = promise.filePaths[0];
+        props.onFolderSelection(path);
+      });
+  };
 
   return (
-    <div className="FileTree">
-      <Tree
-        onNodeClick={props.folderDropdownNodeClickHandler}
-        data={props.folderContent ? props.folderContent : errorDirectory}
-      />
+    <div>
+      <Button
+        onClick={() => openFolderHandler(props.onFolderSelection)}
+        style={openWorkspaceButtonStyle}
+      >
+        Select Folder{' '}
+        <AiOutlineFolderOpen size={24} style={{ verticalAlign: 'middle' }} />
+      </Button>
+
+      {props.folderContent != undefined ? (
+        <div className="FileTree">
+          <Tree
+            onNodeClick={props.folderDropdownNodeClickHandler}
+            data={props.folderContent ? props.folderContent : errorDirectory}
+          />
+        </div>
+      ) : null}
     </div>
   );
 };

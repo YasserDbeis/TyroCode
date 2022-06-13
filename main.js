@@ -23,9 +23,12 @@ function createWindow() {
     },
   });
 
-  win.webContents.openDevTools();
+  if (isDev) {
+    win.webContents.openDevTools();
+  }
   // win.loadURL('file://' + process.cwd() + '/index.html');
-  win.loadURL('file://' + __dirname + '/index.html');
+  win.loadURL(`file://${__dirname}/index.html`);
+
   // win.loadURL('file://' + path.join(__dirname, 'index.html'))   //send boolean to indicate whether this is the first start up of the app
 
   const {

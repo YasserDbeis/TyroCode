@@ -16,16 +16,16 @@ const { TabPane } = Tabs;
 const ADD = 0;
 const REMOVE = 1;
 
-const initialPanes = [
-  {
-    title: 'Welcome',
-    path: getPWD(),
-    content: 'HELLO\nWORLD',
-    saved: false,
-    key: '1',
-    lang: langs.none,
-  },
-];
+// const initialPanes = [
+//   {
+//     title: 'Welcome',
+//     path: getPWD(),
+//     content: 'HELLO\nWORLD',
+//     saved: false,
+//     key: '1',
+//     lang: langs.none,
+//   },
+// ];
 
 class Tabbing extends Component {
   newTabIndex = 0;
@@ -33,8 +33,8 @@ class Tabbing extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeKey: initialPanes[0].key,
-      panes: initialPanes,
+      activeKey: null,
+      panes: [],
       pathToKey: new Map(),
     };
 
@@ -94,6 +94,7 @@ class Tabbing extends Component {
   };
 
   add = (name, path, code) => {
+    console.log('ADDING:', name);
     const pathToKey = this.state.pathToKey;
     const activeKey = `code-tab-${this.newTabIndex++}`;
 
@@ -106,7 +107,7 @@ class Tabbing extends Component {
     }
 
     const { panes } = this.state;
-    const newPanes = panes.length == 1 && panes[0].key == 1 ? [] : [...panes];
+    const newPanes = [...panes];
     newPanes.push({
       title: name,
       path: path,
@@ -148,6 +149,10 @@ class Tabbing extends Component {
       panes: newPanes,
       activeKey: newActiveKey,
     });
+
+    if (newPanes.length == 0) {
+      this.props.onTabsEmpty();
+    }
   };
 
   resizeTextEditor = (activeTab) => {
@@ -190,7 +195,12 @@ class Tabbing extends Component {
   runCurrentCode = async (language, input, codeExitedHandler) => {
     let paneIndex = this.getCurrentPaneIndex();
 
-    let code = this.state.panes[paneIndex].content;
+    let code = this.state.panes[paneIndex]?.content;
+
+    if (!code || code.trim().length == 0) {
+      codeExitedHandler();
+      return;
+    }
 
     try {
       const result = await runCode(language, code, input);

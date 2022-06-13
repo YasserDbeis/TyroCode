@@ -11,10 +11,13 @@ const getFullPath = (currDirectory, filename) => {
   return `${currDirectory}${slash}${filename}`;
 };
 
-const getBaseFolderContent = (app) => {
-  const pwd = getPWD();
-  const folderName = pwd.split(slash).pop();
-  const folderContent = getFolderContent(pwd);
+const getBaseFolderContent = (path, app) => {
+  if (!path) {
+    return;
+  }
+
+  const folderName = path.split(slash).pop();
+  const folderContent = getFolderContent(path);
 
   app.setState({ folderContent: folderContent, folderName: folderName });
 };
@@ -185,6 +188,19 @@ const readDirectory = (filePath) => {
   return dirFiles;
 };
 
+const openFolderHandler = (onFolderSelection) => {
+  const { dialog } = require('electron').remote;
+
+  dialog
+    .showOpenDialog({
+      properties: ['openDirectory', 'createDirectory'],
+    })
+    .then((promise) => {
+      const path = promise.filePaths[0];
+      onFolderSelection(path);
+    });
+};
+
 module.exports = {
   getDirectoryNode,
   getCurrentDirectory,
@@ -194,4 +210,5 @@ module.exports = {
   getFullPath,
   setFolderContent,
   pathExists,
+  openFolderHandler,
 };

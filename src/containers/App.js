@@ -8,6 +8,7 @@ const ResizableBox = require('react-resizable').ResizableBox;
 import { debounce } from 'lodash';
 import { Layout, Menu, Breadcrumb, Divider, Button, Dropdown } from 'antd';
 import Tabs from '../components/Tabs/Tabs';
+import GetStarted from '../components/GetStarted/GetStarted';
 import CodeInput from '../components/CodeInput/CodeInput';
 import { Scrollbars } from 'react-custom-scrollbars';
 import {
@@ -64,6 +65,8 @@ class App extends Component {
       currentDirectory: null,
       languageSelection: { ...defaultLanguage },
       codeRunning: false,
+      tabOpen: false,
+      workSpacePath: null,
     };
   }
 
@@ -90,8 +93,6 @@ class App extends Component {
   componentDidMount() {
     // console.log('[App.js] componentDidMount');
     window.addEventListener('resize', this.resize);
-
-    getBaseFolderContent(this);
 
     this.setState({
       showTerminal: true,
@@ -138,6 +139,12 @@ class App extends Component {
     this.setState({ showTerminal: !showingTerminal });
   };
 
+  setWorkspaceFolder = (folderPath) => {
+    this.setState({ workSpacePath: folderPath });
+
+    getBaseFolderContent(folderPath, this);
+  };
+
   newFileCreatedHandler = (fileName) => {
     console.log('added', fileName);
 
@@ -162,9 +169,19 @@ class App extends Component {
     }
   };
 
+  onTabsEmpty = () => {
+    this.setState({ tabOpen: false });
+  };
+
   addExistingFileToTabs = (fileNode) => {
+    const tabOpen = this.state.tabOpen;
+
+    if (!tabOpen) {
+      this.setState({ tabOpen: true });
+    }
+
     let code = getFileText(fileNode.path);
-    this.tabs.add(fileNode.name, fileNode.path, code);
+    this.tabs?.add(fileNode.name, fileNode.path, code);
   };
 
   folderDropdownNodeClickHandler = (element, directoryNode) => {
@@ -298,6 +315,7 @@ class App extends Component {
                 folderDropdownNodeClickHandler={
                   this.folderDropdownNodeClickHandler
                 }
+                onFolderSelection={this.setWorkspaceFolder}
               />
             </div>
             {/* <Button onClick={this.toggleTerminal}>Open Terminal</Button> */}
@@ -306,17 +324,25 @@ class App extends Component {
         </Resizable>
         <Layout className="site-layout">
           <Tabs
+            className={this.state.tabOpen ? 'hidden' : null}
             windowHeight={this.state.windowHeight}
             terminalHeight={this.state.terminalHeight}
             onRef={(tabRef) => (this.tabs = tabRef)}
+            onTabsEmpty={this.onTabsEmpty}
           />
-          {/* {this.state.showTerminal ? ( */}
+
+          <GetStarted
+            className={this.state.tabOpen ? 'hidden' : null}
+            windowHeight={this.state.windowHeight}
+            terminalHeight={this.state.terminalHeight}
+            onFolderSelection={this.setWorkspaceFolder}
+          />
+
           <Terminal
             onTermExpand={this.onTermExpand}
             sidebarWidth={this.state.sidebarWidth}
             ref={this.term}
           />
-          {/* ) : null} */}
         </Layout>
       </Layout>
     );

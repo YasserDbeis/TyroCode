@@ -136,3 +136,7 @@ li.ant-menu-item {
   background-color: #282c34;
   color: whitesmoke;
 }
+
+.hidden {
+  visibility: hidden;
+}
