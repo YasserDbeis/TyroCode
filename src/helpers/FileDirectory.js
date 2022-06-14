@@ -62,7 +62,7 @@ const setFolderContent = (folderPath, options, app) => {
     folderPtr.push({
       type: 'file',
       name: fileName,
-      path: folderPath,
+      path: filePath,
     });
   } else if (!isUpdate) {
     if (folderPtr.length > 0) {
@@ -118,8 +118,7 @@ const getCurrentDirectory = (directoryNode) => {
 const getFileText = (path, fileName) => {
   const ext = getFileExtension(fileName);
   if (ext == 'pdf') {
-    console.log('CANT READ PDF FILES');
-    return null;
+    return [null, false];
   }
 
   try {
@@ -135,7 +134,7 @@ const getFileText = (path, fileName) => {
   }
 
   const fileData = fs.readFileSync(path, 'utf8');
-  return fileData;
+  return [fileData, true];
 };
 
 const getFolderContent = (folderPath) => {

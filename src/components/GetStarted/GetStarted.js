@@ -46,29 +46,31 @@ const GetStarted = (props) => {
         <span style={{ color: '#8CC0DE' }}>tooling</span>.
       </span>
 
-      <div style={{ margin: '75px' }}>
-        <div>
-          <span
-            style={{
-              fontSize: '22px',
-            }}
-          >
-            Open a folder, create/edit files, select a language, &amp; run!
-          </span>
+      {props.windowHeight - props.terminalHeight > 400 ? (
+        <div style={{ margin: '75px' }}>
+          <div>
+            <span
+              style={{
+                fontSize: '22px',
+              }}
+            >
+              Open a folder, create/edit files, select a language, &amp; run!
+            </span>
+          </div>
+          <br />
+          <div>
+            <AiOutlineFolderOpen size={50} />
+            <IoIosArrowRoundForward size={50} />
+            <AiOutlineFileAdd size={50} />
+            <IoIosArrowRoundForward size={50} />
+            <HiOutlineCode size={50} />
+            <IoIosArrowRoundForward size={50} />
+            <TiThMenuOutline size={50} />
+            <IoIosArrowRoundForward size={50} />
+            <FaRegPlayCircle size={50} />
+          </div>
         </div>
-        <br />
-        <div>
-          <AiOutlineFolderOpen size={50} />
-          <IoIosArrowRoundForward size={50} />
-          <AiOutlineFileAdd size={50} />
-          <IoIosArrowRoundForward size={50} />
-          <HiOutlineCode size={50} />
-          <IoIosArrowRoundForward size={50} />
-          <TiThMenuOutline size={50} />
-          <IoIosArrowRoundForward size={50} />
-          <FaRegPlayCircle size={50} />
-        </div>
-      </div>
+      ) : null}
       <span
         style={{
           fontSize: '18px',

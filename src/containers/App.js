@@ -148,9 +148,16 @@ class App extends Component {
   newFileCreatedHandler = (fileName) => {
     console.log('added', fileName);
 
-    const currDirectory = this.state.currentDirectory ?? getPWD();
+    const currDirectory =
+      this.state.currentDirectory ?? this.state.workSpacePath;
+
+    if (!currDirectory) {
+      return;
+    }
 
     const filePath = getFullPath(currDirectory, fileName);
+
+    console.log('CREATE NEW FILE PATH', filePath);
 
     const fileWriteSuccess = createNewFile(filePath);
 
@@ -180,9 +187,11 @@ class App extends Component {
       this.setState({ tabOpen: true });
     }
 
-    let code = getFileText(fileNode.path, fileNode.name);
-    if (code) {
+    const [code, success] = getFileText(fileNode.path, fileNode.name);
+    if (success) {
       this.tabs?.add(fileNode.name, fileNode.path, code);
+    } else {
+      console.log('INVALID FILE CONTENT READ');
     }
   };
 
@@ -265,7 +274,7 @@ class App extends Component {
           enable={{ left: false, right: true }}
           size={{ width: this.state.sidebarWidth }}
           maxWidth="500px"
-          minWidth="250px"
+          minWidth="300px"
           height="100vh"
           onResizeStop={(e, direction, ref, d) => {
             this.setState({
@@ -278,40 +287,42 @@ class App extends Component {
             resizeTerminal();
           }}
         >
-          <div
-            style={{
-              height: '25px',
-              marginLeft: '20px',
-              marginRight: '20px',
-              marginBottom: '10px',
-              marginTop: '10px',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              display: 'flex',
-            }}
-          >
-            <NewFileModal
-              onFilenameInputSuccess={this.newFileCreatedHandler}
-            ></NewFileModal>
-            <Dropdown overlay={languageMenu} placement="bottom">
-              <Button style={languageDropdownStyle}>
-                <span style={{ lineHeight: '25px' }}>
-                  Run {this.state.languageSelection.name}
-                </span>
-                <span style={{ width: '10px' }} />
-                {this.state.languageSelection.icon}
-              </Button>
-            </Dropdown>
-            {this.state.codeRunning ? (
-              <LoadingOutlined style={runButtonLoadingStyle} />
-            ) : (
-              <FaRegPlayCircle
-                size={25}
-                style={runButtonStyle}
-                onClick={() => this.runButtonHandler()}
-              />
-            )}
-          </div>
+          {this.state.workSpacePath ? (
+            <div
+              style={{
+                height: '25px',
+                marginLeft: '20px',
+                marginRight: '20px',
+                marginBottom: '10px',
+                marginTop: '10px',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                display: 'flex',
+              }}
+            >
+              <NewFileModal
+                onFilenameInputSuccess={this.newFileCreatedHandler}
+              ></NewFileModal>
+              <Dropdown overlay={languageMenu} placement="bottom">
+                <Button style={languageDropdownStyle}>
+                  {this.state.languageSelection.icon}
+                  <span style={{ width: '10px' }} />
+                  <span style={{ lineHeight: '25px' }}>
+                    Run {this.state.languageSelection.name}
+                  </span>
+                </Button>
+              </Dropdown>
+              {this.state.codeRunning ? (
+                <LoadingOutlined style={runButtonLoadingStyle} />
+              ) : (
+                <FaRegPlayCircle
+                  size={25}
+                  style={runButtonStyle}
+                  onClick={() => this.runButtonHandler()}
+                />
+              )}
+            </div>
+          ) : null}
 
           <Scrollbars style={{ height: '80%' }}>
             <div style={{ color: 'white' }}>
