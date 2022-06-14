@@ -2,6 +2,7 @@ let languageDropdownStyle = {
   cursor: 'pointer',
   color: 'whitesmoke',
   backgroundColor: 'transparent',
+  paddingBottom: '27.5px',
   // float: 'right',
   // margin: '5px',
 };

@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const slash = os.platform() === 'win32' ? '\\' : '/';
-
+const { getFileExtension } = require('../helpers/FilenameExtensions');
 const getPWD = () => {
   return process.cwd();
 };
@@ -115,7 +115,13 @@ const getCurrentDirectory = (directoryNode) => {
   }
 };
 
-const getFileText = (path) => {
+const getFileText = (path, fileName) => {
+  const ext = getFileExtension(fileName);
+  if (ext == 'pdf') {
+    console.log('CANT READ PDF FILES');
+    return null;
+  }
+
   try {
     if (fs.existsSync(path)) {
       console.log('File exists.');

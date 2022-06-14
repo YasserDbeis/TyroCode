@@ -180,8 +180,10 @@ class App extends Component {
       this.setState({ tabOpen: true });
     }
 
-    let code = getFileText(fileNode.path);
-    this.tabs?.add(fileNode.name, fileNode.path, code);
+    let code = getFileText(fileNode.path, fileNode.name);
+    if (code) {
+      this.tabs?.add(fileNode.name, fileNode.path, code);
+    }
   };
 
   folderDropdownNodeClickHandler = (element, directoryNode) => {
@@ -293,7 +295,11 @@ class App extends Component {
             ></NewFileModal>
             <Dropdown overlay={languageMenu} placement="bottom">
               <Button style={languageDropdownStyle}>
-                Run {this.state.languageSelection.name}
+                <span style={{ lineHeight: '25px' }}>
+                  Run {this.state.languageSelection.name}
+                </span>
+                <span style={{ width: '10px' }} />
+                {this.state.languageSelection.icon}
               </Button>
             </Dropdown>
             {this.state.codeRunning ? (

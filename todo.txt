@@ -1,6 +1,5 @@
 // Bugs
--5. Make folder content use name [key] based hashmap to traverse
--4. Make init screen to say Hello and choose folder
+-4. Make folder content use name [key] based hashmap to traverse
 -3. Make icons and font offline
 -2. Editing a file in another text editor doesnt reflect in yscode
 -1. On startup, creating a new file doesnt have a valid directory to store to

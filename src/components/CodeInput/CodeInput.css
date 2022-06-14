@@ -24,6 +24,10 @@
     color: white;
 }
 
+#code-input:focus {
+    outline: none !important;
+}
+
 [contenteditable] {padding:12px; background:#eee; }
 
 [data-placeholder]:empty:before{

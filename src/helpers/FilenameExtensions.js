@@ -125,7 +125,7 @@ export const langToIcon = (lang, style) => {
   );
 };
 
-const getFileExtension = (filename) => {
+export const getFileExtension = (filename) => {
   let lastPeriodIndex = filename.lastIndexOf('.');
 
   if (lastPeriodIndex == -1) {
