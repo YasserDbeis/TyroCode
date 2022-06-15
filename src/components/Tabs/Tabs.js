@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Tabs, Button } from 'antd';
 import { writeCodeResult } from '../Terminal/TerminalSetup';
 import TextEditorWrapper from '../TextEditor/TextEditorWrapper';
-import { getPWD } from '../../helpers/FileDirectory';
+import { getFileText, getPWD } from '../../helpers/FileDirectory';
 import { saveFileContent } from '../../helpers/FileWriting';
 import './Tabs.css';
 import { last, update } from 'lodash';
@@ -12,6 +12,7 @@ import { getProgLanguage } from '../../helpers/FilenameExtensions';
 import * as langs from '../../enums/ProgLanguages';
 import { langToIcon } from '../../helpers/FilenameExtensions';
 import { runCode } from '../../helpers/CodeExecution';
+import { startWatching, endWatching } from '../../helpers/FileWatching';
 const { TabPane } = Tabs;
 const ADD = 0;
 const REMOVE = 1;
@@ -37,22 +38,15 @@ class Tabbing extends Component {
       panes: [],
       pathToKey: new Map(),
     };
-
     this.codeChange = this.codeChange.bind(this);
   }
-
-  // shouldComponentUpdate(oldProps, newProps) {
-  //   console.log('OLD PROPS', oldProps);
-
-  //   return true;
-  // }
 
   componentDidMount() {
     this.props.onRef(this);
   }
 
   componentDidUpdate() {
-    this.resizeTextEditor(this.state.activeKey - 1);
+    this.resizeTextEditor(this.state.activeKey);
   }
 
   componentWillUnmount() {
@@ -67,11 +61,25 @@ class Tabbing extends Component {
     this[action](targetKey);
   };
 
+  onExternalFileChange = (changedFilePath) => {
+    const newPanes = this.state.panes.map((pane, i) => {
+      if (pane.path == changedFilePath) {
+        const [newCode, success] = getFileText(pane.path, pane.title);
+        if (success) {
+          return { ...pane, content: newCode };
+        } else {
+          return pane;
+        }
+      }
+
+      return pane;
+    });
+
+    this.setState({ panes: newPanes });
+    // this.state.filesToUpdate.add(changedFilePath);
+  };
+
   onSave = (filepath) => {
-    console.log('RECEIVED SAVE FROM', filepath);
-
-    console.log(this.state.pathToKey);
-
     const { pathToKey } = this.state;
 
     if (pathToKey.has(filepath)) {
@@ -94,7 +102,6 @@ class Tabbing extends Component {
   };
 
   add = (name, path, code) => {
-    console.log('ADDING:', name);
     const pathToKey = this.state.pathToKey;
     const activeKey = `code-tab-${this.newTabIndex++}`;
 
@@ -121,6 +128,8 @@ class Tabbing extends Component {
       panes: newPanes,
       activeKey,
     });
+
+    startWatching(path, this);
   };
 
   remove = (targetKey) => {
@@ -153,6 +162,8 @@ class Tabbing extends Component {
     if (newPanes.length == 0) {
       this.props.onTabsEmpty();
     }
+
+    endWatching(filePathToDelete);
   };
 
   resizeTextEditor = (activeTab) => {
@@ -225,23 +236,22 @@ class Tabbing extends Component {
     // console.log(code);
 
     let currPaneIndex = this.getCurrentPaneIndex();
-    let panesCopy = this.state.panes;
+    let panesCopy = [...this.state.panes];
     panesCopy[currPaneIndex].content = code;
     panesCopy[currPaneIndex].saved = false;
     this.setState({ panes: panesCopy });
   };
 
   render() {
-    const { panes, activeKey } = this.state;
     return (
       <Tabs
         hideAdd
         type="editable-card"
         onChange={this.onChange}
-        activeKey={activeKey}
+        activeKey={this.state.activeKey}
         onEdit={this.onEdit}
       >
-        {panes.map((pane) => (
+        {this.state.panes.map((pane) => (
           <TabPane
             tab={
               <span>

@@ -8,19 +8,13 @@ const TAB_HEIGHT = 40;
 class TextEditorWrapper extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      code: '',
-    };
+    // this.state = {
+    //   code: '',
+    // };
     this.codeChange = this.codeChange.bind(this);
   }
 
   codeChange = (newCode) => {
-    this.setState({
-      code: newCode,
-    });
-
-    // console.log(newCode);
-
     this.props.codeChange(newCode);
   };
 
@@ -35,17 +29,6 @@ class TextEditorWrapper extends Component {
           this.props.terminalHeight
         ).toString() + 'px',
     };
-
-    console.log('WINDOW HEIGHT', this.props.windowHeight);
-    console.log('TERM HEIGHT', this.props.terminalHeight);
-    console.log(
-      'TOTAL HEIGHT',
-      (
-        this.props.windowHeight -
-        TAB_HEIGHT -
-        this.props.terminalHeight
-      ).toString() + 'px'
-    );
 
     return (
       <div

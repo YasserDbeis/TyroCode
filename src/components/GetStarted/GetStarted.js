@@ -11,6 +11,7 @@ import { IoIosArrowRoundForward } from 'react-icons/io';
 const GetStarted = (props) => {
   return (
     <div
+      className="unselectable"
       style={{
         textAlign: 'center',
         color: 'white',

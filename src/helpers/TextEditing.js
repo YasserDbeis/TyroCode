@@ -60,7 +60,7 @@ const getHighlightedCode = (code, lang_ext) => {
 
   const tokens = tokenize(code, lang);
 
-  console.log(tokens);
+  // console.log(tokens);
 
   tokens.forEach((token) => {
     let tokenType = null;

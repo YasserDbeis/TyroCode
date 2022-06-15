@@ -67,6 +67,14 @@ const TextEditor = (props) => {
     setHighlightedCode(getHighlightedCode(code));
   }, []);
 
+  useEffect(() => {
+    const newCode = props.code;
+    const lineNums = getLineNums(newCode);
+    setCode(newCode);
+    setLineNums(lineNums);
+    setHighlightedCode(highlightCode(newCode));
+  }, [props.code]);
+
   useLayoutEffect(() => {
     if (cursor && editorRef.current) {
       editorRef.current.focus();
@@ -87,7 +95,7 @@ const TextEditor = (props) => {
   }
 
   function onKeyDownHandler(e) {
-    console.log('ORESSED', e.keyCode);
+    // console.log('ORESSED', e.keyCode);
     // console.log(
     //   'VALUE:' +
     //     ', ' +

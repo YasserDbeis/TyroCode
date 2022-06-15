@@ -140,9 +140,11 @@ class App extends Component {
   };
 
   setWorkspaceFolder = (folderPath) => {
-    this.setState({ workSpacePath: folderPath });
+    if (folderPath) {
+      this.setState({ workSpacePath: folderPath });
 
-    getBaseFolderContent(folderPath, this);
+      getBaseFolderContent(folderPath, this);
+    }
   };
 
   newFileCreatedHandler = (fileName) => {

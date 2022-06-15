@@ -2,7 +2,6 @@
 -4. Make folder content use name [key] based hashmap to traverse
 -3. Make icons and font offline
 -2. Editing a file in another text editor doesnt reflect in yscode
--1. On startup, creating a new file doesnt have a valid directory to store to
 0. When you create a new file, it does not get highlighted/selected
 1. Paste isnt registered into the undo/redo stack
 2. Tabbing a single line (with the top empty line also selected) multiple times doesnt work well
@@ -17,7 +16,6 @@
 - Add 4 spaces after bracket + enter combo
 - Draggable Tabs
 - custom titlebar
-    - add terminal toggle to this or consider adding it as a button to be more intuitive
 - make a tiktok advertising yscode
     - ask other creators to advertise it
 - add leetcode option that scrapes and imports random leetcode question (icon found at https://react-icons.github.io/react-icons/search?q=leet)
