@@ -5,7 +5,7 @@ import Terminal from '../components/Terminal/Terminal';
 import FileTree from '../components/FolderDropdown/FolderDropdown';
 import NewFileModal from '../components/NewFileModal/NewFileModal';
 const ResizableBox = require('react-resizable').ResizableBox;
-import { debounce } from 'lodash';
+import { debounce, update } from 'lodash';
 import { Layout, Menu, Breadcrumb, Divider, Button, Dropdown } from 'antd';
 import Tabs from '../components/Tabs/Tabs';
 import GetStarted from '../components/GetStarted/GetStarted';
@@ -32,12 +32,15 @@ import {
 import { runButtonStyle, runButtonLoadingStyle } from '../styles/RunButton';
 import { last } from 'lodash';
 import { testAPI } from '../helpers/CodeExecution';
+import { waitForElm } from '../helpers/DomObservers';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 const HANDLE_HEIGHT = 10;
 const DEBOUNCE_TIME = 300;
 let lastHeight = 0;
+const DROPDOWN_SELECTION_COLOR = '#41729f';
+const TRANSPARENT_COLOR = 'transparent';
 
 const {
   initTerminal,
@@ -50,17 +53,15 @@ class App extends Component {
 
     this.term = React.createRef();
     this.codeInput = React.createRef();
-    // console.log('[App.js] constructor');
 
     this.state = {
-      showTerminal: true,
       collapsed: false,
-      terminalInitialized: false,
       terminalHeight: 300,
       windowHeight: window.innerHeight,
       folderContent: null,
       folderName: null,
       sidebarWidth: 300,
+      prevFolderDropdownSelectionElement: null,
       folderDropdownSelectionElement: null,
       currentDirectory: null,
       languageSelection: { ...defaultLanguage },
@@ -91,22 +92,13 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // console.log('[App.js] componentDidMount');
     window.addEventListener('resize', this.resize);
-
-    this.setState({
-      showTerminal: true,
-    });
-
-    // testAPI();
+    initTerminal();
+    resizeTerminal();
   }
 
   componentDidUpdate() {
-    if (this.state.showTerminal && !this.state.terminalInitialized) {
-      initTerminal();
-      this.setState({ terminalInitialized: true });
-      resizeTerminal();
-    }
+    this.updateFolderDropdownHighlighting();
   }
 
   resizeTextEditor = (termHeight) => {
@@ -125,20 +117,6 @@ class App extends Component {
     }
   };
 
-  toggleTerminal = () => {
-    const showingTerminal = this.state.showTerminal;
-
-    if (showingTerminal) {
-      // term is on, so hide it
-      this.setState({ terminalInitialized: false });
-      this.setState({ terminalHeight: 0 });
-    } else {
-      this.setState({ terminalHeight: 300 });
-    }
-
-    this.setState({ showTerminal: !showingTerminal });
-  };
-
   setWorkspaceFolder = (folderPath) => {
     if (folderPath) {
       this.setState({ workSpacePath: folderPath });
@@ -147,7 +125,7 @@ class App extends Component {
     }
   };
 
-  newFileCreatedHandler = (fileName) => {
+  newFileCreatedHandler = async (fileName) => {
     console.log('added', fileName);
 
     const currDirectory =
@@ -174,6 +152,12 @@ class App extends Component {
           filePath,
         },
         this
+      );
+
+      const element = await waitForElm(filePath);
+
+      this.updateFolderDropdownHighlightSelection(
+        document.getElementById(filePath)
       );
     }
   };
@@ -216,14 +200,29 @@ class App extends Component {
     const currDirectory = getCurrentDirectory(directoryNode);
     this.setState({ currentDirectory: currDirectory });
 
-    const prevSelectedElement = this.state.folderDropdownSelectionElement;
-    if (prevSelectedElement != null) {
-      prevSelectedElement.style.backgroundColor = 'transparent';
+    this.updateFolderDropdownHighlightSelection(element);
+  };
+
+  updateFolderDropdownHighlightSelection = (element) => {
+    const currSelectedElement = this.state.folderDropdownSelectionElement;
+
+    this.setState({
+      prevFolderDropdownSelectionElement: currSelectedElement,
+      folderDropdownSelectionElement: element,
+    });
+  };
+
+  updateFolderDropdownHighlighting = () => {
+    const prevSelectedElement = this.state.prevFolderDropdownSelectionElement;
+    const currSelectedElement = this.state.folderDropdownSelectionElement;
+
+    if (prevSelectedElement) {
+      prevSelectedElement.style.backgroundColor = TRANSPARENT_COLOR;
     }
 
-    this.setState({ folderDropdownSelectionElement: element });
-
-    element.style.backgroundColor = '#41729f';
+    if (currSelectedElement) {
+      currSelectedElement.style.backgroundColor = DROPDOWN_SELECTION_COLOR;
+    }
   };
 
   runButtonHandler = () => {
@@ -337,7 +336,6 @@ class App extends Component {
                 onFolderSelection={this.setWorkspaceFolder}
               />
             </div>
-            {/* <Button onClick={this.toggleTerminal}>Open Terminal</Button> */}
           </Scrollbars>
           <CodeInput ref={this.codeInput} />
         </Resizable>

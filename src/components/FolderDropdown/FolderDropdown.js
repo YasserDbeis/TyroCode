@@ -90,7 +90,7 @@ const File = ({ name, path, onNodeClick }) => {
   return (
     <StyledFile>
       {langToIcon(lang, { height: '14px', width: '14px' })}
-      <span onClick={fileClickHandler} style={{ cursor: 'pointer' }}>
+      <span id={path} onClick={fileClickHandler} style={{ cursor: 'pointer' }}>
         {name}
       </span>
     </StyledFile>

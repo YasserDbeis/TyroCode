@@ -1,8 +1,8 @@
 // Bugs
--4. Make folder content use name [key] based hashmap to traverse
--3. Make icons and font offline
--2. Editing a file in another text editor doesnt reflect in yscode
-0. When you create a new file, it does not get highlighted/selected
+
+-2. Make folder content use name [key] based hashmap to traverse
+-1. Make icons and font offline
+0. When external file additions/removals occur, they are not reflected in folder dropdown
 1. Paste isnt registered into the undo/redo stack
 2. Tabbing a single line (with the top empty line also selected) multiple times doesnt work well
 3. If you press enter until cursor is at bottom of editor, it cuts off last line, and the scrolling is misaligned
