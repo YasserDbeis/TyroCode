@@ -22,6 +22,10 @@ const initTerminal = () => {
     ipc.send('terminal.keystroke', e);
   });
 
+  term.onResize((size) => {
+    ipc.send('terminal.resize', size);
+  });
+
   resizeTerminal();
 
   fitAdd = fitAddon;
@@ -47,8 +51,8 @@ const resizeTerminal = debounce((e) => {
 const createTerminal = () => {
   termProxy = new Terminal({
     convertEol: true,
-    rows: 30,
-    cols: 80,
+    // rows: 30,
+    // cols: 80,
     cursorBlink: true,
     theme: {
       background: '#282C34',

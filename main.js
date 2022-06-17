@@ -53,8 +53,8 @@ if (isDev) {
 
 var ptyProcess = pty.spawn(shell, [], {
   name: 'xterm-color',
-  cols: 150,
-  rows: 50,
+  // cols: 40,
+  // rows: 50,
   cwd: process.cwd(),
   env: process.env,
 });
@@ -67,6 +67,10 @@ app.on('ready', () => {
   ptyProcess.on('data', (data) => {
     win.webContents.send('terminal.incomingData', data);
     console.log('Data sent');
+  });
+
+  ipcMain.on('terminal.resize', (event, size) => {
+    ptyProcess.resize(size.cols, size.rows);
   });
 
   ipcMain.on('terminal.keystroke', (event, key) => {

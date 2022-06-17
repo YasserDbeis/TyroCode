@@ -201,11 +201,11 @@ const FileTree = (props) => {
         <AiOutlineFolderOpen size={24} style={{ verticalAlign: 'middle' }} />
       </Button>
 
-      {props.folderContent != undefined ? (
+      {props.folderContent ? (
         <div className="FileTree">
           <Tree
             onNodeClick={props.folderDropdownNodeClickHandler}
-            data={props.folderContent ? props.folderContent : errorDirectory}
+            data={props.folderContent}
           />
         </div>
       ) : null}

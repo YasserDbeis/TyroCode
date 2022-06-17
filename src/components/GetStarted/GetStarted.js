@@ -27,7 +27,13 @@ const GetStarted = (props) => {
           height={100}
           src="src/assets/TyroCode.png"
         ></img>
-        <div style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+        <div
+          style={{
+            display: 'inline-block',
+            verticalAlign: 'middle',
+            marginRight: '10px',
+          }}
+        >
           <span
             style={{ fontSize: '72px', fontWeight: 'bolder', color: '#4D719B' }}
           >
@@ -48,7 +54,14 @@ const GetStarted = (props) => {
       </span>
 
       {props.windowHeight - props.terminalHeight > 400 ? (
-        <div style={{ margin: '75px' }}>
+        <div
+          style={{
+            marginTop: '25px',
+            marginLeft: '75px',
+            marginRight: '75px',
+            marginBottom: '50px',
+          }}
+        >
           <div>
             <span
               style={{
@@ -59,17 +72,19 @@ const GetStarted = (props) => {
             </span>
           </div>
           <br />
-          <div>
-            <AiOutlineFolderOpen size={50} />
-            <IoIosArrowRoundForward size={50} />
-            <AiOutlineFileAdd size={50} />
-            <IoIosArrowRoundForward size={50} />
-            <HiOutlineCode size={50} />
-            <IoIosArrowRoundForward size={50} />
-            <TiThMenuOutline size={50} />
-            <IoIosArrowRoundForward size={50} />
-            <FaRegPlayCircle size={50} />
-          </div>
+          {props.windowWidth - props.sidebarWidth > 700 ? (
+            <div>
+              <AiOutlineFolderOpen size={50} />
+              <IoIosArrowRoundForward size={50} />
+              <AiOutlineFileAdd size={50} />
+              <IoIosArrowRoundForward size={50} />
+              <HiOutlineCode size={50} />
+              <IoIosArrowRoundForward size={50} />
+              <TiThMenuOutline size={50} />
+              <IoIosArrowRoundForward size={50} />
+              <FaRegPlayCircle size={50} />
+            </div>
+          ) : null}
         </div>
       ) : null}
       <span

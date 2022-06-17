@@ -46,7 +46,7 @@ const Terminal = forwardRef((props, ref) => {
           height: termHeight,
         }}
         minHeight="10vh"
-        maxHeight="90vh"
+        maxHeight="50vh"
         onResizeStop={(e, direction, ref, d) => {
           if (direction !== 'top') return;
           resizeTerminal();

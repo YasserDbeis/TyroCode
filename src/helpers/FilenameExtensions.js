@@ -125,14 +125,14 @@ export const langToIcon = (lang, style) => {
   );
 };
 
-export const getFileExtension = (filename) => {
-  let lastPeriodIndex = filename.lastIndexOf('.');
+export const getFileExtension = (fileName) => {
+  let lastPeriodIndex = fileName.lastIndexOf('.');
 
   if (lastPeriodIndex == -1) {
     return null;
   }
 
-  let ext = filename.slice(lastPeriodIndex + 1);
+  let ext = fileName.slice(lastPeriodIndex + 1);
 
   return ext;
 };

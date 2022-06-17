@@ -37,8 +37,9 @@ import { waitForElm } from '../helpers/DomObservers';
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 const HANDLE_HEIGHT = 10;
-const DEBOUNCE_TIME = 300;
+const DEBOUNCE_TIME = 100;
 let lastHeight = 0;
+let lastWidth = 0;
 const DROPDOWN_SELECTION_COLOR = '#41729f';
 const TRANSPARENT_COLOR = 'transparent';
 
@@ -58,6 +59,7 @@ class App extends Component {
       collapsed: false,
       terminalHeight: 300,
       windowHeight: window.innerHeight,
+      windowWidth: window.innerWidth,
       folderContent: null,
       folderName: null,
       sidebarWidth: 300,
@@ -84,7 +86,15 @@ class App extends Component {
           : this.state.terminalHeight,
       });
     }
+
+    if (e.target.innerWidth != lastWidth) {
+      this.setState({
+        windowWidth: e.target.innerWidth,
+      });
+    }
+
     lastHeight = e.target.innerHeight;
+    lastWidth = e.target.innerWidth;
   }, DEBOUNCE_TIME);
 
   componentWillUnmount() {
@@ -274,7 +284,7 @@ class App extends Component {
           className="ant-layout-sider-children"
           enable={{ left: false, right: true }}
           size={{ width: this.state.sidebarWidth }}
-          maxWidth="500px"
+          maxWidth="50vw"
           minWidth="300px"
           height="100vh"
           onResizeStop={(e, direction, ref, d) => {
@@ -351,6 +361,8 @@ class App extends Component {
           <GetStarted
             className={this.state.tabOpen ? 'hidden' : null}
             windowHeight={this.state.windowHeight}
+            windowWidth={this.state.windowWidth}
+            sidebarWidth={this.state.sidebarWidth}
             terminalHeight={this.state.terminalHeight}
             onFolderSelection={this.setWorkspaceFolder}
           />
