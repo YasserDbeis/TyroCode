@@ -2,7 +2,7 @@ const ipc = require('electron').ipcRenderer;
 import { FitAddon } from 'xterm-addon-fit';
 import { debounce } from 'lodash';
 const DEBOUNCE_TIME = 300;
-const terminalWelcomeMessage = 'Press Enter to Use The YSCode Terminal...';
+const terminalWelcomeMessage = 'Press Enter to Use The TyroCode Terminal...';
 
 let fitAdd = null;
 let termProxy = null;

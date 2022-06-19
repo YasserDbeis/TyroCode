@@ -21,10 +21,10 @@ import os from 'os';
 import UndoStack from '../../StateManagement/UndoStack';
 import { Console } from 'console';
 import autosize from 'autosize';
-import 'floating-scroll/dist/jquery.floatingscroll.css';
+// import 'floating-scroll/dist/jquery.floatingscroll.css';
 // import * as l from 'floating-scroll'
-import './jquery.floatingscroll';
-import $ from 'jquery';
+// import './jquery.floatingscroll';
+// import $ from 'jquery';
 // import 'floating-scroll/src/jquery.floatingscroll.js';
 
 const TAB_HEIGHT = 40;

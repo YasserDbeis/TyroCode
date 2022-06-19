@@ -1,5 +1,9 @@
-# yscode
+# TyroCode
 
-Work in progress...
+## More coding, less tooling.
 
-by Yasser Dbeis
+---
+
+A text-editor optimized for begineers.
+
+Designed and programmed by Yasser Dbeis (GitHub: @YasserDbeis)
