@@ -2,7 +2,7 @@ const ipc = require('electron').ipcRenderer;
 import { FitAddon } from 'xterm-addon-fit';
 import { debounce } from 'lodash';
 const DEBOUNCE_TIME = 300;
-const terminalWelcomeMessage = 'Press Enter to Use The TyroCode Terminal...';
+const TERM_WELCOME_MSG = 'Press Enter to Use The TyroCode Terminal...';
 
 let fitAdd = null;
 let termProxy = null;
@@ -67,7 +67,7 @@ const createTerminal = () => {
 const writeEnter = async () => {
   termProxy.writeln('');
 
-  for (let welcomeMessageChar of terminalWelcomeMessage) {
+  for (let welcomeMessageChar of TERM_WELCOME_MSG) {
     termProxy.write(welcomeMessageChar);
     await new Promise((r) => setTimeout(r, 50));
   }

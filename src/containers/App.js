@@ -56,7 +56,6 @@ class App extends Component {
     this.codeInput = React.createRef();
 
     this.state = {
-      collapsed: false,
       terminalHeight: 300,
       windowHeight: window.innerHeight,
       windowWidth: window.innerWidth,
@@ -72,10 +71,6 @@ class App extends Component {
       workSpacePath: null,
     };
   }
-
-  onCollapse = (collapsed) => {
-    this.setState({ collapsed });
-  };
 
   resize = debounce((e) => {
     if (e.target.innerHeight != lastHeight) {
@@ -155,6 +150,7 @@ class App extends Component {
       this.tabs.add(fileName, filePath, '');
 
       setFolderContent(
+        this.state.workSpacePath,
         currDirectory,
         {
           isUpdate: true,
@@ -197,6 +193,7 @@ class App extends Component {
     } else {
       console.log('CLICKED');
       setFolderContent(
+        this.state.workSpacePath,
         directoryNode.path,
         {
           isUpdate: false,
@@ -258,8 +255,6 @@ class App extends Component {
   };
 
   render() {
-    const { collapsed } = this.state;
-
     let languageMenu = (
       <Menu
         className="layout-font language-dropdown"

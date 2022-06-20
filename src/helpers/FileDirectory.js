@@ -3,6 +3,7 @@ const path = require('path');
 const os = require('os');
 const slash = os.platform() === 'win32' ? '\\' : '/';
 const { getFileExtension } = require('../helpers/FilenameExtensions');
+const { cloneDeep } = require('lodash');
 // test
 const getPWD = () => {
   return process.cwd();
@@ -23,60 +24,53 @@ const getBaseFolderContent = (path, app) => {
   app.setState({ folderContent: folderContent, folderName: folderName });
 };
 
-const getTargetDirectory = (folderPath, folderContent) => {
-  const baseDir = getPWD();
+const getTargetDirectory = (baseDirPath, folderPath, folderContent) => {
+  const targetPath = folderPath.replace(baseDirPath + slash, '');
 
-  const targetPath = folderPath.replace(baseDir + slash, '');
-
-  console.log('FOLDER CLICK!!', targetPath);
   console.log('FOLDER CLICK!!', targetPath.split(slash));
 
   const paths = targetPath.split(slash);
 
-  // let baseFolderContent = [...app.state.folderContent];
-
-  let folderPtr = folderContent;
+  let folderMap = folderContent;
+  let folderPtr = null;
 
   for (const path of paths) {
-    for (const base of folderPtr) {
-      console.log(path + '---' + base.type + ', ' + base?.name);
-      if (base.type == 'folder' && base.name == path) {
-        folderPtr = base.children;
-        break;
-      }
-    }
+    folderPtr = folderMap.get(path);
+    folderMap = folderPtr.children;
   }
 
   return folderPtr;
 };
 
-const setFolderContent = (folderPath, options, app) => {
-  const folderContent = [...app.state.folderContent];
+const setFolderContent = (baseDirPath, folderPath, options, app) => {
+  const folderContent = cloneDeep(app.state.folderContent);
 
-  const folderPtr = getTargetDirectory(folderPath, folderContent);
+  let folderPtr = getTargetDirectory(baseDirPath, folderPath, folderContent);
 
   const { isUpdate, updateType, filePath } = options;
 
-  if (isUpdate && updateType == 'add') {
-    const fileName = getDirectoryNodeName('file', filePath);
+  if (isUpdate) {
+    if (updateType == 'add') {
+      const fileName = getDirectoryNodeName('file', filePath);
 
-    folderPtr.push({
-      type: 'file',
-      name: fileName,
-      path: filePath,
-    });
+      folderPtr.set(fileName, {
+        type: 'file',
+        name: fileName,
+        path: filePath,
+      });
+    }
   } else if (!isUpdate) {
-    if (folderPtr.length > 0) {
+    if (folderPtr.children) {
       console.log('ALREADY POPULATED');
       return;
     }
-
-    folderPtr.push(...getFolderContent(folderPath));
+    const folderName = getDirectoryNodeName('folder', folderPath);
+    folderPtr.children = getFolderContent(folderPath);
   } else {
     console.log('INVALID OPTIONS // OR NOT ACCOMODATED NOW', options);
   }
 
-  console.log('SET FOLDER CONTENT', folderContent);
+  // console.log('SET FOLDER CONTENT', folderContent);
 
   app.setState({ folderContent: folderContent });
 };
@@ -144,7 +138,7 @@ const getFolderContent = (folderPath) => {
     return;
   }
 
-  var newDir = [];
+  var newDir = new Map();
 
   const baseDir = readDirectory(folderPath);
 
@@ -158,16 +152,16 @@ const getFolderContent = (folderPath) => {
 
       const folderName = getDirectoryNodeName('folder', currentPath);
 
-      newDir.push({
+      newDir.set(folderName, {
         type: 'folder',
         name: folderName,
-        children: [],
+        children: null,
         path: currentPath,
       });
     } else {
       const fileName = getDirectoryNodeName('file', currentPath);
 
-      newDir.push({
+      newDir.set(fileName, {
         type: 'file',
         name: fileName,
         path: currentPath,

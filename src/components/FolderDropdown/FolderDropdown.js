@@ -124,8 +124,13 @@ const Folder = ({ name, path, children, onNodeClick }) => {
 };
 
 const TreeRecursive = ({ data, onNodeClick }) => {
+  if (data == null) {
+    return null;
+  }
+
+  const values = Array.from(data.values());
   // loop through the data
-  return data.map((item) => {
+  return values.map((item) => {
     if (item.type === 'file') {
       return (
         <File
@@ -190,7 +195,6 @@ const FileTree = (props) => {
         props.onFolderSelection(path);
       });
   };
-
   return (
     <div>
       <Button
