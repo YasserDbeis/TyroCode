@@ -10,9 +10,12 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-python';
 
 import React from 'react';
+import path from 'path';
 
-export const getProgLanguage = (filename) => {
-  let ext = getFileExtension(filename);
+const PERIOD_INDEX = 1;
+
+export const getProgLanguage = (fileName) => {
+  const ext = getFileExtension(fileName);
 
   return extToLang(ext);
 };
@@ -126,13 +129,16 @@ export const langToIcon = (lang, style) => {
 };
 
 export const getFileExtension = (fileName) => {
-  let lastPeriodIndex = fileName.lastIndexOf('.');
+  // const lastPeriodIndex = fileName.lastIndexOf('.');
 
-  if (lastPeriodIndex == -1) {
-    return null;
-  }
+  // if (lastPeriodIndex == -1) {
+  //   return null;
+  // }
 
-  let ext = fileName.slice(lastPeriodIndex + 1);
+  // const ext = fileName.slice(lastPeriodIndex + 1);
 
-  return ext;
+  const ext = path.extname(fileName);
+
+  // if no file ext, return null, otherwise strip period and return
+  return ext === '' ? null : ext.slice(PERIOD_INDEX);
 };

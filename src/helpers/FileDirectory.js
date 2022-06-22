@@ -4,6 +4,9 @@ const os = require('os');
 const slash = os.platform() === 'win32' ? '\\' : '/';
 const { getFileExtension } = require('../helpers/FilenameExtensions');
 const { cloneDeep } = require('lodash');
+const extName = require('ext-name');
+const isBinaryFileSync = require('isbinaryfile').isBinaryFileSync;
+
 // test
 const getPWD = () => {
   return process.cwd();
@@ -111,8 +114,13 @@ const getCurrentDirectory = (directoryNode) => {
 };
 
 const getFileText = (path, fileName) => {
-  const ext = getFileExtension(fileName);
-  if (ext == 'pdf') {
+  console.log('FILENAME:', fileName);
+  const bytes = fs.readFileSync(path);
+  const size = fs.lstatSync(path).size;
+  console.log(isBinaryFileSync(bytes, size));
+
+  const isBinaryFile = isBinaryFileSync(bytes, size);
+  if (isBinaryFile) {
     return [null, false];
   }
 

@@ -1,6 +1,7 @@
 // Bugs
 
--2. Make folder content use name [key] based hashmap to traverse
+-3. Look into other binary/non-supported file formats 
+-2. Find a better way to map the foldercontent to components than the Array.from....
 -1. Make icons and font offline
 0. When external file additions/removals occur, they are not reflected in folder dropdown
 1. Paste isnt registered into the undo/redo stack
@@ -9,7 +10,7 @@
 4. Have selected directory be the directory of terminal
 // Clean Up
 1. Change default directory from with src to without (if this still is relevant)
-2. Remove "Toggle Terminal Button" + relavant code 
+2. Remove "Toggle Terminal Button" + relavant code 4
 
 // Features
 - Add 4 spaces after bracket + enter combo
