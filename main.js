@@ -21,6 +21,7 @@ function createWindow() {
       contextIsolation: false,
       enableRemoteModule: true,
     },
+    // frame: false,
   });
 
   if (isDev) {
@@ -60,6 +61,8 @@ var ptyProcess = pty.spawn(shell, [], {
 });
 
 app.on('ready', () => {
+  // require('electron-react-titlebar/main').initialize();
+
   createWindow();
 
   // require('electron-react-titlebar/main').initialize();

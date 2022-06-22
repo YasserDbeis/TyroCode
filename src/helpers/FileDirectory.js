@@ -115,11 +115,11 @@ const getCurrentDirectory = (directoryNode) => {
 
 const getFileText = (path, fileName) => {
   console.log('FILENAME:', fileName);
-  const bytes = fs.readFileSync(path);
-  const size = fs.lstatSync(path).size;
-  console.log(isBinaryFileSync(bytes, size));
+  // const bytes = fs.readFileSync(path);
+  // const size = fs.lstatSync(path).size;
+  console.log(isBinaryFileSync(path));
 
-  const isBinaryFile = isBinaryFileSync(bytes, size);
+  const isBinaryFile = isBinaryFileSync(path);
   if (isBinaryFile) {
     return [null, false];
   }
