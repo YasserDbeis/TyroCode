@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Modal, Input } from 'antd';
 import { useState } from 'react';
 import { AiOutlineFileAdd } from 'react-icons/ai';
-import newFileIconStyle from '../../styles/NewFileIcon';
+import newFileIconStyle from '../../../styles/NewFileIcon';
 import isValidFilename from 'valid-filename';
 import './NewFileModal.css';
 

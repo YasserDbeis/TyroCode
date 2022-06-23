@@ -1,0 +1,41 @@
+.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
+    border-color: #41729f;
+    border-right-width: 1px;
+    z-index: 1;
+}
+
+.ant-input-affix-wrapper {
+    box-shadow: none !important;
+}
+
+div.ant-modal-footer > button.ant-btn.ant-btn-primary {
+    background-color: #41729f;
+    border: 1px solid transparent;
+}
+div.ant-modal-footer > button.ant-btn.ant-btn-primary:hover {
+    color: black;
+}
+
+div.ant-modal-confirm-btns > button {
+    background-color: #41729f !important;
+    border: 1px solid transparent !important;
+}
+
+div.ant-modal-confirm-btns > button:hover {
+    color: black;
+}
+div.ant-modal-footer > button.ant-btn.ant-btn-default:hover {
+    color: #41729f;
+
+}
+
+div.ant-modal-footer > button.ant-btn.ant-btn-default {
+    border: 1px solid #41729f;
+}
+div.ant-modal-footer > button.ant-btn.ant-btn-default:hover {
+    color: #41729f;
+}
+
+.ant-input::selection {
+    background-color: #8CC0DE;
+}

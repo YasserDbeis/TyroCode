@@ -3,10 +3,18 @@ import path from 'path';
 import './App.css';
 import Terminal from '../components/Terminal/Terminal';
 import FileTree from '../components/FolderDropdown/FolderDropdown';
-import NewFileModal from '../components/NewFileModal/NewFileModal';
+import NewFileModal from '../components/Modals/NewFileModal/NewFileModal';
 const ResizableBox = require('react-resizable').ResizableBox;
 import { debounce, update } from 'lodash';
-import { Layout, Menu, Breadcrumb, Divider, Button, Dropdown } from 'antd';
+import {
+  Layout,
+  Menu,
+  Breadcrumb,
+  Divider,
+  Button,
+  Dropdown,
+  Modal,
+} from 'antd';
 import Tabs from '../components/Tabs/Tabs';
 import GetStarted from '../components/GetStarted/GetStarted';
 import CodeInput from '../components/CodeInput/CodeInput';
@@ -33,6 +41,7 @@ import { runButtonStyle, runButtonLoadingStyle } from '../styles/RunButton';
 import { last } from 'lodash';
 import { testAPI } from '../helpers/CodeExecution';
 import { waitForElm } from '../helpers/DomObservers';
+import { dialog } from 'electron';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -130,6 +139,18 @@ class App extends Component {
     }
   };
 
+  openErrorModal = (title, content) => {
+    Modal.error({
+      title,
+      content,
+      closable: true,
+      width: 450,
+      bodyStyle: {
+        textAlign: 'left',
+      },
+    });
+  };
+
   newFileCreatedHandler = async (fileName) => {
     console.log('added', fileName);
 
@@ -183,6 +204,11 @@ class App extends Component {
     if (success) {
       this.tabs?.add(fileNode.name, fileNode.path, code);
     } else {
+      const errorTitle = `File '${fileNode.name}' can not be opened`;
+      const errorDescription =
+        'TyroCode can only display plain text files, not binaries.';
+
+      this.openErrorModal(errorTitle, errorDescription);
       console.log('INVALID FILE CONTENT READ');
     }
   };
@@ -308,7 +334,7 @@ class App extends Component {
             >
               <NewFileModal
                 onFilenameInputSuccess={this.newFileCreatedHandler}
-              ></NewFileModal>
+              />
               <Dropdown overlay={languageMenu} placement="bottom">
                 <Button style={languageDropdownStyle}>
                   {this.state.languageSelection.icon}
