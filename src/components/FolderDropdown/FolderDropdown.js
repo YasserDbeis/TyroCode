@@ -128,9 +128,9 @@ const TreeRecursive = ({ data, onNodeClick }) => {
     return null;
   }
 
-  const values = Array.from(data.values());
+  // const values = Array.from(data.values());
   // loop through the data
-  return values.map((item) => {
+  return Object.entries(data).map(([_, item]) => {
     if (item.type === 'file') {
       return (
         <File

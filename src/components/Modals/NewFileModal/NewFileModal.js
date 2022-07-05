@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { AiOutlineFileAdd } from 'react-icons/ai';
 import newFileIconStyle from '../../../styles/NewFileIcon';
 import isValidFilename from 'valid-filename';
-import './NewFileModal.css';
+import '../../Modals/Modal.css';
 
 const NewFileModal = (props) => {
   const [isModalVisible, setIsModalVisible] = useState(false);

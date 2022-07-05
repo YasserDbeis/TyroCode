@@ -1,7 +1,5 @@
 // Bugs
 
--3. Give user feedback for when binary file is clicked
--2. Find a better way to map the foldercontent to components than the Array.from....
 -1. Make icons and font offline
 0. When external file additions/removals occur, they are not reflected in folder dropdown
 1. Paste isnt registered into the undo/redo stack

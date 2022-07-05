@@ -12,8 +12,10 @@ div.ant-modal-footer > button.ant-btn.ant-btn-primary {
     background-color: #41729f;
     border: 1px solid transparent;
 }
+
 div.ant-modal-footer > button.ant-btn.ant-btn-primary:hover {
-    color: black;
+    color: white;
+    background-color: #8CC0DE
 }
 
 div.ant-modal-confirm-btns > button {
@@ -22,11 +24,12 @@ div.ant-modal-confirm-btns > button {
 }
 
 div.ant-modal-confirm-btns > button:hover {
-    color: black;
+    background-color: #8CC0DE !important;
+    color: white;
 }
 div.ant-modal-footer > button.ant-btn.ant-btn-default:hover {
     color: #41729f;
-
+    
 }
 
 div.ant-modal-footer > button.ant-btn.ant-btn-default {
