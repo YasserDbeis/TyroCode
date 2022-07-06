@@ -56,6 +56,9 @@ const StyledFile = styled.div`
   align-items: center;
   span {
     margin-left: 5px;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    white-space: pre;
   }
 `;
 const StyledFolder = styled.div`
@@ -66,6 +69,9 @@ const StyledFolder = styled.div`
     align-items: center;
     span {
       margin-left: 5px;
+      text-overflow: ellipsis;
+      overflow-x: hidden;
+      white-space: pre;
     }
   }
 `;
@@ -128,9 +134,9 @@ const TreeRecursive = ({ data, onNodeClick }) => {
     return null;
   }
 
-  // const values = Array.from(data.values());
+  const values = Array.from(data.values());
   // loop through the data
-  return Object.entries(data).map(([_, item]) => {
+  return values.map((item) => {
     if (item.type === 'file') {
       return (
         <File

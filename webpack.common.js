@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  externals: ['node-pty'],
+  externals: ['node-pty', 'fsevents'],
   mode: 'development',
   entry: './src/index.js',
   devtool: 'inline-source-map',
@@ -38,6 +38,10 @@ module.exports = {
           // Compiles Sass to CSS
           'sass-loader',
         ],
+      },
+      {
+        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        use: ['url-loader'],
       },
     ],
   },

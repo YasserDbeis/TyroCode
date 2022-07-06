@@ -1,19 +1,10 @@
-// Bugs
+// Bugs + Features
 
--1. Make icons and font offline
 0. When external file additions/removals occur, they are not reflected in folder dropdown
 1. Paste isnt registered into the undo/redo stack
 2. Tabbing a single line (with the top empty line also selected) multiple times doesnt work well
 3. If you press enter until cursor is at bottom of editor, it cuts off last line, and the scrolling is misaligned
-4. Have selected directory be the directory of terminal
-// Clean Up
-1. Change default directory from with src to without (if this still is relevant)
-2. Remove "Toggle Terminal Button" + relavant code 4
+5. Add 4 spaces after bracket + enter combo
 
-// Features
-- Add 4 spaces after bracket + enter combo
-- Draggable Tabs
-- custom titlebar
-- make a tiktok advertising TyroCode
-    - ask other creators to advertise it
-- add leetcode option that scrapes and imports random leetcode question (icon found at https://react-icons.github.io/react-icons/search?q=leet)
+// Future things that would be nice but can't do right now
+1. Have selected directory be the directory of terminal
