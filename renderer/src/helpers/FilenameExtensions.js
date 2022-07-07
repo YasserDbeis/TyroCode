@@ -124,7 +124,7 @@ export const langToIcon = (lang, style) => {
           src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-plain.svg"
         />
       ),
-    }[lang] ?? <img style={style} src="./src/assets/fileIcon.svg" />
+    }[lang] ?? <img style={style} src="../renderer/src/assets/fileIcon.svg" />
   );
 };
 

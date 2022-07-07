@@ -25,7 +25,7 @@ const GetStarted = (props) => {
           style={{ display: 'inline-block', verticalAlign: 'middle' }}
           width={100}
           height={100}
-          src="src/assets/TyroCode.png"
+          src="../renderer/src/assets/TyroCode.png"
         ></img>
         <div
           style={{

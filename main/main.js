@@ -6,10 +6,10 @@ var shell = os.platform() === 'win32' ? 'cmd.exe' : 'bash';
 
 const isDev = !app.isPackaged;
 
-let win;
+let window;
 
-function createWindow() {
-  win = new BrowserWindow({
+const createWindow = () => {
+  window = new BrowserWindow({
     width: 1200,
     height: 800,
     minHeight: 500,
@@ -25,12 +25,10 @@ function createWindow() {
   });
 
   if (isDev) {
-    win.webContents.openDevTools();
+    window.webContents.openDevTools();
   }
-  // win.loadURL('file://' + process.cwd() + '/index.html');
-  win.loadURL(`file://${__dirname}/index.html`);
 
-  // win.loadURL('file://' + path.join(__dirname, 'index.html'))   //send boolean to indicate whether this is the first start up of the app
+  window.loadFile(path.join(__dirname, '../resources/index.html'));
 
   const {
     default: installExtension,
@@ -43,7 +41,7 @@ function createWindow() {
     .catch((err) => {
       console.log(err);
     });
-}
+};
 
 if (isDev) {
   require('electron-reload')(__dirname, {
@@ -68,7 +66,7 @@ app.on('ready', () => {
   // require('electron-react-titlebar/main').initialize();
 
   ptyProcess.on('data', (data) => {
-    win.webContents.send('terminal.incomingData', data);
+    window.webContents.send('terminal.incomingData', data);
     console.log('Data sent');
   });
 

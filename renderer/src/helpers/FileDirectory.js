@@ -28,14 +28,23 @@ const getBaseFolderContent = (path, app) => {
 };
 
 const getTargetDirectory = (baseDirPath, folderPath, folderContent) => {
-  const targetPath = folderPath.replace(baseDirPath + slash, '');
+  console.log('BASE PATH--', baseDirPath);
+  console.log('FOLDER PATH--', baseDirPath);
 
-  console.log('FOLDER CLICK!!', targetPath.split(slash));
+  const targetPath = folderPath.replace(baseDirPath, '');
+  console.log('TARGET PATH--', targetPath);
 
-  const paths = targetPath.split(slash);
+  let paths = targetPath.split(slash);
+  if (paths.length > 0 && paths[0] === '') {
+    paths = paths.slice(1);
+  }
+  console.log('FOLDER CLICK!!', paths);
+  console.log('PATHS LENGTH', paths.length);
 
   let folderMap = folderContent;
-  let folderPtr = null;
+  let folderPtr = folderContent;
+
+  console.log('FOLDA MAP', folderMap);
 
   for (const path of paths) {
     folderPtr = folderMap.get(path);
@@ -46,7 +55,9 @@ const getTargetDirectory = (baseDirPath, folderPath, folderContent) => {
 };
 
 const setFolderContent = (baseDirPath, folderPath, options, app) => {
-  const folderContent = cloneDeep(app.state.folderContent);
+  const folderContent = new Map(app.state.folderContent);
+
+  console.log('BASE DIR PATH', baseDirPath);
 
   let folderPtr = getTargetDirectory(baseDirPath, folderPath, folderContent);
 
@@ -56,7 +67,9 @@ const setFolderContent = (baseDirPath, folderPath, options, app) => {
     if (updateType == 'add') {
       const fileName = getDirectoryNodeName('file', filePath);
 
-      folderPtr.set(fileName, {
+      const targetDir = folderPtr.children ?? folderPtr;
+
+      targetDir.set(fileName, {
         type: 'file',
         name: fileName,
         path: filePath,

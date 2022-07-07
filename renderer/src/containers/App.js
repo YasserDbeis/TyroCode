@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import path from 'path';
 import './App.css';
+
 import Terminal from '../components/Terminal/Terminal';
 import FileTree from '../components/FolderDropdown/FolderDropdown';
 import NewFileModal from '../components/Modals/NewFileModal/NewFileModal';
@@ -164,6 +165,7 @@ class App extends Component {
     const filePath = getFullPath(currDirectory, fileName);
 
     console.log('CREATE NEW FILE PATH', filePath);
+    console.log('BASE DIR', this.state.workSpacePath);
 
     const fileWriteSuccess = createNewFile(filePath);
 
@@ -217,7 +219,7 @@ class App extends Component {
     if (directoryNode.type == 'file') {
       this.addExistingFileToTabs(directoryNode);
     } else {
-      console.log('CLICKED');
+      console.log('CLICKED, BASE DIR', this.state.workSpacePath);
       setFolderContent(
         this.state.workSpacePath,
         directoryNode.path,
