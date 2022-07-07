@@ -140,5 +140,5 @@ li.ant-menu-item {
 }
 
 .hidden {
-  visibility: hidden;
+  display: none;
 }

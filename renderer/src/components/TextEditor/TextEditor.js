@@ -254,7 +254,7 @@ const TextEditor = (props) => {
     <div
       id="text-editor-container"
       style={{
-        height: props.windowHeight - props.terminalHeight - TAB_HEIGHT,
+        height: 'inherit',
       }}
     >
       <div

@@ -381,14 +381,16 @@ class App extends Component {
             onTabsEmpty={this.onTabsEmpty}
           />
 
-          <GetStarted
-            className={this.state.tabOpen ? 'hidden' : null}
-            windowHeight={this.state.windowHeight}
-            windowWidth={this.state.windowWidth}
-            sidebarWidth={this.state.sidebarWidth}
-            terminalHeight={this.state.terminalHeight}
-            onFolderSelection={this.setWorkspaceFolder}
-          />
+          {this.state.tabOpen ? null : (
+            <GetStarted
+              // className={this.state.tabOpen ? 'hidden' : null}
+              windowHeight={this.state.windowHeight}
+              windowWidth={this.state.windowWidth}
+              sidebarWidth={this.state.sidebarWidth}
+              terminalHeight={this.state.terminalHeight}
+              onFolderSelection={this.setWorkspaceFolder}
+            />
+          )}
 
           <Terminal
             onTermExpand={this.onTermExpand}
