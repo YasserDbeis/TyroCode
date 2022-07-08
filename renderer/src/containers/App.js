@@ -43,6 +43,7 @@ import { last } from 'lodash';
 import { testAPI } from '../helpers/CodeExecution';
 import { waitForElm } from '../helpers/DomObservers';
 import { dialog } from 'electron';
+import { startWatchingWorkspace, endWatching } from '../helpers/FileWatching';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -79,6 +80,7 @@ class App extends Component {
       codeRunning: false,
       tabOpen: false,
       workSpacePath: null,
+      fileTreeKey: null,
     };
   }
 
@@ -104,6 +106,10 @@ class App extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.resize);
+
+    if (this.state.workSpacePath) {
+      endWatching(this.state.workSpacePath);
+    }
   }
 
   componentDidMount() {
@@ -134,7 +140,24 @@ class App extends Component {
 
   setWorkspaceFolder = (folderPath) => {
     if (folderPath) {
-      this.setState({ workSpacePath: folderPath });
+      if (this.state.workSpacePath) {
+        endWatching(this.state.workSpacePath);
+      }
+
+      const currSelectedElement = this.state.folderDropdownSelectionElement;
+      if (currSelectedElement) {
+        currSelectedElement.style.backgroundColor = TRANSPARENT_COLOR;
+      }
+
+      this.setState({
+        workSpacePath: folderPath,
+        prevFolderDropdownSelectionElement: null,
+        folderDropdownSelectionElement: null,
+        currentDirectory: null,
+        fileTreeKey: folderPath + Date.now().toString(),
+      });
+
+      startWatchingWorkspace(folderPath, this);
 
       getBaseFolderContent(folderPath, this);
     }
@@ -173,7 +196,6 @@ class App extends Component {
       this.tabs.add(fileName, filePath, '');
 
       setFolderContent(
-        this.state.workSpacePath,
         currDirectory,
         {
           isUpdate: true,
@@ -221,7 +243,6 @@ class App extends Component {
     } else {
       console.log('CLICKED, BASE DIR', this.state.workSpacePath);
       setFolderContent(
-        this.state.workSpacePath,
         directoryNode.path,
         {
           isUpdate: false,
@@ -361,7 +382,7 @@ class App extends Component {
           <Scrollbars style={{ height: '80%' }}>
             <div style={{ color: 'white' }}>
               <FileTree
-                key={this.state.folderName}
+                key={this.state.fileTreeKey}
                 folderContent={this.state.folderContent}
                 folderDropdownNodeClickHandler={
                   this.folderDropdownNodeClickHandler

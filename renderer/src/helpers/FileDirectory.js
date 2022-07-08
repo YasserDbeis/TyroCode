@@ -24,42 +24,42 @@ const getBaseFolderContent = (path, app) => {
   const folderName = path.split(slash).pop();
   const folderContent = getFolderContent(path);
 
+  console.log('BASE FOLDER CONTENT', folderContent);
+
   app.setState({ folderContent: folderContent, folderName: folderName });
 };
 
-const getTargetDirectory = (baseDirPath, folderPath, folderContent) => {
-  console.log('BASE PATH--', baseDirPath);
-  console.log('FOLDER PATH--', baseDirPath);
-
+const getTargetDirectory = (folderPath, folderContent, app) => {
+  const baseDirPath = app.state.workSpacePath;
+  console.log('BASE DIR PATH', baseDirPath);
   const targetPath = folderPath.replace(baseDirPath, '');
-  console.log('TARGET PATH--', targetPath);
 
   let paths = targetPath.split(slash);
   if (paths.length > 0 && paths[0] === '') {
     paths = paths.slice(1);
   }
   console.log('FOLDER CLICK!!', paths);
-  console.log('PATHS LENGTH', paths.length);
+  // console.log('PATHS LENGTH', paths.length);
 
   let folderMap = folderContent;
-  let folderPtr = folderContent;
-
-  console.log('FOLDA MAP', folderMap);
+  let folderPtr = null;
 
   for (const path of paths) {
+    console.log('PATH', path);
     folderPtr = folderMap.get(path);
+    if (folderPtr == null) {
+      console.log('NULL', baseDirPath + '\n\n' + folderPath + '\n\n');
+    }
     folderMap = folderPtr.children;
   }
 
   return folderPtr;
 };
 
-const setFolderContent = (baseDirPath, folderPath, options, app) => {
-  const folderContent = new Map(app.state.folderContent);
+const setFolderContent = (folderPath, options, app) => {
+  const folderContent = app.state.folderContent;
 
-  console.log('BASE DIR PATH', baseDirPath);
-
-  let folderPtr = getTargetDirectory(baseDirPath, folderPath, folderContent);
+  const folderPtr = getTargetDirectory(folderPath, folderContent, app);
 
   const { isUpdate, updateType, filePath } = options;
 
@@ -67,20 +67,25 @@ const setFolderContent = (baseDirPath, folderPath, options, app) => {
     if (updateType == 'add') {
       const fileName = getDirectoryNodeName('file', filePath);
 
-      const targetDir = folderPtr.children ?? folderPtr;
-
-      targetDir.set(fileName, {
-        type: 'file',
-        name: fileName,
-        path: filePath,
-      });
+      if (folderPtr) {
+        folderPtr.children.set(fileName, {
+          type: 'file',
+          name: fileName,
+          path: filePath,
+        });
+      } else {
+        app.state.folderContent.set(fileName, {
+          type: 'file',
+          name: fileName,
+          path: filePath,
+        });
+      }
     }
   } else if (!isUpdate) {
     if (folderPtr.children) {
       console.log('ALREADY POPULATED');
       return;
     }
-    const folderName = getDirectoryNodeName('folder', folderPath);
     folderPtr.children = getFolderContent(folderPath);
   } else {
     console.log('INVALID OPTIONS // OR NOT ACCOMODATED NOW', options);
@@ -105,6 +110,10 @@ const getDirectoryNodeName = (type, path) => {
   } else {
     throw 'Invalid Directory Node Type';
   }
+};
+
+const getFilesFolderName = (filePath) => {
+  return path.dirname(filePath);
 };
 
 const getCurrentDirectory = (directoryNode) => {
@@ -232,4 +241,5 @@ module.exports = {
   setFolderContent,
   pathExists,
   openFolderHandler,
+  getFilesFolderName,
 };

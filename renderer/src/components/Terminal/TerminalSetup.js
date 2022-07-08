@@ -65,7 +65,7 @@ const createTerminal = () => {
 };
 
 const writeEnter = async () => {
-  termProxy.writeln('');
+  // termProxy.writeln('');
 
   for (let welcomeMessageChar of TERM_WELCOME_MSG) {
     termProxy.write(welcomeMessageChar);

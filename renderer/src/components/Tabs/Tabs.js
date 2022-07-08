@@ -12,7 +12,7 @@ import { getProgLanguage } from '../../helpers/FilenameExtensions';
 import * as langs from '../../enums/ProgLanguages';
 import { langToIcon } from '../../helpers/FilenameExtensions';
 import { runCode } from '../../helpers/CodeExecution';
-import { startWatching, endWatching } from '../../helpers/FileWatching';
+import { startWatchingFile, endWatching } from '../../helpers/FileWatching';
 const { TabPane } = Tabs;
 const ADD = 0;
 const REMOVE = 1;
@@ -129,7 +129,7 @@ class Tabbing extends Component {
       activeKey,
     });
 
-    startWatching(path, this);
+    startWatchingFile(path, this);
   };
 
   remove = (targetKey) => {

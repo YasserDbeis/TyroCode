@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import './FolderTree.css';
 
@@ -106,6 +106,10 @@ const File = ({ name, path, onNodeClick }) => {
 const Folder = ({ name, path, children, onNodeClick }) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  if (name == 'hello') {
+    console.log('OPEN', isOpen);
+  }
+
   const handleToggle = (e) => {
     e.preventDefault();
     setIsOpen(!isOpen);
@@ -147,6 +151,8 @@ const TreeRecursive = ({ data, onNodeClick }) => {
         />
       );
     }
+
+    // const randNum = Math.random
 
     if (item.type === 'folder') {
       return (

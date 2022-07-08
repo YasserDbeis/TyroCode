@@ -3,9 +3,8 @@
 0. When external file additions/removals occur, they are not reflected in folder dropdown
 1. Paste isnt registered into the undo/redo stack
 2. Tabbing a single line (with the top empty line also selected) multiple times doesnt work well
-3. If you press enter until cursor is at bottom of editor, it cuts off last line, and the scrolling is misaligned
-5. Add 4 spaces after bracket + enter combo
-6. Universal mac style scrollbars for windows as well
+3. Add 4 spaces after bracket + enter combo
+4. Universal mac style scrollbars for windows as well
 
 // Future things that would be nice but can't do right now
 1. Have selected directory be the directory of terminal
