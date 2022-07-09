@@ -14,6 +14,7 @@ import * as keys from '../../enums/KeyboardCodes';
 import {
   isNonInsertionKey,
   isComboNonShiftKeyActive,
+  isPasteKeyCombo,
 } from '../../helpers/KeyDownHandlers';
 import { getFullPath } from '../../helpers/FileDirectory';
 import { getProgLanguage } from '../../helpers/FilenameExtensions';
@@ -104,13 +105,16 @@ const TextEditor = (props) => {
     //     !isComboKeyActivated(e)
     // );
 
-    if (isNonInsertionKey(e.keyCode) && !isComboNonShiftKeyActive(e)) {
+    if (
+      (isNonInsertionKey(e.keyCode) && !isComboNonShiftKeyActive(e)) ||
+      isPasteKeyCombo(e)
+    ) {
       const keyCodeStr = e.keyCode.toString();
       undoStack.current.push({
         keyCode: [keyCodeStr],
         repetitions: NO_REPITITIONS,
       });
-      // console.log(e.key);
+      console.log(undoStack.current);
     }
     const isMac = os.platform() == MAC_PLATFORM;
 

@@ -1,5 +1,6 @@
 export const TAB_KEYCODE = 9;
 export const Z_KEYCODE = 90;
+export const V_KEYCODE = 86;
 export const ESCAPE_KEYCODE = 27;
 export const OPEN_PAREN_KEYCODE = 57;
 export const OPEN_BRACKETS_KEYCODE = 219;

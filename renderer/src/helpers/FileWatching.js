@@ -18,15 +18,51 @@ const startWatchingWorkspace = (workspacePath, app) => {
         fileDir,
         {
           isUpdate: true,
-          updateType: 'add',
-          filePath,
+          updateType: 'addFile',
+          path: filePath,
         },
         app
       );
     })
-    .on('unlink', (path) => {})
-    .on('addDir', (path) => {})
-    .on('unlinkDir', (path) => {});
+    .on('unlink', (filePath) => {
+      const fileDir = getFilesFolderName(filePath);
+
+      setFolderContent(
+        fileDir,
+        {
+          isUpdate: true,
+          updateType: 'removeFile',
+          path: filePath,
+        },
+        app
+      );
+    })
+    .on('addDir', (folderPath) => {
+      const folderDir = getFilesFolderName(folderPath);
+
+      setFolderContent(
+        folderDir,
+        {
+          isUpdate: true,
+          updateType: 'addFolder',
+          path: folderPath,
+        },
+        app
+      );
+    })
+    .on('unlinkDir', (folderPath) => {
+      const folderDir = getFilesFolderName(folderPath);
+
+      setFolderContent(
+        folderDir,
+        {
+          isUpdate: true,
+          updateType: 'removeFolder',
+          path: folderPath,
+        },
+        app
+      );
+    });
 };
 
 const endWatching = (watchedPath) => {

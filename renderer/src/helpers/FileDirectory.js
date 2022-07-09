@@ -3,7 +3,7 @@ const path = require('path');
 const os = require('os');
 const slash = os.platform() === 'win32' ? '\\' : '/';
 const { getFileExtension } = require('../helpers/FilenameExtensions');
-const { cloneDeep } = require('lodash');
+const { cloneDeep, update } = require('lodash');
 const extName = require('ext-name');
 const isBinaryFileSync = require('isbinaryfile').isBinaryFileSync;
 
@@ -61,24 +61,58 @@ const setFolderContent = (folderPath, options, app) => {
 
   const folderPtr = getTargetDirectory(folderPath, folderContent, app);
 
-  const { isUpdate, updateType, filePath } = options;
+  const { isUpdate, updateType, path } = options;
 
   if (isUpdate) {
-    if (updateType == 'add') {
-      const fileName = getDirectoryNodeName('file', filePath);
+    if (updateType == 'addFile') {
+      const fileName = getDirectoryNodeName('file', path);
 
       if (folderPtr) {
         folderPtr.children.set(fileName, {
           type: 'file',
           name: fileName,
-          path: filePath,
+          path: path,
         });
       } else {
         app.state.folderContent.set(fileName, {
           type: 'file',
           name: fileName,
-          path: filePath,
+          path: path,
         });
+      }
+    } else if (updateType == 'removeFile') {
+      const fileName = getDirectoryNodeName('file', path);
+
+      if (folderPtr) {
+        folderPtr.children.delete(fileName);
+      } else {
+        app.state.folderContent.delete(fileName);
+      }
+    } else if (updateType == 'addFolder') {
+      const folderName = getDirectoryNodeName('folder', path);
+
+      if (folderPtr) {
+        folderPtr.children.set(folderName, {
+          type: 'folder',
+          name: folderName,
+          children: null,
+          path: path,
+        });
+      } else {
+        app.state.folderContent.set(folderName, {
+          type: 'folder',
+          name: folderName,
+          children: null,
+          path: path,
+        });
+      }
+    } else if (updateType == 'removeFolder') {
+      const folderName = getDirectoryNodeName('folder', path);
+
+      if (folderPtr) {
+        folderPtr.children.delete(folderName);
+      } else {
+        app.state.folderContent.delete(folderName);
       }
     }
   } else if (!isUpdate) {

@@ -106,10 +106,6 @@ const File = ({ name, path, onNodeClick }) => {
 const Folder = ({ name, path, children, onNodeClick }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  if (name == 'hello') {
-    console.log('OPEN', isOpen);
-  }
-
   const handleToggle = (e) => {
     e.preventDefault();
     setIsOpen(!isOpen);

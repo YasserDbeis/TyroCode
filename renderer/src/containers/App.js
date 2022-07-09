@@ -199,8 +199,8 @@ class App extends Component {
         currDirectory,
         {
           isUpdate: true,
-          updateType: 'add',
-          filePath,
+          updateType: 'addFile',
+          path: filePath,
         },
         this
       );
@@ -247,7 +247,7 @@ class App extends Component {
         {
           isUpdate: false,
           updateType: null,
-          filePath: null,
+          path: null,
         },
         this
       );
