@@ -1,6 +1,5 @@
 // Bugs + Features
 
-0. When external file additions/removals occur, they are not reflected in folder dropdown
 1. Accomodate keycode combos for redo used by windows (and make sure other combos accomodated as well)
 2. Tabbing a single line (with the top empty line also selected) multiple times doesnt work well
 3. Add 4 spaces after bracket + enter combo

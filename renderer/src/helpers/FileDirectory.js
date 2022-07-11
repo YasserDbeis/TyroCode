@@ -7,6 +7,7 @@ const { cloneDeep, update } = require('lodash');
 const extName = require('ext-name');
 const isBinaryFileSync = require('isbinaryfile').isBinaryFileSync;
 
+const FOLDER_NOT_LOADED_YET = 404;
 // test
 const getPWD = () => {
   return process.cwd();
@@ -44,11 +45,15 @@ const getTargetDirectory = (folderPath, folderContent, app) => {
   let folderMap = folderContent;
   let folderPtr = null;
 
+  console.log('FOLDER CONTENT', folderContent);
+
   for (const path of paths) {
     console.log('PATH', path);
     folderPtr = folderMap.get(path);
     if (folderPtr == null) {
-      console.log('NULL', baseDirPath + '\n\n' + folderPath + '\n\n');
+      // console.log('NULL', baseDirPath + '\n\n' + folderPath + '\n\n');
+      console.log('FOLDER HASNT BEEN LOADED IN YET');
+      return FOLDER_NOT_LOADED_YET;
     }
     folderMap = folderPtr.children;
   }
@@ -60,6 +65,10 @@ const setFolderContent = (folderPath, options, app) => {
   const folderContent = app.state.folderContent;
 
   const folderPtr = getTargetDirectory(folderPath, folderContent, app);
+
+  if (folderPtr == FOLDER_NOT_LOADED_YET) {
+    return;
+  }
 
   const { isUpdate, updateType, path } = options;
 
@@ -95,14 +104,14 @@ const setFolderContent = (folderPath, options, app) => {
         folderPtr.children.set(folderName, {
           type: 'folder',
           name: folderName,
-          children: null,
+          children: new Map(),
           path: path,
         });
       } else {
         app.state.folderContent.set(folderName, {
           type: 'folder',
           name: folderName,
-          children: null,
+          children: new Map(),
           path: path,
         });
       }
@@ -116,7 +125,7 @@ const setFolderContent = (folderPath, options, app) => {
       }
     }
   } else if (!isUpdate) {
-    if (folderPtr.children) {
+    if (folderPtr.children.size > 0) {
       console.log('ALREADY POPULATED');
       return;
     }
@@ -219,7 +228,7 @@ const getFolderContent = (folderPath) => {
       newDir.set(folderName, {
         type: 'folder',
         name: folderName,
-        children: null,
+        children: new Map(),
         path: currentPath,
       });
     } else {

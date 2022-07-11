@@ -27,7 +27,7 @@ const saveFileContent = (content, path) => {
   console.log('PATH', path);
 
   fs.writeFile(path, content, function (err) {
-    if (err) throw err;
+    if (err) alert(err);
     else console.log('File is saved successfully.');
   });
 };
