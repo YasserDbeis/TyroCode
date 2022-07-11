@@ -7,7 +7,6 @@ import { saveFileContent } from '../../helpers/FileWriting';
 import './Tabs.css';
 import { last, update } from 'lodash';
 import { EditOutlined } from '@ant-design/icons';
-import { write } from 'original-fs';
 import { getProgLanguage } from '../../helpers/FilenameExtensions';
 import * as langs from '../../enums/ProgLanguages';
 import { langToIcon } from '../../helpers/FilenameExtensions';

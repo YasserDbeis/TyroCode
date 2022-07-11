@@ -2,9 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const slash = os.platform() === 'win32' ? '\\' : '/';
-const { getFileExtension } = require('../helpers/FilenameExtensions');
-const { cloneDeep, update } = require('lodash');
-const extName = require('ext-name');
 const isBinaryFileSync = require('isbinaryfile').isBinaryFileSync;
 
 const FOLDER_NOT_LOADED_YET = 404;
