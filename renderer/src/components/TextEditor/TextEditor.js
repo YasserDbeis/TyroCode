@@ -8,7 +8,7 @@ import {
   getTabbedOverLinesStartPos,
 } from '../../helpers/TextEditing';
 import './TextEditor.css';
-import { Scrollbars } from 'react-custom-scrollbars';
+import Scrollbars from 'react-custom-scrollbars';
 import TextArea from 'antd/lib/input/TextArea';
 import * as keys from '../../enums/KeyboardCodes';
 import {
@@ -22,13 +22,8 @@ import os from 'os';
 import UndoStack from '../../StateManagement/UndoStack';
 import { Console } from 'console';
 import autosize from 'autosize';
-// import 'floating-scroll/dist/jquery.floatingscroll.css';
-// import * as l from 'floating-scroll'
-// import './jquery.floatingscroll';
-// import $ from 'jquery';
-// import 'floating-scroll/src/jquery.floatingscroll.js';
 
-const TAB_HEIGHT = 40;
+const BOTTOM_SCROLLBAR_HEIGHT = 17.5;
 const MAC_PLATFORM = 'darwin';
 const NO_REPITITIONS = -1;
 const FOUR_SPACE_TAB = ' '.repeat(4);
@@ -259,60 +254,62 @@ const TextEditor = (props) => {
   if (editorRef.current) console.log(editorRef.current.scrollWidth);
 
   return (
-    <div
-      id="text-editor-container"
-      style={{
-        height: 'inherit',
-      }}
-    >
+    <div>
+      <div
+        id="text-editor-container"
+        style={{
+          height: props.editorHeight - BOTTOM_SCROLLBAR_HEIGHT,
+        }}
+      >
+        <div
+          id="line-num-container"
+          ref={lineNumRef}
+          className="scroller text-editor-child"
+          dangerouslySetInnerHTML={{ __html: lineNums }}
+          style={{
+            backgroundColor: '#282c34',
+          }}
+        ></div>
+        <Scrollbars id="editor-container" className="text-editor-child">
+          <div
+            id="editor-child-div"
+            className="scroller editor-child"
+            dangerouslySetInnerHTML={{ __html: highlightedCode }}
+            align="left"
+          ></div>
+          <textarea
+            id="editor-child-textarea"
+            className="scroller editor-child"
+            ref={editorRef}
+            value={code}
+            onChange={codeChange}
+            onKeyDown={onKeyDownHandler}
+          ></textarea>
+        </Scrollbars>
+      </div>
+
       <div
         id="editor-bottom-scrollbar"
         className="scroller"
         style={
           lineNumRef.current && editorRef.current
             ? {
-                left: lineNumRef.current.clientWidth,
+                marginLeft: lineNumRef.current.clientWidth,
                 width: editorRef.current.clientWidth,
               }
             : null
         }
       >
-        <div
+        <Scrollbars
           style={
             editorRef.current
               ? {
                   width: editorRef.current.scrollWidth,
-                  height: '20px',
+                  height: BOTTOM_SCROLLBAR_HEIGHT,
                 }
               : null
           }
-        ></div>
-      </div>
-
-      <div
-        id="line-num-container"
-        ref={lineNumRef}
-        className="scroller text-editor-child"
-        dangerouslySetInnerHTML={{ __html: lineNums }}
-        style={{
-          backgroundColor: '#282c34',
-        }}
-      ></div>
-      <div id="editor-container" className="text-editor-child">
-        <div
-          id="editor-child-div"
-          className="scroller editor-child"
-          dangerouslySetInnerHTML={{ __html: highlightedCode }}
-          align="left"
-        ></div>
-        <textarea
-          id="editor-child-textarea"
-          className="scroller editor-child"
-          ref={editorRef}
-          value={code}
-          onChange={codeChange}
-          onKeyDown={onKeyDownHandler}
-        ></textarea>
+        ></Scrollbars>
       </div>
     </div>
   );

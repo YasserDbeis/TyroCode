@@ -84,14 +84,7 @@
 }
 
 #editor-bottom-scrollbar {
-  position: absolute;
-  bottom: 0;
-  /* left: 0;
-  right: 0; */
-  height: 20px;
-  /* width: 100%; */
   overflow: auto;
-  /* background-color: red; */
 }
 
 .editor-child {
