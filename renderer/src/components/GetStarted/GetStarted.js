@@ -16,7 +16,7 @@ const GetStarted = (props) => {
         textAlign: 'center',
         color: 'white',
         height: props.windowHeight - props.terminalHeight,
-        overflow: 'scroll',
+        overflow: 'auto',
         position: 'relative',
       }}
     >

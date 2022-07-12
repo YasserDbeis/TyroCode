@@ -4,6 +4,9 @@
 2. Tabbing a single line (with the top empty line also selected) multiple times doesnt work well
 3. Add 4 spaces after bracket + enter combo
 3. Universal mac style scrollbars for windows as well
+4. <email> in .json file not being syntax highlighted
+5. GetStarted page overlapping when window size is shrunk (possibly windows only)
+6. Misalignment of text in text editor on horiz scroll to end on windows (likely because of extra room vert scrollbar is taking because custom scrollbar not working)
 
 // Future things that would be nice but can't do right now
 1. Have selected directory be the directory of terminal

@@ -255,8 +255,9 @@ const TextEditor = (props) => {
   // if (editorRef.current) console.log(editorRef.current.scrollWidth);
 
   return (
-    <div
+    <Scrollbars
       id="text-editor-container"
+      renderView={getCustomScrollbar}
       style={{
         height: 'inherit',
       }}
@@ -295,11 +296,7 @@ const TextEditor = (props) => {
           backgroundColor: '#282c34',
         }}
       ></div>
-      <Scrollbars
-        id="editor-container"
-        className="text-editor-child"
-        renderView={getCustomScrollbar}
-      >
+      <div id="editor-container" className="text-editor-child">
         <div
           id="editor-child-div"
           className="scroller editor-child"
@@ -314,8 +311,8 @@ const TextEditor = (props) => {
           onChange={codeChange}
           onKeyDown={onKeyDownHandler}
         ></textarea>
-      </Scrollbars>
-    </div>
+      </div>
+    </Scrollbars>
   );
 };
 
