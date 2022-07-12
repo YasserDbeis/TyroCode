@@ -20,6 +20,7 @@ import Tabs from '../components/Tabs/Tabs';
 import GetStarted from '../components/GetStarted/GetStarted';
 import CodeInput from '../components/CodeInput/CodeInput';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { getCustomScrollbar } from '../helpers/ScrollbarCustomization';
 import {
   getFileText,
   getCurrentDirectory,
@@ -379,7 +380,7 @@ class App extends Component {
             </div>
           ) : null}
 
-          <Scrollbars style={{ height: '80%' }}>
+          <Scrollbars renderView={getCustomScrollbar} style={{ height: '80%' }}>
             <div style={{ color: 'white' }}>
               <FileTree
                 key={this.state.fileTreeKey}

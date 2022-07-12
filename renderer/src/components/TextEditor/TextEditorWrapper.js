@@ -43,7 +43,6 @@ class TextEditorWrapper extends Component {
           filepath={this.props.filepath}
           windowHeight={this.props.windowHeight}
           terminalHeight={this.props.terminalHeight}
-          editorHeight={textEditorHeight}
           codeChange={this.codeChange}
           code={this.props.code}
           onSave={this.props.onSave}

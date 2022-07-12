@@ -61,10 +61,14 @@
   max-width: 100%;
   /* background:red !important; */
   white-space:nowrap;
-  padding: 5px;
+  /* padding-left: 5px;
+  padding-right: 5px; */
+  padding-top: 15px;
+  padding-bottom: 15px;
   overflow: scroll;
   text-align: right;
   height: inherit;
+  border-right: 2px inset white;
 }
 
 #editor-container {
@@ -72,7 +76,7 @@
   overflow: auto;
   border: none;
   background-color: transparent;
-  padding: 5px;
+  padding: 15px;
   border-color: transparent;
   /* overflow-wrap: normal; */
   /* background:yellow; */
@@ -84,7 +88,17 @@
 }
 
 #editor-bottom-scrollbar {
+  position: absolute;
+  margin-bottom: -2px;
+  bottom: 0;
+  /* left: 0;
+  right: 0; */
+  height: 20px;
+  /* width: 100%; */
+  /* background-color: #282c34; */
+  z-index: 1;
   overflow: auto;
+  /* background-color: red; */
 }
 
 .editor-child {
@@ -94,7 +108,7 @@
   top: 0;
   bottom: 0;
   white-space: pre;
-  padding: 5px;
+  padding: 15px;
   background-color: transparent;
   /* height: 100%; */
   width: 100%;
