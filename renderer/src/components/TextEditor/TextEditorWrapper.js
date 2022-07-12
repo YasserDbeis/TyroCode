@@ -20,16 +20,16 @@ class TextEditorWrapper extends Component {
   };
 
   render() {
+    const textEditorHeight =
+      this.props.windowHeight -
+      TAB_HEIGHT -
+      this.props.terminalHeight -
+      HANDLE_HEIGHT;
+
     const textEditorWrapperStyles = {
       overflowY: 'hidden',
       position: 'relative',
-      height:
-        (
-          this.props.windowHeight -
-          TAB_HEIGHT -
-          this.props.terminalHeight -
-          HANDLE_HEIGHT
-        ).toString() + 'px',
+      height: textEditorHeight.toString() + 'px',
     };
 
     return (

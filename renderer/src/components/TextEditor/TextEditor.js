@@ -43,6 +43,8 @@ const TextEditor = (props) => {
   const [cursor, setCursor] = useState([props.code.length, props.code.length]);
 
   const editorRef = useRef(null);
+  const lineNumRef = useRef(null);
+
   const undoStack = useRef(new UndoStack());
 
   useEffect(() => {
@@ -254,6 +256,8 @@ const TextEditor = (props) => {
       .join('</br>');
   }
 
+  if (editorRef.current) console.log(editorRef.current.scrollWidth);
+
   return (
     <div
       id="text-editor-container"
@@ -262,12 +266,36 @@ const TextEditor = (props) => {
       }}
     >
       <div
+        id="editor-bottom-scrollbar"
+        className="scroller"
+        style={
+          lineNumRef.current && editorRef.current
+            ? {
+                left: lineNumRef.current.clientWidth,
+                width: editorRef.current.clientWidth,
+              }
+            : null
+        }
+      >
+        <div
+          style={
+            editorRef.current
+              ? {
+                  width: editorRef.current.scrollWidth,
+                  height: '20px',
+                }
+              : null
+          }
+        ></div>
+      </div>
+
+      <div
         id="line-num-container"
+        ref={lineNumRef}
         className="scroller text-editor-child"
         dangerouslySetInnerHTML={{ __html: lineNums }}
         style={{
           backgroundColor: '#282c34',
-          borderColor: 'red',
         }}
       ></div>
       <div id="editor-container" className="text-editor-child">
