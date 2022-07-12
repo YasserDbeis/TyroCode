@@ -4,7 +4,6 @@ import './CodeInput.css';
 import ContentEditable from 'react-contenteditable';
 import SimpleBar from 'simplebar-react';
 import 'simplebar-react/dist/simplebar.min.css';
-import { getCustomScrollbar } from '../../helpers/ScrollbarCustomization';
 
 const CodeInput = forwardRef((props, ref) => {
   //console.log(props.folderContent)
@@ -18,7 +17,7 @@ const CodeInput = forwardRef((props, ref) => {
 
   return (
     <div id="code-input-container">
-      <Scrollbars id="code-input-scrollbars" renderView={getCustomScrollbar}>
+      <Scrollbars id="code-input-scrollbars">
         <ContentEditable
           ref={ref}
           data-placeholder="Code Input"

@@ -68,7 +68,6 @@
   overflow: hidden;
   text-align: right;
   height: inherit;
-  border-right: 2px inset white;
 }
 
 #editor-container {
@@ -107,7 +106,8 @@
   top: 0;
   bottom: 0;
   white-space: pre;
-  padding: 15px;
+  padding-top: 15px;
+  padding-bottom: 15px;
   background-color: transparent;
   /* height: 100%; */
   width: 100%;

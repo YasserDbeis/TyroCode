@@ -22,7 +22,6 @@ import os from 'os';
 import UndoStack from '../../StateManagement/UndoStack';
 import { Console } from 'console';
 import autosize from 'autosize';
-import { getCustomScrollbar } from '../../helpers/ScrollbarCustomization';
 
 const TAB_HEIGHT = 40;
 const MAC_PLATFORM = 'darwin';
@@ -255,9 +254,7 @@ const TextEditor = (props) => {
   // if (editorRef.current) console.log(editorRef.current.scrollWidth);
 
   return (
-    <Scrollbars
-      id="text-editor-container"
-      renderView={getCustomScrollbar}
+    <div
       style={{
         height: 'inherit',
       }}
@@ -275,7 +272,6 @@ const TextEditor = (props) => {
         }
       >
         <Scrollbars
-          renderView={getCustomScrollbar}
           style={
             editorRef.current
               ? {
@@ -286,33 +282,34 @@ const TextEditor = (props) => {
           }
         ></Scrollbars>
       </div>
-
-      <div
-        id="line-num-container"
-        ref={lineNumRef}
-        className="scroller text-editor-child"
-        dangerouslySetInnerHTML={{ __html: lineNums }}
-        style={{
-          backgroundColor: '#282c34',
-        }}
-      ></div>
-      <div id="editor-container" className="text-editor-child">
+      <Scrollbars id="text-editor-container">
         <div
-          id="editor-child-div"
-          className="scroller editor-child"
-          dangerouslySetInnerHTML={{ __html: highlightedCode }}
-          align="left"
+          id="line-num-container"
+          ref={lineNumRef}
+          className="scroller text-editor-child"
+          dangerouslySetInnerHTML={{ __html: lineNums }}
+          style={{
+            backgroundColor: '#282c34',
+          }}
         ></div>
-        <textarea
-          id="editor-child-textarea"
-          className="scroller editor-child"
-          ref={editorRef}
-          value={code}
-          onChange={codeChange}
-          onKeyDown={onKeyDownHandler}
-        ></textarea>
-      </div>
-    </Scrollbars>
+        <div id="editor-container" className="text-editor-child">
+          <div
+            id="editor-child-div"
+            className="scroller editor-child"
+            dangerouslySetInnerHTML={{ __html: highlightedCode }}
+            align="left"
+          ></div>
+          <textarea
+            id="editor-child-textarea"
+            className="scroller editor-child"
+            ref={editorRef}
+            value={code}
+            onChange={codeChange}
+            onKeyDown={onKeyDownHandler}
+          ></textarea>
+        </div>
+      </Scrollbars>
+    </div>
   );
 };
 
