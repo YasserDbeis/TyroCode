@@ -22,6 +22,8 @@ import os from 'os';
 import UndoStack from '../../StateManagement/UndoStack';
 import { Console } from 'console';
 import autosize from 'autosize';
+import 'mac-scrollbar/dist/mac-scrollbar.css';
+import { MacScrollbar } from 'mac-scrollbar';
 
 const TAB_HEIGHT = 40;
 const MAC_PLATFORM = 'darwin';
@@ -255,13 +257,16 @@ const TextEditor = (props) => {
 
   return (
     <div
+      id="text-editor"
       style={{
         height: 'inherit',
       }}
     >
-      <div
-        id="editor-bottom-scrollbar"
+      <MacScrollbar
+        skin="light"
+        suppressAutoHide={true}
         className="scroller"
+        id="editor-bottom-scrollbar"
         style={
           lineNumRef.current && editorRef.current
             ? {
@@ -271,7 +276,7 @@ const TextEditor = (props) => {
             : null
         }
       >
-        <Scrollbars
+        <div
           style={
             editorRef.current
               ? {
@@ -280,19 +285,9 @@ const TextEditor = (props) => {
                 }
               : null
           }
-        >
-          {/* <div
-            style={
-              editorRef.current
-                ? {
-                    width: editorRef.current.scrollWidth,
-                    height: '20px',
-                  }
-                : null
-            }
-          ></div> */}
-        </Scrollbars>
-      </div>
+        ></div>
+      </MacScrollbar>
+
       <Scrollbars id="text-editor-container">
         <div
           id="line-num-container"
