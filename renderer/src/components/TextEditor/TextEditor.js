@@ -256,10 +256,13 @@ const TextEditor = (props) => {
   // if (editorRef.current) console.log(editorRef.current.scrollWidth);
 
   return (
-    <div
+    <MacScrollbar
+      skin="light"
+      suppressAutoHide={true}
       id="text-editor"
       style={{
-        height: 'inherit',
+        height: '100%',
+        overflowY: 'auto',
       }}
     >
       <MacScrollbar
@@ -288,7 +291,7 @@ const TextEditor = (props) => {
         ></div>
       </MacScrollbar>
 
-      <Scrollbars id="text-editor-container">
+      <div id="text-editor-container">
         <div
           id="line-num-container"
           ref={lineNumRef}
@@ -314,8 +317,8 @@ const TextEditor = (props) => {
             onKeyDown={onKeyDownHandler}
           ></textarea>
         </div>
-      </Scrollbars>
-    </div>
+      </div>
+    </MacScrollbar>
   );
 };
 

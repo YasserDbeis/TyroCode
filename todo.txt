@@ -7,6 +7,8 @@
 4. <email> in .json file not being syntax highlighted
 5. GetStarted page overlapping when window size is shrunk (possibly windows only)
 6. resizing text editpr shows og scrollbar
+7. Slight misalignment in text on highlight
+8. Scroll hit box height not correct
 
 // Future things that would be nice but can't do right now
 1. Have selected directory be the directory of terminal
