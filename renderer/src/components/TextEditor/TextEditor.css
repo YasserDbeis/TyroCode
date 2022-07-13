@@ -86,6 +86,10 @@
   height: inherit;
 }
 
+.bottom-scrollbar {
+  background-color: #8CC0DE;
+}
+
 #editor-bottom-scrollbar {
   position: absolute;
   bottom: 0;

@@ -265,7 +265,7 @@ const TextEditor = (props) => {
         style={
           lineNumRef.current && editorRef.current
             ? {
-                left: lineNumRef.current.clientWidth,
+                marginLeft: lineNumRef.current.clientWidth,
                 width: editorRef.current.clientWidth,
               }
             : null
@@ -280,7 +280,18 @@ const TextEditor = (props) => {
                 }
               : null
           }
-        ></Scrollbars>
+        >
+          {/* <div
+            style={
+              editorRef.current
+                ? {
+                    width: editorRef.current.scrollWidth,
+                    height: '20px',
+                  }
+                : null
+            }
+          ></div> */}
+        </Scrollbars>
       </div>
       <Scrollbars id="text-editor-container">
         <div
