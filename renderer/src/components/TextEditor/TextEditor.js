@@ -266,6 +266,12 @@ const TextEditor = (props) => {
       }}
     >
       <MacScrollbar
+        trackStyle={() => {
+          return {
+            backgroundColor: 'transparent',
+            borderColor: 'transparent',
+          };
+        }}
         skin="light"
         suppressAutoHide={true}
         className="scroller"
