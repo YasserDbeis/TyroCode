@@ -223,12 +223,12 @@ class App extends Component {
   addExistingFileToTabs = (fileNode) => {
     const tabOpen = this.state.tabOpen;
 
-    if (!tabOpen) {
-      this.setState({ tabOpen: true });
-    }
-
     const [code, success] = getFileText(fileNode.path, fileNode.name);
     if (success) {
+      if (!tabOpen) {
+        this.setState({ tabOpen: true });
+      }
+
       this.tabs?.add(fileNode.name, fileNode.path, code);
     } else {
       const errorTitle = `File '${fileNode.name}' can not be opened`;
@@ -382,7 +382,10 @@ class App extends Component {
             </div>
           ) : null}
 
-          <MacScrollbar {...scrollbarOptions} style={{ height: '80%' }}>
+          <MacScrollbar
+            // {...scrollbarOptions}
+            style={{ height: '80%', marginRight: '2.5px' }}
+          >
             <div style={{ color: 'white' }}>
               <FileTree
                 key={this.state.fileTreeKey}
