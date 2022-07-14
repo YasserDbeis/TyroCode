@@ -44,6 +44,9 @@ import { testAPI } from '../helpers/CodeExecution';
 import { waitForElm } from '../helpers/DomObservers';
 import { dialog } from 'electron';
 import { startWatchingWorkspace, endWatching } from '../helpers/FileWatching';
+import 'mac-scrollbar/dist/mac-scrollbar.css';
+import { MacScrollbar } from 'mac-scrollbar';
+import { scrollbarOptions } from '../styles/Scrollbar';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -379,7 +382,7 @@ class App extends Component {
             </div>
           ) : null}
 
-          <Scrollbars style={{ height: '80%' }}>
+          <MacScrollbar {...scrollbarOptions} style={{ height: '80%' }}>
             <div style={{ color: 'white' }}>
               <FileTree
                 key={this.state.fileTreeKey}
@@ -390,7 +393,7 @@ class App extends Component {
                 onFolderSelection={this.setWorkspaceFolder}
               />
             </div>
-          </Scrollbars>
+          </MacScrollbar>
           <CodeInput ref={this.codeInput} />
         </Resizable>
         <Layout className="site-layout">

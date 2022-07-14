@@ -24,6 +24,7 @@ import { Console } from 'console';
 import autosize from 'autosize';
 import 'mac-scrollbar/dist/mac-scrollbar.css';
 import { MacScrollbar } from 'mac-scrollbar';
+import { scrollbarOptions } from '../../styles/Scrollbar';
 
 const TAB_HEIGHT = 40;
 const MAC_PLATFORM = 'darwin';
@@ -257,8 +258,7 @@ const TextEditor = (props) => {
 
   return (
     <MacScrollbar
-      skin="light"
-      suppressAutoHide={true}
+      {...scrollbarOptions}
       id="text-editor"
       style={{
         height: '100%',
@@ -266,14 +266,7 @@ const TextEditor = (props) => {
       }}
     >
       <MacScrollbar
-        trackStyle={() => {
-          return {
-            backgroundColor: 'transparent',
-            borderColor: 'transparent',
-          };
-        }}
-        skin="light"
-        suppressAutoHide={true}
+        {...scrollbarOptions}
         className="scroller"
         id="editor-bottom-scrollbar"
         style={
@@ -297,7 +290,14 @@ const TextEditor = (props) => {
         ></div>
       </MacScrollbar>
 
-      <div id="text-editor-container">
+      <div
+        id="text-editor-container"
+        style={
+          {
+            // height: props.editorHeight,
+          }
+        }
+      >
         <div
           id="line-num-container"
           ref={lineNumRef}
@@ -307,7 +307,13 @@ const TextEditor = (props) => {
             backgroundColor: '#282c34',
           }}
         ></div>
-        <div id="editor-container" className="text-editor-child">
+        <div
+          style={{
+            height: props.editorHeight,
+          }}
+          id="editor-container"
+          className="text-editor-child"
+        >
           <div
             id="editor-child-div"
             className="scroller editor-child"
