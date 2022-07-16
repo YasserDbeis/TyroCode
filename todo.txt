@@ -3,12 +3,11 @@
 1. Accomodate keycode combos for redo used by windows (and make sure other combos accomodated as well)
 2. Tabbing a single line (with the top empty line also selected) multiple times doesnt work well
 3. Add 4 spaces after bracket + enter combo
-3. Universal mac style scrollbars for windows as well
-4. <email> in .json file not being syntax highlighted
-5. GetStarted page overlapping when window size is shrunk (possibly windows only)
-6. resizing text editpr shows og scrollbar
-7. Slight misalignment in text on highlight
-8. Scroll hit box height not correct
+4. GetStarted page overlapping when window size is shrunk (possibly windows only)
+5. resizing text editpr shows og scrollbar
+6. The "Please press enter..." message in terminal needs reworking
+7. Html/markup langs syntax highlighting is mono-color
+8. When a non-saved edited file is in tabs dropdown, theres no space b/w icon and filename
 
 // Future things that would be nice but can't do right now
 1. Have selected directory be the directory of terminal

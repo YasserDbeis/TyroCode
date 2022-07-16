@@ -53,3 +53,15 @@
     line-height: 0px;
     padding: 5px;
 }
+
+.ant-tabs-dropdown-menu-item, .anticon-close {
+    color: grey
+}
+
+.ant-tabs-dropdown-menu-item:hover {
+    background-color: #282C34;
+}
+
+.anticon-ellipsis {
+    color: whitesmoke;
+}

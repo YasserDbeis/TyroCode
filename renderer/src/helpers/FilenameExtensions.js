@@ -8,6 +8,9 @@ import 'prismjs/components/prism-go';
 import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-python';
+import 'prismjs/components/prism-json';
+import 'prismjs/components/prism-css';
+import 'prismjs/components/prism-markup';
 
 import React from 'react';
 import path from 'path';
@@ -34,11 +37,13 @@ export const extToLang = (lang_ext) => {
       cs: langs.cs,
       cpp: langs.cpp,
       cc: langs.cc,
+      json: langs.json,
     }[lang_ext] ?? langs.none
   );
 };
 
 export const extToPrismLang = (lang_ext) => {
+  console.log('HU', lang_ext);
   const lang =
     {
       js: 'javascript',
@@ -50,7 +55,12 @@ export const extToPrismLang = (lang_ext) => {
       py: 'python',
       py3: 'python',
       cs: 'csharp',
+      json: 'json',
+      css: 'css',
+      html: 'markup',
     }[lang_ext] ?? 'clike';
+
+  console.log('KEY LANG', lang);
 
   return prism.languages[lang];
 };

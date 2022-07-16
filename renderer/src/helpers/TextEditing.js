@@ -5,7 +5,12 @@ const TAB_SIZE = 4;
 
 const tokenContentToString = (contents) => {
   if (typeof contents == 'string') {
-    return contents;
+    return contents
+      .replace(/&/g, '&amp;')
+      .replace(/>/g, '&gt;')
+      .replace(/</g, '&lt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
   }
 
   let totalContent = '';
@@ -13,10 +18,16 @@ const tokenContentToString = (contents) => {
   for (const content of contents) {
     if (typeof content == 'object') {
       // totalContent += '<span style="color:teal;">';
+
       totalContent += tokenContentToString(content.content);
       // totalContent += '</span>';
     } else {
-      totalContent += content;
+      totalContent += content
+        .replace(/&/g, '&amp;')
+        .replace(/>/g, '&gt;')
+        .replace(/</g, '&lt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
     }
   }
 
@@ -41,6 +52,8 @@ const getSyntaxColor = (tokenType, lang) => {
       regex: '#e5c07b',
       constant: '#98c379',
       punctuation: 'whitesmoke',
+      tag: 'orange',
+      script: 'red',
     }[tokenType] ?? '#61afef';
 
   return result;
@@ -58,7 +71,10 @@ const getHighlightedCode = (code, lang_ext) => {
 
   let result = '';
 
+  console.log('LANG', lang);
   const tokens = tokenize(code, lang);
+
+  console.log('TOKENS', tokens);
 
   // console.log(tokens);
 
@@ -68,18 +84,17 @@ const getHighlightedCode = (code, lang_ext) => {
       tokenType = token.type;
       const tokenContentStr = tokenContentToString(token.content);
 
+      console.log('TOKEN TYPE 1', tokenType);
       result += syntaxHighlight(tokenContentStr, tokenType, lang);
     } else {
+      console.log('TOKEN TYPE 2', token);
       result += syntaxHighlight(token, null, lang);
     }
   });
 
+  console.log('RESULT', result);
+
   return result;
-  // .replace(/&/g, '&amp;')
-  // .replace(/>/g, '&gt;')
-  // .replace(/</g, '&lt;')
-  // .replace(/"/g, '&quot;')
-  // .replace(/'/g, '&apos;');
 
   // return result;
 };

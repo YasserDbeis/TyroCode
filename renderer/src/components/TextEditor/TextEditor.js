@@ -17,7 +17,10 @@ import {
   isPasteKeyCombo,
 } from '../../helpers/KeyDownHandlers';
 import { getFullPath } from '../../helpers/FileDirectory';
-import { getProgLanguage } from '../../helpers/FilenameExtensions';
+import {
+  getFileExtension,
+  getProgLanguage,
+} from '../../helpers/FilenameExtensions';
 import os from 'os';
 import UndoStack from '../../StateManagement/UndoStack';
 import { Console } from 'console';
@@ -242,9 +245,9 @@ const TextEditor = (props) => {
   }
 
   function highlightCode(input) {
-    let lang = getProgLanguage(props.filename);
+    const lang_ext = getFileExtension(props.filename);
 
-    return getHighlightedCode(input, lang);
+    return getHighlightedCode(input, lang_ext);
   }
 
   function getLineNums(input) {
