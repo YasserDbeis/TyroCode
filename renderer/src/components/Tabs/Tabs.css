@@ -65,3 +65,7 @@
 .anticon-ellipsis {
     color: whitesmoke;
 }
+
+span.anticon.anticon-edit.unsaved {
+    margin-right: 5px;
+}

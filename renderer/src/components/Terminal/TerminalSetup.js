@@ -69,7 +69,7 @@ const writeEnter = async () => {
 
   for (let welcomeMessageChar of TERM_WELCOME_MSG) {
     termProxy.write(welcomeMessageChar);
-    await new Promise((r) => setTimeout(r, 50));
+    // await new Promise((r) => setTimeout(r, 50));
   }
   termProxy.writeln('');
 };
