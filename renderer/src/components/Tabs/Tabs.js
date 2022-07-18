@@ -12,6 +12,7 @@ import * as langs from '../../enums/ProgLanguages';
 import { langToIcon } from '../../helpers/FilenameExtensions';
 import { runCode } from '../../helpers/CodeExecution';
 import { startWatchingFile, endWatching } from '../../helpers/FileWatching';
+import { FILE_READ_SUCCESS } from '../../enums/FileReadingErrors';
 const { TabPane } = Tabs;
 const ADD = 0;
 const REMOVE = 1;
@@ -63,8 +64,8 @@ class Tabbing extends Component {
   onExternalFileChange = (changedFilePath) => {
     const newPanes = this.state.panes.map((pane, i) => {
       if (pane.path == changedFilePath) {
-        const [newCode, success] = getFileText(pane.path, pane.title);
-        if (success) {
+        const [newCode, status] = getFileText(pane.path, pane.title);
+        if (status == FILE_READ_SUCCESS) {
           return { ...pane, content: newCode };
         } else {
           return pane;

@@ -11,6 +11,7 @@ import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-css';
 import 'prismjs/components/prism-markup';
+import 'prismjs/components/prism-diff';
 
 import React from 'react';
 import path from 'path';
@@ -38,6 +39,7 @@ export const extToLang = (lang_ext) => {
       cpp: langs.cpp,
       cc: langs.cc,
       json: langs.json,
+      diff: langs.diff,
     }[lang_ext] ?? langs.none
   );
 };
@@ -58,6 +60,7 @@ export const extToPrismLang = (lang_ext) => {
       json: 'json',
       css: 'css',
       html: 'markup',
+      diff: 'diff',
     }[lang_ext] ?? 'clike';
 
   console.log('KEY LANG', lang);
@@ -133,6 +136,9 @@ export const langToIcon = (lang, style) => {
           style={style}
           src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-plain.svg"
         />
+      ),
+      [langs.json]: (
+        <img style={style} src="../renderer/src/assets/jsonIcon.svg" />
       ),
     }[lang] ?? <img style={style} src="../renderer/src/assets/fileIcon.svg" />
   );

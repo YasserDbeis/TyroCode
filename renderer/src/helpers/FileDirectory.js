@@ -1,6 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const {
+  FILE_READ_SUCCESS,
+  FILE_BINARY_ERROR,
+  FILE_TOO_LARGE_ERROR,
+  FILE_DOES_NOT_EXIST_ERROR,
+} = require('../enums/FileReadingErrors');
 const slash = os.platform() === 'win32' ? '\\' : '/';
 const isBinaryFileSync = require('isbinaryfile').isBinaryFileSync;
 
@@ -183,7 +189,7 @@ const getFileText = (path, fileName) => {
 
   const isBinaryFile = isBinaryFileSync(path);
   if (isBinaryFile) {
-    return [null, false];
+    return [null, FILE_BINARY_ERROR];
   }
 
   try {
@@ -191,15 +197,23 @@ const getFileText = (path, fileName) => {
       console.log('File exists.');
     } else {
       console.log(path, 'File does not exist.');
-      return '';
+      return [null, FILE_DOES_NOT_EXIST_ERROR];
     }
   } catch (err) {
     console.error(err);
-    return '';
+    return [null, FILE_DOES_NOT_EXIST_ERROR];
   }
 
-  const fileData = fs.readFileSync(path, 'utf8');
-  return [fileData, true];
+  let fileData = null;
+  let status = FILE_READ_SUCCESS;
+  try {
+    fileData = fs.readFileSync(path, 'utf8');
+  } catch (err) {
+    console.log(err);
+    fileData = null;
+    status = FILE_TOO_LARGE_ERROR;
+  }
+  return [fileData, status];
 };
 
 const getFolderContent = (folderPath) => {

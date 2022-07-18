@@ -10,4 +10,5 @@ export const cs = 8;
 export const cpp = 9;
 export const cc = 10;
 export const json = 11;
-export const none = 12;
+export const diff = 12;
+export const none = 13;

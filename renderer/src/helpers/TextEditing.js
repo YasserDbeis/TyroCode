@@ -19,7 +19,11 @@ const tokenContentToString = (contents) => {
     if (typeof content == 'object') {
       // totalContent += '<span style="color:teal;">';
 
-      totalContent += tokenContentToString(content.content);
+      console.log('CONTENT', content);
+      console.log('CONTENT TYPE', content.type);
+
+      const tokenStr = tokenContentToString(content.content);
+      totalContent += syntaxHighlight(tokenStr, content.type);
       // totalContent += '</span>';
     } else {
       totalContent += content
@@ -34,7 +38,7 @@ const tokenContentToString = (contents) => {
   return totalContent;
 };
 
-const getSyntaxColor = (tokenType, lang) => {
+const getSyntaxColor = (tokenType) => {
   const result =
     {
       keyword: '#56B6C2',
@@ -54,13 +58,32 @@ const getSyntaxColor = (tokenType, lang) => {
       punctuation: 'whitesmoke',
       tag: 'orange',
       script: 'red',
+      'attr-value': 'maroon',
+      'attr-equals': 'brown',
+      'attr-name': 'cyan',
+      selector: 'green',
+      property: 'teal',
+      doctype: '#5c6370',
+      cdata: 'red',
+      entity: 'gold',
+      prolog: '#5c6370',
+      namespace: 'orange',
+      important: 'red',
+      url: 'blue',
+      regex: 'cyan',
+      symbol: 'red',
+      atrule: 'red',
+      'inserted-sign': 'green',
+      'deleted-sign': 'red',
+      prefix: 'orange',
+      line: 'red',
     }[tokenType] ?? '#61afef';
 
   return result;
 };
 
-const syntaxHighlight = (token, tokenType, lang) => {
-  const syntaxColor = getSyntaxColor(tokenType, lang);
+const syntaxHighlight = (token, tokenType) => {
+  const syntaxColor = getSyntaxColor(tokenType);
   const highlightedToken = `<span style="color: ${syntaxColor};">${token}</span>`;
 
   return highlightedToken;
@@ -71,7 +94,6 @@ const getHighlightedCode = (code, lang_ext) => {
 
   let result = '';
 
-  console.log('LANG', lang);
   const tokens = tokenize(code, lang);
 
   console.log('TOKENS', tokens);
@@ -84,11 +106,11 @@ const getHighlightedCode = (code, lang_ext) => {
       tokenType = token.type;
       const tokenContentStr = tokenContentToString(token.content);
 
-      console.log('TOKEN TYPE 1', tokenType);
-      result += syntaxHighlight(tokenContentStr, tokenType, lang);
+      // console.log('TOKEN TYPE 1', tokenType);
+      result += syntaxHighlight(tokenContentStr, tokenType);
     } else {
-      console.log('TOKEN TYPE 2', token);
-      result += syntaxHighlight(token, null, lang);
+      // console.log('TOKEN TYPE 2', token);
+      result += syntaxHighlight(token, null);
     }
   });
 

@@ -69,3 +69,7 @@
 span.anticon.anticon-edit.unsaved {
     margin-right: 5px;
 }
+
+.ant-tabs-dropdown-menu-item-remove {
+    outline: none;
+}

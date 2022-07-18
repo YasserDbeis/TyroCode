@@ -5,7 +5,7 @@
 3. Add 4 spaces after bracket + enter combo
 4. GetStarted page overlapping when window size is shrunk (possibly windows only)
 5. resizing text editpr shows og scrollbar
-6. Html/markup langs syntax highlighting is mono-color
+6. Customize syntax highlighting colors to better ones
 
 // Future things that would be nice but can't do right now
 1. Have selected directory be the directory of terminal

@@ -47,6 +47,12 @@ import { startWatchingWorkspace, endWatching } from '../helpers/FileWatching';
 import 'mac-scrollbar/dist/mac-scrollbar.css';
 import { MacScrollbar } from 'mac-scrollbar';
 import { scrollbarOptions } from '../styles/Scrollbar';
+import {
+  FILE_READ_SUCCESS,
+  FILE_BINARY_ERROR,
+  FILE_DOES_NOT_EXIST_ERROR,
+  FILE_TOO_LARGE_ERROR,
+} from '../enums/FileReadingErrors';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -223,8 +229,9 @@ class App extends Component {
   addExistingFileToTabs = (fileNode) => {
     const tabOpen = this.state.tabOpen;
 
-    const [code, success] = getFileText(fileNode.path, fileNode.name);
-    if (success) {
+    const [code, status] = getFileText(fileNode.path, fileNode.name);
+
+    if (status == FILE_READ_SUCCESS) {
       if (!tabOpen) {
         this.setState({ tabOpen: true });
       }
@@ -232,9 +239,25 @@ class App extends Component {
       this.tabs?.add(fileNode.name, fileNode.path, code);
     } else {
       const errorTitle = `File '${fileNode.name}' can not be opened`;
-      const errorDescription =
-        'TyroCode can only display plain text files, not binaries.';
+      let errorDescription = null;
 
+      switch (status) {
+        case FILE_BINARY_ERROR:
+          errorDescription =
+            'TyroCode can only display plain text files, not binaries.';
+          break;
+
+        case FILE_TOO_LARGE_ERROR:
+          errorDescription = 'This file was too large to be read.';
+          break;
+
+        case FILE_DOES_NOT_EXIST_ERROR:
+          errorDescription = 'This file does not exist in your file directory.';
+          break;
+
+        default:
+          errorDescription = 'An error occurred reading this file.';
+      }
       this.openErrorModal(errorTitle, errorDescription);
       console.log('INVALID FILE CONTENT READ');
     }
