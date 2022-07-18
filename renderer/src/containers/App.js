@@ -75,6 +75,8 @@ class App extends Component {
     this.term = React.createRef();
     this.codeInput = React.createRef();
 
+    let x = false;
+
     this.state = {
       terminalHeight: 300,
       windowHeight: window.innerHeight,
@@ -406,7 +408,7 @@ class App extends Component {
           ) : null}
 
           <MacScrollbar
-            // {...scrollbarOptions}
+            {...scrollbarOptions}
             style={{ height: '80%', marginRight: '2.5px' }}
           >
             <div style={{ color: 'white' }}>
