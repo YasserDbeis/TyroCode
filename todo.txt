@@ -7,3 +7,7 @@
 
 // Future things that would be nice but can't do right now
 1. Have selected directory be the directory of terminal
+2. Remove middle click scrolling from text editor (cuz it can only do horiz scrolling)
+
+// To-do before packaging
+1. Set Menu to false in main.js (remove menu)
