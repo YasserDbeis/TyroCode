@@ -17,14 +17,11 @@ const tokenContentToString = (contents) => {
 
   for (const content of contents) {
     if (typeof content == 'object') {
-      // totalContent += '<span style="color:teal;">';
-
-      console.log('CONTENT', content);
-      console.log('CONTENT TYPE', content.type);
+      // console.log('CONTENT', content);
+      // console.log('CONTENT TYPE', content.type);
 
       const tokenStr = tokenContentToString(content.content);
       totalContent += syntaxHighlight(tokenStr, content.type);
-      // totalContent += '</span>';
     } else {
       totalContent += content
         .replace(/&/g, '&amp;')
@@ -97,29 +94,22 @@ const getHighlightedCode = (code, lang_ext) => {
 
   const tokens = tokenize(code, lang);
 
-  console.log('TOKENS', tokens);
-
-  // console.log(tokens);
+  // console.log('TOKENS', tokens);
 
   tokens.forEach((token) => {
-    let tokenType = null;
     if (typeof token == 'object') {
-      tokenType = token.type;
+      const tokenType = token.type;
       const tokenContentStr = tokenContentToString(token.content);
 
-      // console.log('TOKEN TYPE 1', tokenType);
       result += syntaxHighlight(tokenContentStr, tokenType);
     } else {
-      // console.log('TOKEN TYPE 2', token);
       result += syntaxHighlight(token, null);
     }
   });
 
-  console.log('RESULT', result);
+  // console.log('RESULT', result);
 
   return result;
-
-  // return result;
 };
 
 const tabOverText = (editorTextarea, tabbedOverLinesStartPos) => {

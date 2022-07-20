@@ -356,7 +356,7 @@ class App extends Component {
           className="ant-layout-sider-children"
           enable={{ left: false, right: true }}
           size={{ width: this.state.sidebarWidth }}
-          maxWidth="50vw"
+          maxWidth="42.5vw"
           minWidth="300px"
           height="100vh"
           onResizeStop={(e, direction, ref, d) => {
@@ -409,7 +409,7 @@ class App extends Component {
 
           <MacScrollbar
             {...scrollbarOptions}
-            style={{ height: '80%', marginRight: '2.5px' }}
+            style={{ height: '75%', marginRight: '2.5px' }}
           >
             <div style={{ color: 'white' }}>
               <FileTree

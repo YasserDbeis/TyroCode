@@ -151,6 +151,10 @@
   display: none;
 }
 
+#text-editor-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
 #editor-child-div {
   color: white;
   z-index: 1;
