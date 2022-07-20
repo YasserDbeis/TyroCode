@@ -29,7 +29,7 @@ import 'mac-scrollbar/dist/mac-scrollbar.css';
 import { MacScrollbar } from 'mac-scrollbar';
 import { scrollbarOptions } from '../../styles/Scrollbar';
 
-const TAB_HEIGHT = 40;
+const TAB_HEIGHT = 48;
 const MAC_PLATFORM = 'darwin';
 const NO_REPITITIONS = -1;
 const FOUR_SPACE_TAB = ' '.repeat(4);

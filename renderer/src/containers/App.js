@@ -56,7 +56,7 @@ import {
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
-const HANDLE_HEIGHT = 10;
+const HANDLE_HEIGHT = 0;
 const DEBOUNCE_TIME = 100;
 let lastHeight = 0;
 let lastWidth = 0;
@@ -100,7 +100,7 @@ class App extends Component {
       this.setState({
         windowHeight: e.target.innerHeight,
         terminalHeight: this.term.current
-          ? this.term.current.clientHeight + HANDLE_HEIGHT
+          ? this.term.current.offsetHeight + HANDLE_HEIGHT
           : this.state.terminalHeight,
       });
     }

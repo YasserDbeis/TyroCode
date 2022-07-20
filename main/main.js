@@ -24,6 +24,7 @@ const createWindow = () => {
     // frame: false,
   });
 
+  // window.removeMenu(false);
   if (isDev) {
     window.webContents.openDevTools();
   }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import TextEditor from './TextEditor';
-const TAB_HEIGHT = 40;
-const HANDLE_HEIGHT = 10;
+const TAB_HEIGHT = 48;
+const HANDLE_HEIGHT = 0;
 
 //var entirePageHeightMinusTabs;
 //        entirePageHeightMinusTabs = document.querySelector("#root > section > section").clientHeight - 40

@@ -62,6 +62,9 @@ const Terminal = forwardRef((props, ref) => {
         onResizeStop={(e, direction, ref, d) => {
           if (direction !== 'top') return;
           resizeTerminal();
+          console.log('TERM HEIGHT', termHeight);
+          console.log('D HEIGHT', d.height);
+
           setTermHeight(termHeight + d.height);
           props.onTermExpand(termHeight + d.height + HANDLE_HEIGHT);
 
