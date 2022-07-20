@@ -42,6 +42,9 @@ const TextEditor = (props) => {
   const [highlightedCode, setHighlightedCode] = useState(props.code);
   const [lineNums, setLineNums] = useState(getLineNums(props.code));
   const [cursor, setCursor] = useState([props.code.length, props.code.length]);
+  const [editorWidth, setEditorWidth] = useState(0);
+  const [editorScrollWidth, setEditorScrollWidth] = useState(0);
+  const [lineNumWidth, setLineNumWidth] = useState(0);
 
   const editorRef = useRef(null);
   const lineNumRef = useRef(null);
@@ -83,6 +86,15 @@ const TextEditor = (props) => {
     if (cursor && editorRef.current) {
       editorRef.current.focus();
       editorRef.current.setSelectionRange(cursor[0], cursor[1]);
+    }
+
+    if (editorRef) {
+      setEditorWidth(editorRef.current.clientWidth);
+      setEditorScrollWidth(editorRef.current.scrollWidth);
+    }
+
+    if (lineNumRef) {
+      setLineNumWidth(lineNumRef.current.clientWidth);
     }
   }, [cursor]);
 
@@ -259,6 +271,9 @@ const TextEditor = (props) => {
 
   // if (editorRef.current) console.log(editorRef.current.scrollWidth);
 
+  console.log('Line Num Width', lineNumWidth);
+  console.log('Editor Width', editorWidth);
+
   return (
     <MacScrollbar
       {...scrollbarOptions}
@@ -272,35 +287,20 @@ const TextEditor = (props) => {
         {...scrollbarOptions}
         className="scroller"
         id="editor-bottom-scrollbar"
-        style={
-          lineNumRef.current && editorRef.current
-            ? {
-                marginLeft: lineNumRef.current.clientWidth,
-                width: editorRef.current.clientWidth,
-              }
-            : null
-        }
+        style={{
+          marginLeft: lineNumWidth,
+          width: editorWidth,
+        }}
       >
         <div
-          style={
-            editorRef.current
-              ? {
-                  width: editorRef.current.scrollWidth,
-                  height: '20px',
-                }
-              : null
-          }
+          style={{
+            width: editorScrollWidth,
+            height: '20px',
+          }}
         ></div>
       </MacScrollbar>
 
-      <div
-        id="text-editor-container"
-        style={
-          {
-            // height: props.editorHeight,
-          }
-        }
-      >
+      <div id="text-editor-container">
         <div
           id="line-num-container"
           ref={lineNumRef}

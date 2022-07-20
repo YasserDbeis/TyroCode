@@ -3,7 +3,6 @@
 1. Accomodate keycode combos for redo used by windows (and make sure other combos accomodated as well)
 2. Tabbing a single line (with the top empty line also selected) multiple times doesnt work well
 3. Add 4 spaces after bracket + enter combo
-4. If you go from page that has doesnt have scrollbar to one that does, it wont be there (possible fix: enable auto-hiding)
 
 // Future things that would be nice but can't do right now
 1. Have selected directory be the directory of terminal
