@@ -45,7 +45,6 @@ export const extToLang = (lang_ext) => {
 };
 
 export const extToPrismLang = (lang_ext) => {
-  console.log('HU', lang_ext);
   const lang =
     {
       js: 'javascript',
@@ -62,8 +61,6 @@ export const extToPrismLang = (lang_ext) => {
       html: 'markup',
       diff: 'diff',
     }[lang_ext] ?? 'clike';
-
-  console.log('KEY LANG', lang);
 
   return prism.languages[lang];
 };

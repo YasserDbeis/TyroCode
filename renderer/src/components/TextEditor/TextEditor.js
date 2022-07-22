@@ -99,7 +99,7 @@ const TextEditor = (props) => {
   }, [cursor]);
 
   function codeChange(e) {
-    console.log('CHANGED');
+    // console.log('CHANGED');
     const newCode = e.target.value;
     const lineNums = getLineNums(newCode);
     setCode(newCode);
@@ -207,18 +207,23 @@ const TextEditor = (props) => {
     } else if (e.keyCode == keys.TAB_KEYCODE) {
       const startCursor = editorRef.current.selectionStart;
       const endCursor = editorRef.current.selectionEnd;
+
+      console.log('startCusrsor', startCursor);
       const currCode = editorRef.current.value;
 
       const currCodeSelection = currCode.slice(startCursor, endCursor);
 
       if (currCodeSelection.includes('\n')) {
-        const tabbedOverLinesStartPos = getTabbedOverLinesStartPos(
-          currCode,
-          startCursor,
-          endCursor
-        );
+        const [tabbedOverLinesStartPos, firstLineEmpty] =
+          getTabbedOverLinesStartPos(currCode, startCursor, endCursor);
+        console.log('FIRST LINE EMPTY', firstLineEmpty);
+        let numTabbedOverLines = tabbedOverLinesStartPos.length;
 
-        const numTabbedOverLines = tabbedOverLinesStartPos.length;
+        if (firstLineEmpty) {
+          tabbedOverLinesStartPos.splice(0, 1);
+          console.log('SPLICED', tabbedOverLinesStartPos);
+          numTabbedOverLines -= 1;
+        }
 
         const currentStackFrame = undoStack.current.getCurrentFrame();
         currentStackFrame.repetitions = numTabbedOverLines - 1;
@@ -228,7 +233,8 @@ const TextEditor = (props) => {
           const [startShift, endShift] = unTabText(
             editorRef.current,
             currCode,
-            tabbedOverLinesStartPos
+            tabbedOverLinesStartPos,
+            firstLineEmpty
           );
 
           editorRef.current.setSelectionRange(
@@ -237,13 +243,15 @@ const TextEditor = (props) => {
           );
         } else {
           console.log('TAB');
+
           tabOverText(editorRef.current, tabbedOverLinesStartPos);
 
-          const numShiftedLines = tabbedOverLinesStartPos.length;
-          editorRef.current.setSelectionRange(
-            startCursor + TAB_SIZE,
-            endCursor + numShiftedLines * TAB_SIZE
-          );
+          const start = startCursor + (firstLineEmpty ? 0 : TAB_SIZE);
+          const end = endCursor + numTabbedOverLines * TAB_SIZE;
+          console.log('start!', start);
+          console.log('end!', end);
+
+          editorRef.current.setSelectionRange(start, end);
         }
       } else {
         document.execCommand('insertText', false, FOUR_SPACE_TAB);
@@ -271,8 +279,8 @@ const TextEditor = (props) => {
 
   // if (editorRef.current) console.log(editorRef.current.scrollWidth);
 
-  console.log('Line Num Width', lineNumWidth);
-  console.log('Editor Width', editorWidth);
+  // console.log('Line Num Width', lineNumWidth);
+  // console.log('Editor Width', editorWidth);
 
   return (
     <MacScrollbar

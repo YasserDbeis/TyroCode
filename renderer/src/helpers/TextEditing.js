@@ -130,7 +130,12 @@ const tabOverText = (editorTextarea, tabbedOverLinesStartPos) => {
   }
 };
 
-const unTabText = (editorTextarea, code, tabbedOverLinesStartPos) => {
+const unTabText = (
+  editorTextarea,
+  code,
+  tabbedOverLinesStartPos,
+  firstLineEmpty
+) => {
   let startShift = 0;
   let endShift = 0;
 
@@ -147,8 +152,9 @@ const unTabText = (editorTextarea, code, tabbedOverLinesStartPos) => {
       editorTextarea.setSelectionRange(cursorPos, cursorPos + whiteSpaceSize);
       document.execCommand('delete');
 
-      if (i == 0) {
+      if (i == 0 && !firstLineEmpty) {
         startShift = whiteSpaceSize;
+        console.log('WHITE SPACE', whiteSpaceSize);
       }
     }
 
@@ -174,12 +180,16 @@ const getWhiteSpaceSize = (code, cursorPos) => {
 
 const getTabbedOverLinesStartPos = (code, start, end) => {
   const lines = code.split('\n');
-  // console.log('SPLIT: ', lines);
+  console.log('SPLIT: ', lines);
+  console.log('start', start);
+  console.log('end', end);
 
   let seenFrameStart = 0;
   let seenFrameEnd = -1;
 
   const tabbedOverLines = [];
+
+  let firstLineEmpty = false;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -193,22 +203,31 @@ const getTabbedOverLinesStartPos = (code, start, end) => {
     seenFrameStart = seenFrameEnd + 1;
     seenFrameEnd = seenFrameStart + len - 1;
 
-    if (line.trim().length == 0) {
-      continue;
-    }
+    // if (line.trim().length == 0) {
+    //   if (i == 0) {
+    //     firstLineEmpty = true;
+    //   } else {
+    //     continue;
+    //   }
+    // }
 
     if (
       (start <= seenFrameStart && end >= seenFrameEnd) ||
       (start >= seenFrameStart && start <= seenFrameEnd) ||
       (end >= seenFrameStart && end <= seenFrameEnd)
     ) {
-      tabbedOverLines.push(seenFrameStart);
+      if (line.trim().length != 0) {
+        tabbedOverLines.push(seenFrameStart);
+      } else if (tabbedOverLines.length == 0) {
+        tabbedOverLines.push(seenFrameStart);
+        firstLineEmpty = true;
+      }
     }
   }
 
   console.log('TABBEDOVERLINES', tabbedOverLines);
 
-  return tabbedOverLines;
+  return [tabbedOverLines, firstLineEmpty];
 };
 
 export {
