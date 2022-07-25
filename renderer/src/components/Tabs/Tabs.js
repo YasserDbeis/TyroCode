@@ -38,7 +38,7 @@ class Tabbing extends Component {
       panes: [],
       pathToKey: new Map(),
     };
-    this.codeChange = this.codeChange.bind(this);
+    this.onCodeChange = this.onCodeChange.bind(this);
   }
 
   componentDidMount() {
@@ -232,7 +232,7 @@ class Tabbing extends Component {
     }
   };
 
-  codeChange = (code) => {
+  onCodeChange = (code) => {
     // console.log(code);
 
     let currPaneIndex = this.getCurrentPaneIndex();
@@ -274,7 +274,7 @@ class Tabbing extends Component {
               filepath={pane.path}
               windowHeight={this.props.windowHeight}
               terminalHeight={this.props.terminalHeight}
-              codeChange={this.codeChange}
+              onCodeChange={this.onCodeChange}
               code={pane.content}
               className="text-editor-wrappers"
               onSave={this.onSave}

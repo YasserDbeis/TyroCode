@@ -1,5 +1,6 @@
 import { extToPrismLang } from './FilenameExtensions';
 import { tokenize } from 'prismjs/components/prism-core';
+import { times } from 'lodash';
 
 const TAB_SIZE = 4;
 
@@ -145,10 +146,11 @@ const unTabText = (
     const cursorPos = tabbedOverLinesStartPos[i];
 
     const whiteSpaceSize = getWhiteSpaceSize(code, cursorPos);
-
+    console.log('WHTITE STPACE UNTAB', whiteSpaceSize);
     // if there is non-zero whitespace, shift-tab
     if (whiteSpaceSize > 0) {
       editorTextarea.focus();
+      console.log(cursorPos, cursorPos + whiteSpaceSize);
       editorTextarea.setSelectionRange(cursorPos, cursorPos + whiteSpaceSize);
       document.execCommand('delete');
 

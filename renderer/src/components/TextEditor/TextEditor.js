@@ -15,6 +15,12 @@ import {
   isNonInsertionKey,
   isComboNonShiftKeyActive,
   isPasteKeyCombo,
+  isRedo,
+  isUndo,
+  isSave,
+  isEnter,
+  isMatchingChar,
+  isTab,
 } from '../../helpers/KeyDownHandlers';
 import { getFullPath } from '../../helpers/FileDirectory';
 import {
@@ -98,17 +104,17 @@ const TextEditor = (props) => {
     }
   }, [cursor]);
 
-  function codeChange(e) {
+  const onCodeChange = (e) => {
     // console.log('CHANGED');
     const newCode = e.target.value;
     const lineNums = getLineNums(newCode);
     setCode(newCode);
     setLineNums(lineNums);
     setHighlightedCode(highlightCode(newCode));
-    props.codeChange(newCode);
+    props.onCodeChange(newCode);
 
     // $('#editor-child-div').floatingScroll('update');
-  }
+  };
 
   function onKeyDownHandler(e) {
     // console.log('ORESSED', e.keyCode);
@@ -131,48 +137,40 @@ const TextEditor = (props) => {
       });
       console.log(undoStack.current);
     }
-    const isMac = os.platform() == MAC_PLATFORM;
 
-    if (
-      ((isMac && e.metaKey) || (!isMac && e.ctrlKey)) &&
-      e.keyCode == keys.S_KEYCODE
-    ) {
+    if (isSave(e)) {
       console.log('SAVING!', props.filepath);
 
       props.onSave(props.filepath);
-    } else if (e.keyCode == keys.Z_KEYCODE) {
-      if ((isMac && e.metaKey) || (!isMac && e.ctrlKey)) {
-        if (e.shiftKey) {
-          console.log('REDO');
-          const redidFrame = undoStack.current.redo();
+    } else if (isRedo(e)) {
+      console.log('REDO');
+      const redidFrame = undoStack.current.redo();
 
-          if (redidFrame != null) {
-            const numRepitions = redidFrame.repetitions;
-            console.log('NUM REP', numRepitions);
-            if (numRepitions != NO_REPITITIONS) {
-              for (let i = 0; i < numRepitions; i++) {
-                console.log('REDO AGAIN!!');
-                document.execCommand('redo');
-              }
-            }
-          }
-        } else {
-          console.log('UNDO');
-          const undidFrame = undoStack.current.undo();
-
-          if (undidFrame != null) {
-            const numRepitions = undidFrame.repetitions;
-            console.log('NUM REP', numRepitions);
-            if (numRepitions != NO_REPITITIONS) {
-              for (let i = 0; i < numRepitions; i++) {
-                console.log('UNDO AGAIN!!');
-                document.execCommand('undo');
-              }
-            }
+      if (redidFrame != null) {
+        const numRepitions = redidFrame.repetitions;
+        console.log('NUM REP', numRepitions);
+        if (numRepitions != NO_REPITITIONS) {
+          for (let i = 0; i < numRepitions; i++) {
+            console.log('REDO AGAIN!!');
+            document.execCommand('redo');
           }
         }
       }
-    } else if (e.keyCode == keys.ENTER_KEYCODE) {
+    } else if (isUndo(e)) {
+      console.log('UNDO');
+      const undidFrame = undoStack.current.undo();
+
+      if (undidFrame != null) {
+        const numRepitions = undidFrame.repetitions;
+        console.log('NUM REP', numRepitions);
+        if (numRepitions != NO_REPITITIONS) {
+          for (let i = 0; i < numRepitions; i++) {
+            console.log('UNDO AGAIN!!');
+            document.execCommand('undo');
+          }
+        }
+      }
+    } else if (isEnter(e)) {
       const prevFrame = undoStack.current.getPrevFrame();
       // console.log(
       //   (prevFrame == null).toString() + '::' + prevFrame.keyCode.toString()
@@ -184,10 +182,7 @@ const TextEditor = (props) => {
           editorRef.current.selectionStart - 1,
         ]);
       }
-    } else if (
-      e.keyCode == keys.OPEN_BRACKETS_KEYCODE ||
-      (e.keyCode == keys.OPEN_PAREN_KEYCODE && e.shiftKey)
-    ) {
+    } else if (isMatchingChar(e)) {
       // default brackets to open parenthesis
       let brackets = '()';
 
@@ -204,7 +199,7 @@ const TextEditor = (props) => {
 
       e.preventDefault();
       return false;
-    } else if (e.keyCode == keys.TAB_KEYCODE) {
+    } else if (isTab(e)) {
       const startCursor = editorRef.current.selectionStart;
       const endCursor = editorRef.current.selectionEnd;
 
@@ -230,6 +225,8 @@ const TextEditor = (props) => {
 
         if (e.shiftKey) {
           console.log('SHIFT + TAB');
+          console.log('TABBED OVER LINES', tabbedOverLinesStartPos);
+          console.log('firstLineEmpty', firstLineEmpty);
           const [startShift, endShift] = unTabText(
             editorRef.current,
             currCode,
@@ -254,7 +251,41 @@ const TextEditor = (props) => {
           editorRef.current.setSelectionRange(start, end);
         }
       } else {
-        document.execCommand('insertText', false, FOUR_SPACE_TAB);
+        if (e.shiftKey) {
+          console.log('SINGLE SHIFT + TAB');
+          const [tabbedOverLinesStartPos, firstLineEmpty] =
+            getTabbedOverLinesStartPos(currCode, startCursor, endCursor);
+          console.log('TABBED OVER LINES', tabbedOverLinesStartPos);
+          console.log('FIRST LINE EMPTY', firstLineEmpty);
+          const [startShift, endShift] = unTabText(
+            editorRef.current,
+            currCode,
+            tabbedOverLinesStartPos,
+            false
+          );
+
+          editorRef.current.setSelectionRange(
+            Math.max(startCursor - startShift, tabbedOverLinesStartPos[0]),
+            endCursor - endShift
+          );
+          // const cursorPos = editorRef.current.selectionStart
+
+          // const whiteSpaceSize = getWhite
+
+          // // if there is non-zero whitespace, shift-tab
+          // if (whiteSpaceSize > 0) {
+          //   editorTextarea.focus();
+          //   editorTextarea.setSelectionRange(cursorPos, cursorPos + whiteSpaceSize);
+          //   document.execCommand('delete');
+
+          //   if (i == 0 && !firstLineEmpty) {
+          //     startShift = whiteSpaceSize;
+          //     console.log('WHITE SPACE', whiteSpaceSize);
+          //   }
+          // }
+        } else {
+          document.execCommand('insertText', false, FOUR_SPACE_TAB);
+        }
       }
 
       e.preventDefault();
@@ -336,7 +367,7 @@ const TextEditor = (props) => {
             className="scroller editor-child"
             ref={editorRef}
             value={code}
-            onChange={codeChange}
+            onChange={onCodeChange}
             onKeyDown={onKeyDownHandler}
           ></textarea>
         </div>

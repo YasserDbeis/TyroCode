@@ -1,11 +1,11 @@
 // Bugs + Features
 
-1. Accomodate keycode combos for redo used by windows (and make sure other combos accomodated as well)
-2. Add 4 spaces after bracket + enter combo
+1. Add 4 spaces after bracket + enter combo
 
 // Future things that would be nice but can't do right now
 1. Have selected directory be the directory of terminal
 2. Remove middle click scrolling from text editor (cuz it can only do horiz scrolling)
 
 // To-do before packaging
-1. Set Menu to false in main.js (remove menu)
+1. Test keycode combos work for windows as well
+2. Set Menu to false in main.js (remove menu)

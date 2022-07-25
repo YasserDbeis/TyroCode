@@ -12,11 +12,11 @@ class TextEditorWrapper extends Component {
     // this.state = {
     //   code: '',
     // };
-    this.codeChange = this.codeChange.bind(this);
+    this.onCodeChange = this.onCodeChange.bind(this);
   }
 
-  codeChange = (newCode) => {
-    this.props.codeChange(newCode);
+  onCodeChange = (newCode) => {
+    this.props.onCodeChange(newCode);
   };
 
   render() {
@@ -44,7 +44,7 @@ class TextEditorWrapper extends Component {
           windowHeight={this.props.windowHeight}
           terminalHeight={this.props.terminalHeight}
           editorHeight={textEditorHeight}
-          codeChange={this.codeChange}
+          onCodeChange={this.onCodeChange}
           code={this.props.code}
           onSave={this.props.onSave}
         />
