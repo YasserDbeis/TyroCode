@@ -5,6 +5,8 @@
 // Future things that would be nice but can't do right now
 1. Have selected directory be the directory of terminal
 2. Remove middle click scrolling from text editor (cuz it can only do horiz scrolling)
+3. Fix undoing with bracket match (becomes two undos, should be one)
+    - Type open bracket, press enter, press undo
 
 // To-do before packaging
 1. Test keycode combos work for windows as well

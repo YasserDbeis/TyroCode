@@ -216,7 +216,7 @@ class Tabbing extends Component {
     try {
       const result = await runCode(language, code, input);
       console.log(result);
-      const success = result.success;
+      const success = result.status == 200;
 
       let output;
       if (success) {

@@ -1,7 +1,7 @@
 var axios = require('axios');
 var qs = require('qs');
 const POST = 'post';
-const CODEX_API_URL = 'https://codex-api.herokuapp.com/';
+const CODEX_API_URL = 'https://api.codex.jaagrav.in';
 const CONTENT_TYPE = 'application/x-www-form-urlencoded';
 
 const getDataQS = (language, code, input) => {
