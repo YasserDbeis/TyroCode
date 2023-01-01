@@ -1,6 +1,5 @@
 import { extToPrismLang } from './FilenameExtensions';
 import { tokenize } from 'prismjs/components/prism-core';
-import { times } from 'lodash';
 
 const TAB_SIZE = 4;
 
@@ -18,9 +17,6 @@ const tokenContentToString = (contents) => {
 
   for (const content of contents) {
     if (typeof content == 'object') {
-      // console.log('CONTENT', content);
-      // console.log('CONTENT TYPE', content.type);
-
       const tokenStr = tokenContentToString(content.content);
       totalContent += syntaxHighlight(tokenStr, content.type);
     } else {
@@ -95,8 +91,6 @@ const getHighlightedCode = (code, lang_ext) => {
 
   const tokens = tokenize(code, lang);
 
-  // console.log('TOKENS', tokens);
-
   tokens.forEach((token) => {
     if (typeof token == 'object') {
       const tokenType = token.type;
@@ -108,14 +102,10 @@ const getHighlightedCode = (code, lang_ext) => {
     }
   });
 
-  // console.log('RESULT', result);
-
   return result;
 };
 
 const tabOverText = (editorTextarea, tabbedOverLinesStartPos) => {
-  console.log('Tabbed over lines:', tabbedOverLinesStartPos);
-
   const numTabbedLines = tabbedOverLinesStartPos.length;
 
   for (let i = numTabbedLines - 1; i >= 0; i--) {
@@ -146,17 +136,14 @@ const unTabText = (
     const cursorPos = tabbedOverLinesStartPos[i];
 
     const whiteSpaceSize = getWhiteSpaceSize(code, cursorPos);
-    console.log('WHTITE STPACE UNTAB', whiteSpaceSize);
     // if there is non-zero whitespace, shift-tab
     if (whiteSpaceSize > 0) {
       editorTextarea.focus();
-      console.log(cursorPos, cursorPos + whiteSpaceSize);
       editorTextarea.setSelectionRange(cursorPos, cursorPos + whiteSpaceSize);
       document.execCommand('delete');
 
       if (i == 0 && !firstLineEmpty) {
         startShift = whiteSpaceSize;
-        console.log('WHITE SPACE', whiteSpaceSize);
       }
     }
 
@@ -182,9 +169,6 @@ const getWhiteSpaceSize = (code, cursorPos) => {
 
 const getTabbedOverLinesStartPos = (code, start, end) => {
   const lines = code.split('\n');
-  console.log('SPLIT: ', lines);
-  console.log('start', start);
-  console.log('end', end);
 
   let seenFrameStart = 0;
   let seenFrameEnd = -1;
@@ -205,14 +189,6 @@ const getTabbedOverLinesStartPos = (code, start, end) => {
     seenFrameStart = seenFrameEnd + 1;
     seenFrameEnd = seenFrameStart + len - 1;
 
-    // if (line.trim().length == 0) {
-    //   if (i == 0) {
-    //     firstLineEmpty = true;
-    //   } else {
-    //     continue;
-    //   }
-    // }
-
     if (
       (start <= seenFrameStart && end >= seenFrameEnd) ||
       (start >= seenFrameStart && start <= seenFrameEnd) ||
@@ -227,9 +203,40 @@ const getTabbedOverLinesStartPos = (code, start, end) => {
     }
   }
 
-  console.log('TABBEDOVERLINES', tabbedOverLines);
-
   return [tabbedOverLines, firstLineEmpty];
+};
+
+const getIndendationLength = (code, cursorPos) => {
+  const lines = code.split('\n');
+
+  var seen = 0;
+  var whiteSpaceBeforeFirstCharOnCursorLine = 0;
+
+  console.log('NUM LINES: ' + lines.length);
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const len = line.length;
+
+    // accomodate newline character into length
+    if (i != lines.length - 1) {
+      len += 1;
+    }
+
+    seen += len;
+
+    if (cursorPos <= seen) {
+      whiteSpaceBeforeFirstCharOnCursorLine =
+        line.length - line.trimLeft().length;
+
+      if (whiteSpaceBeforeFirstCharOnCursorLine == -1) {
+        whiteSpaceBeforeFirstCharOnCursorLine = 0;
+      }
+      break;
+    }
+  }
+
+  return whiteSpaceBeforeFirstCharOnCursorLine;
 };
 
 export {
@@ -237,4 +244,5 @@ export {
   tabOverText,
   unTabText,
   getTabbedOverLinesStartPos,
+  getIndendationLength,
 };

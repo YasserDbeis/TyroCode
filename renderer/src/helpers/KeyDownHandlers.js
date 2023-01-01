@@ -5,8 +5,10 @@ import {
   Z_KEYCODE,
   S_KEYCODE,
   ENTER_KEYCODE,
-  OPEN_BRACKETS_KEYCODE,
-  OPEN_PAREN_KEYCODE,
+  OPENING_BRACKETS_KEYCODE,
+  OPENING_PAREN_KEYCODE,
+  CLOSING_BRACKETS_KEYCODE,
+  CLOSING_PAREN_KEYCODE,
   TAB_KEYCODE,
 } from '../enums/KeyboardCodes';
 import os from 'os';
@@ -65,10 +67,27 @@ export const isEnter = (e) => {
   return e.keyCode == ENTER_KEYCODE;
 };
 
-export const isMatchingChar = (e) => {
+export const isOpeningChar = (e) => {
   return (
-    e.keyCode == OPEN_BRACKETS_KEYCODE ||
-    (e.keyCode == OPEN_PAREN_KEYCODE && e.shiftKey)
+    e.keyCode == OPENING_BRACKETS_KEYCODE ||
+    (e.keyCode == OPENING_PAREN_KEYCODE && e.shiftKey)
+  );
+};
+
+export const isClosingChar = (e) => {
+  return (
+    e.keyCode == CLOSING_BRACKETS_KEYCODE ||
+    (e.keyCode == CLOSING_PAREN_KEYCODE && e.shiftKey)
+  );
+};
+
+export const areMatchingChars = (prevChar, currChar) => {
+  return (
+    (prevChar.keyCode == OPENING_PAREN_KEYCODE &&
+      currChar.keyCode == CLOSING_PAREN_KEYCODE) ||
+    (prevChar.shiftKey == currChar.shiftKey &&
+      prevChar.keyCode == OPENING_BRACKETS_KEYCODE &&
+      currChar.keyCode == CLOSING_BRACKETS_KEYCODE)
   );
 };
 

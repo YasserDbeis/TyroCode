@@ -1,15 +1,13 @@
 import React from 'react';
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import fs from 'fs';
 import {
   getHighlightedCode,
   tabOverText,
   unTabText,
   getTabbedOverLinesStartPos,
+  getIndendationLength,
 } from '../../helpers/TextEditing';
 import './TextEditor.css';
-import Scrollbars from 'react-custom-scrollbars';
-import TextArea from 'antd/lib/input/TextArea';
 import * as keys from '../../enums/KeyboardCodes';
 import {
   isNonInsertionKey,
@@ -19,18 +17,13 @@ import {
   isUndo,
   isSave,
   isEnter,
-  isMatchingChar,
+  isOpeningChar,
+  isClosingChar,
+  areMatchingChars,
   isTab,
 } from '../../helpers/KeyDownHandlers';
-import { getFullPath } from '../../helpers/FileDirectory';
-import {
-  getFileExtension,
-  getProgLanguage,
-} from '../../helpers/FilenameExtensions';
-import os from 'os';
+import { getFileExtension } from '../../helpers/FilenameExtensions';
 import UndoStack from '../../StateManagement/UndoStack';
-import { Console } from 'console';
-import autosize from 'autosize';
 import 'mac-scrollbar/dist/mac-scrollbar.css';
 import { MacScrollbar } from 'mac-scrollbar';
 import { scrollbarOptions } from '../../styles/Scrollbar';
@@ -105,27 +98,15 @@ const TextEditor = (props) => {
   }, [cursor]);
 
   const onCodeChange = (e) => {
-    // console.log('CHANGED');
     const newCode = e.target.value;
     const lineNums = getLineNums(newCode);
     setCode(newCode);
     setLineNums(lineNums);
     setHighlightedCode(highlightCode(newCode));
     props.onCodeChange(newCode);
-
-    // $('#editor-child-div').floatingScroll('update');
   };
 
   function onKeyDownHandler(e) {
-    // console.log('ORESSED', e.keyCode);
-    // console.log(
-    //   'VALUE:' +
-    //     ', ' +
-    //     isNonInsertionKey(e.keyCode) +
-    //     ', ' +
-    //     !isComboKeyActivated(e)
-    // );
-
     if (
       (isNonInsertionKey(e.keyCode) && !isComboNonShiftKeyActive(e)) ||
       isPasteKeyCombo(e)
@@ -134,8 +115,9 @@ const TextEditor = (props) => {
       undoStack.current.push({
         keyCode: [keyCodeStr],
         repetitions: NO_REPITITIONS,
+        shiftKey: e.shiftKey,
       });
-      console.log(undoStack.current);
+      // console.log(undoStack.current);
     }
 
     if (isSave(e)) {
@@ -171,22 +153,35 @@ const TextEditor = (props) => {
         }
       }
     } else if (isEnter(e)) {
+      const currCode = editorRef.current.value;
+      const indentationLength = getIndendationLength(
+        currCode,
+        editorRef.current.selectionStart - 1
+      );
+
+      console.log('INDENTATION LENGTH: ' + indentationLength);
       const prevFrame = undoStack.current.getPrevFrame();
-      // console.log(
-      //   (prevFrame == null).toString() + '::' + prevFrame.keyCode.toString()
-      // );
-      if (prevFrame && prevFrame.keyCode == keys.OPEN_BRACKETS_KEYCODE) {
-        document.execCommand('insertText', false, '\n');
+      if (prevFrame && isOpeningChar(prevFrame)) {
+        const bracketMatchWithTabbingText =
+          '\n' +
+          ' '.repeat(TAB_SIZE + indentationLength) +
+          '\n' +
+          ' '.repeat(indentationLength);
+        document.execCommand('insertText', false, bracketMatchWithTabbingText);
         setCursor([
-          editorRef.current.selectionStart - 1,
-          editorRef.current.selectionStart - 1,
+          editorRef.current.selectionStart - 1 - indentationLength,
+          editorRef.current.selectionStart - 1 - indentationLength,
         ]);
+      } else {
+        const whiteSpaceText = '\n' + ' '.repeat(indentationLength);
+        document.execCommand('insertText', false, whiteSpaceText);
       }
-    } else if (isMatchingChar(e)) {
+      e.preventDefault();
+    } else if (isOpeningChar(e)) {
       // default brackets to open parenthesis
       let brackets = '()';
 
-      if (e.keyCode == keys.OPEN_BRACKETS_KEYCODE) {
+      if (e.keyCode == keys.OPENING_BRACKETS_KEYCODE) {
         brackets = e.shiftKey ? '{}' : '[]';
       }
 
@@ -199,6 +194,25 @@ const TextEditor = (props) => {
 
       e.preventDefault();
       return false;
+    } else if (isClosingChar(e)) {
+      const prevFrame = undoStack.current.getPrevFrame();
+      console.log('----');
+      console.log(prevFrame);
+      console.log(isClosingChar(prevFrame));
+      console.log(areMatchingChars(prevFrame, e));
+      console.log('----');
+
+      if (
+        prevFrame &&
+        isOpeningChar(prevFrame) &&
+        areMatchingChars(prevFrame, e)
+      ) {
+        setCursor([
+          editorRef.current.selectionStart + 1,
+          editorRef.current.selectionStart + 1,
+        ]);
+        e.preventDefault();
+      }
     } else if (isTab(e)) {
       const startCursor = editorRef.current.selectionStart;
       const endCursor = editorRef.current.selectionEnd;
@@ -211,12 +225,10 @@ const TextEditor = (props) => {
       if (currCodeSelection.includes('\n')) {
         const [tabbedOverLinesStartPos, firstLineEmpty] =
           getTabbedOverLinesStartPos(currCode, startCursor, endCursor);
-        console.log('FIRST LINE EMPTY', firstLineEmpty);
         let numTabbedOverLines = tabbedOverLinesStartPos.length;
 
         if (firstLineEmpty) {
           tabbedOverLinesStartPos.splice(0, 1);
-          console.log('SPLICED', tabbedOverLinesStartPos);
           numTabbedOverLines -= 1;
         }
 
@@ -224,9 +236,6 @@ const TextEditor = (props) => {
         currentStackFrame.repetitions = numTabbedOverLines - 1;
 
         if (e.shiftKey) {
-          console.log('SHIFT + TAB');
-          console.log('TABBED OVER LINES', tabbedOverLinesStartPos);
-          console.log('firstLineEmpty', firstLineEmpty);
           const [startShift, endShift] = unTabText(
             editorRef.current,
             currCode,
@@ -239,24 +248,16 @@ const TextEditor = (props) => {
             endCursor - endShift
           );
         } else {
-          console.log('TAB');
-
           tabOverText(editorRef.current, tabbedOverLinesStartPos);
 
           const start = startCursor + (firstLineEmpty ? 0 : TAB_SIZE);
           const end = endCursor + numTabbedOverLines * TAB_SIZE;
-          console.log('start!', start);
-          console.log('end!', end);
-
           editorRef.current.setSelectionRange(start, end);
         }
       } else {
         if (e.shiftKey) {
-          console.log('SINGLE SHIFT + TAB');
           const [tabbedOverLinesStartPos, firstLineEmpty] =
             getTabbedOverLinesStartPos(currCode, startCursor, endCursor);
-          console.log('TABBED OVER LINES', tabbedOverLinesStartPos);
-          console.log('FIRST LINE EMPTY', firstLineEmpty);
           const [startShift, endShift] = unTabText(
             editorRef.current,
             currCode,
@@ -268,21 +269,6 @@ const TextEditor = (props) => {
             Math.max(startCursor - startShift, tabbedOverLinesStartPos[0]),
             endCursor - endShift
           );
-          // const cursorPos = editorRef.current.selectionStart
-
-          // const whiteSpaceSize = getWhite
-
-          // // if there is non-zero whitespace, shift-tab
-          // if (whiteSpaceSize > 0) {
-          //   editorTextarea.focus();
-          //   editorTextarea.setSelectionRange(cursorPos, cursorPos + whiteSpaceSize);
-          //   document.execCommand('delete');
-
-          //   if (i == 0 && !firstLineEmpty) {
-          //     startShift = whiteSpaceSize;
-          //     console.log('WHITE SPACE', whiteSpaceSize);
-          //   }
-          // }
         } else {
           document.execCommand('insertText', false, FOUR_SPACE_TAB);
         }
@@ -307,11 +293,6 @@ const TextEditor = (props) => {
       .map((line, i) => `<span class="unselectable line-nums">${i + 1}</span>`)
       .join('</br>');
   }
-
-  // if (editorRef.current) console.log(editorRef.current.scrollWidth);
-
-  // console.log('Line Num Width', lineNumWidth);
-  // console.log('Editor Width', editorWidth);
 
   return (
     <MacScrollbar

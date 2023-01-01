@@ -11,3 +11,4 @@
 // To-do before packaging
 1. Test keycode combos work for windows as well
 2. Set Menu to false in main.js (remove menu)
+3. Remove Dev Tools Window
