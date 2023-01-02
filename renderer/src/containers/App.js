@@ -67,6 +67,7 @@ const {
   initTerminal,
   resizeTerminal,
   setDirectory,
+  writeEnter,
 } = require('../components/Terminal/TerminalSetup');
 
 class App extends Component {
@@ -126,6 +127,7 @@ class App extends Component {
     window.addEventListener('resize', this.resize);
     initTerminal();
     resizeTerminal();
+    writeEnter();
   }
 
   componentDidUpdate() {

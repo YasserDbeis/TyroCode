@@ -96,4 +96,5 @@ export {
   writeEnterMessage,
   writeCodeResult,
   setDirectory,
+  writeEnter,
 };

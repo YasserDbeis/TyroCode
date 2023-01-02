@@ -15,8 +15,8 @@
 		"rebuild": "electron-rebuild"
 	},
 	"build": {
-		"productName": "create-electron-react-app",
-		"appId": "com.levminer.create-electron-react-app",
+		"productName": "TyroCode",
+		"appId": "me.ydbeis.TyroCode",
 		"win": {
 			"target": [
 				"nsis"
@@ -32,6 +32,7 @@
 	"main": "./main/main.js",
 	"dependencies": {
 		"@ant-design/icons": "^4.4.0",
+		"@electron/rebuild": "^3.2.10",
 		"antd": "^4.20.6",
 		"autosize": "^5.0.1",
 		"axios": "^0.27.2",
