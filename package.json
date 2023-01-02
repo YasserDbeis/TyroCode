@@ -11,15 +11,19 @@
 		"pack": "webpack --config .webpackrc.js",
 		"start": "electron .",
 		"electronmon": "electronmon .",
-		"build": "electron-builder",
-		"rebuild": "electron-rebuild"
+		"build": "electron-builder -mwl",
+		"rebuild": "electron-rebuild",
+		"package": "npm run pack && npm run build"
 	},
 	"build": {
 		"productName": "TyroCode",
 		"appId": "me.ydbeis.TyroCode",
 		"win": {
 			"target": [
-				"nsis"
+				{
+					"target": "nsis",
+					"arch": "x64"
+				}
 			]
 		}
 	},

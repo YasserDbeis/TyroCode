@@ -4,10 +4,12 @@
 
 # Requires npm version v14.15.4
 
-# Run `npm install` to install required node modules
+# 1. Run `npm install` to install required node modules
 
-# Run `npm run rebuild` to compile native modules
+# 2. Run `npm run rebuild` to compile native modules
 
-# Run `npm run pack` to create webpack package
+# 3. Run `npm run pack` to create webpack package
 
-# Run `npm run build` to build & package the application to distrubute.
+# 4. Run `npm run build` to build & package the application to distrubute.
+
+# Alternatively to steps (3) and (4), run `npm run package`.

@@ -179,7 +179,7 @@ const getTabbedOverLinesStartPos = (code, start, end) => {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    const len = line.length;
+    var len = line.length;
 
     // accomodate newline character into length
     if (i != lines.length - 1) {
