@@ -16,6 +16,13 @@ import { FILE_READ_SUCCESS } from '../../enums/FileReadingErrors';
 const { TabPane } = Tabs;
 const ADD = 0;
 const REMOVE = 1;
+const API_ERROR_MESSAGE =
+  '------------------------\n' +
+  'Error retrieving output.\n' +
+  'This may be due to two reasons.\n' +
+  '(1) You queried standard input but never supplied any or\n' +
+  '(2) You do not have a stable or any internet connection.\n' +
+  '------------------------';
 
 // const initialPanes = [
 //   {
@@ -226,9 +233,11 @@ class Tabbing extends Component {
       }
 
       writeCodeResult(output);
-      codeExitedHandler();
     } catch (e) {
+      writeCodeResult(API_ERROR_MESSAGE);
       console.log(e);
+    } finally {
+      codeExitedHandler();
     }
   };
 

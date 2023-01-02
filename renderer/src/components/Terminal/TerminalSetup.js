@@ -1,8 +1,9 @@
 const ipc = require('electron').ipcRenderer;
 import { FitAddon } from 'xterm-addon-fit';
 import { debounce } from 'lodash';
+import { ipcMain } from 'electron';
 const DEBOUNCE_TIME = 300;
-const TERM_WELCOME_MSG = 'Press Enter to Use The TyroCode Terminal...';
+const TERM_WELCOME_MSG = 'Welcome to the TyroCode Terminal...';
 
 let fitAdd = null;
 let termProxy = null;
@@ -29,8 +30,6 @@ const initTerminal = () => {
   resizeTerminal();
 
   fitAdd = fitAddon;
-
-  writeEnter();
 };
 
 const getFitAddon = () => {
@@ -64,30 +63,37 @@ const createTerminal = () => {
   return termProxy;
 };
 
-const writeEnter = async () => {
-  // termProxy.writeln('');
+const writeEnter = () => {
+  ipc.send('terminal.enter');
+};
 
+const writeEnterMessage = async () => {
+  await new Promise((r) => setTimeout(r, 75));
   for (let welcomeMessageChar of TERM_WELCOME_MSG) {
     termProxy.write(welcomeMessageChar);
-    // await new Promise((r) => setTimeout(r, 50));
+    await new Promise((r) => setTimeout(r, 75));
   }
-  termProxy.writeln('');
+  writeEnter();
 };
 
 const writeCodeResult = (result) => {
   termProxy.writeln('');
-
   termProxy.write(result);
-
-  termProxy.writeln('');
+  writeEnter();
 
   termProxy.focus();
+};
+
+const setDirectory = (path) => {
+  const pathChange = 'cd ' + path;
+  ipc.send('terminal.path_change', pathChange);
 };
 
 export {
   initTerminal,
   getFitAddon,
   resizeTerminal,
-  writeEnter,
+  writeEnterMessage,
   writeCodeResult,
+  setDirectory,
 };

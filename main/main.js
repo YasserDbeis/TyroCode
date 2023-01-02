@@ -78,4 +78,13 @@ app.on('ready', () => {
   ipcMain.on('terminal.keystroke', (event, key) => {
     ptyProcess.write(key);
   });
+
+  ipcMain.on('terminal.path_change', (event, pathChange) => {
+    ptyProcess.write(pathChange);
+    ptyProcess.write('\n');
+  });
+
+  ipcMain.on('terminal.enter', (event) => {
+    ptyProcess.write('\n');
+  });
 });

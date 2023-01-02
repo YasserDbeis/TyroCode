@@ -66,6 +66,7 @@ const TRANSPARENT_COLOR = 'transparent';
 const {
   initTerminal,
   resizeTerminal,
+  setDirectory,
 } = require('../components/Terminal/TerminalSetup');
 
 class App extends Component {
@@ -169,6 +170,8 @@ class App extends Component {
       startWatchingWorkspace(folderPath, this);
 
       getBaseFolderContent(folderPath, this);
+
+      setDirectory(folderPath);
     }
   };
 

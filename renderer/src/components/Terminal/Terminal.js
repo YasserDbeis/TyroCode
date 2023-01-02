@@ -2,7 +2,7 @@ import React, { Component, useEffect, forwardRef } from 'react';
 import { XTerm } from 'xterm-for-react';
 const ResizableBox = require('react-resizable').ResizableBox;
 const { ipcRenderer } = require('electron');
-const { resizeTerminal, writeEnter } = require('./TerminalSetup');
+const { resizeTerminal } = require('./TerminalSetup');
 import { terminalHandle } from './Handle/TerminalHandle';
 import { Resizable } from 're-resizable';
 import { Layout } from 'antd';
